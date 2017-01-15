@@ -1,0 +1,738 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dubbo,java,spring," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="dubbo源码研究之config模块   dubbo模块说明   dubbo-common 公共逻辑模块，包括Util类和通用模型。   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。   dubbo-cluster 集群模块，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dubbo源码研究之config模块">
+<meta property="og:url" content="www.chenxun.wiki/2017/01/15/6/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="dubbo源码研究之config模块   dubbo模块说明   dubbo-common 公共逻辑模块，包括Util类和通用模型。   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。   dubbo-cluster 集群模块，">
+<meta property="og:image" content="www.chenxun.wiki/images/e.png">
+<meta property="og:updated_time" content="2017-01-15T02:17:06.673Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dubbo源码研究之config模块">
+<meta name="twitter:description" content="dubbo源码研究之config模块   dubbo模块说明   dubbo-common 公共逻辑模块，包括Util类和通用模型。   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。   dubbo-cluster 集群模块，">
+<meta name="twitter:image" content="www.chenxun.wiki/images/e.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="www.chenxun.wiki/2017/01/15/6/"/>
+
+
+
+
+
+  <title> dubbo源码研究之config模块 | 陈公子的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">陈公子的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">文字可以宣泄过往，但终究写不出流年。</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/6/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                dubbo源码研究之config模块
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="dubbo源码研究之config模块"><a href="#dubbo源码研究之config模块" class="headerlink" title="dubbo源码研究之config模块"></a>dubbo源码研究之config模块</h1><p>   dubbo模块说明<br>   dubbo-common 公共逻辑模块，包括Util类和通用模型。<br>   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。<br>   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。<br>   dubbo-cluster 集群模块，将多个服务提供方伪装为一个提供方，包括：负载均衡, 容错，路由等，集群的地址列表可以是静态配置的，也可以是由注册中心下发。<br>   dubbo-registry 注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。<br>   dubbo-monitor 监控模块，统计服务调用次数，调用时间的，调用链跟踪的服务。<br>   dubbo-config 配置模块，是Dubbo对外的API，用户通过Config使用Dubbo，隐藏Dubbo所有细节。<br>   dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat/JBoss等Web容器的特性，没必要用Web容器去加载服务。<br>  今天开始从dubbo入口，config模块开始研究。<br>   config模块和Service模块是API，其他为SPI实现。<br>   config模块uml类图<br>    <img src="/images/e.png"><br>    AbstractConfig类提供几个主要的方法       appendAnnotation，appendProperties，appendParameters，appendAttributes<br>  其他子类提供相关自身的属性。<br>    AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错<br>    <pre><code><br>        catch (Throwable t) { // 防御性容错<br>           logger.warn(t.getMessage(), t);<br>           return super.toString();<br>       }<br>    </code></pre><br>     防御性容错在此处使用，提升代码健壮性。<br>    AnnotationBean是子类里面一个比较特殊的类。因为该类是处于com.alibaba.dubbo.config.spring包下面。<br>该类属于config模块的spring 扩展，支持通过注解来配置dubbo。<br>      AnnotationBean实现了DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, ApplicationContextAware这四个接口。<br>       DisposableBean：资源清理接口<br>       BeanFactoryPostProcessor，BeanPostProcessor：作用类似，都是在bean创建之后的扩展接口。<br>       ApplicationContextAware：获取spring上下文接口。<br>   通过该类可以看出，dubbo注解实际上是spring注解的扩展，也就是说使用dubbo注解的前提是使用spring作为dubbo的容器。<br>       @servcie暴露dubbo服务配置的代码<br>       <pre><code><br>       public Object postProcessAfterInitialization(Object bean, String beanName)<br>          throws BeansException {<br>      if (! isMatchPackage(bean)) {<br>          return bean;<br>      }<br>      Class&lt;?&gt; clazz = bean.getClass();<br>      if(isProxyBean(bean)){<br>          clazz = AopUtils.getTargetClass(bean);<br>      }<br>      Service service = clazz.getAnnotation(Service.class);<br>      if (service != null) {<br>          ServiceBean<object> serviceConfig = new ServiceBean<object>(service);<br>          if (void.class.equals(service.interfaceClass())<br>                  &amp;&amp; “”.equals(service.interfaceName())) {<br>              if (clazz.getInterfaces().length &gt; 0) {<br>                  serviceConfig.setInterface(clazz.getInterfaces()[0]);<br>              } else {<br>                  throw new IllegalStateException(“Failed to export remote service class “ + clazz.getName() + “, cause: The @Service undefined interfaceClass or interfaceName, and the service class unimplemented any interfaces.”);<br>              }<br>          }<br>          if (applicationContext != null) {<br>              serviceConfig.setApplicationContext(applicationContext);<br>              if (service.registry() != null &amp;&amp; service.registry().length &gt; 0) {<br>                  List<registryconfig> registryConfigs = new ArrayList<registryconfig>();<br>                  for (String registryId : service.registry()) {<br>                      if (registryId != null &amp;&amp; registryId.length() &gt; 0) {<br>                          registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));<br>                      }<br>                  }<br>                  serviceConfig.setRegistries(registryConfigs);<br>              }<br>              if (service.provider() != null &amp;&amp; service.provider().length() &gt; 0) {<br>                  serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(),ProviderConfig.class));<br>              }<br>              if (service.monitor() != null &amp;&amp; service.monitor().length() &gt; 0) {<br>                  serviceConfig.setMonitor((MonitorConfig)applicationContext.getBean(service.monitor(), MonitorConfig.class));<br>              }<br>              if (service.application() != null &amp;&amp; service.application().length() &gt; 0) {<br>                  serviceConfig.setApplication((ApplicationConfig)applicationContext.getBean(service.application(), ApplicationConfig.class));<br>              }<br>              if (service.module() != null &amp;&amp; service.module().length() &gt; 0) {<br>                  serviceConfig.setModule((ModuleConfig)applicationContext.getBean(service.module(), ModuleConfig.class));<br>              }<br>              if (service.provider() != null &amp;&amp; service.provider().length() &gt; 0) {<br>                  serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(), ProviderConfig.class));<br>              } else {  </registryconfig></registryconfig></object></object></code></pre></p>
+<pre><code>        }  
+        if (service.protocol() != null &amp;&amp; service.protocol().length &gt; 0) {  
+            List&lt;ProtocolConfig&gt; protocolConfigs = new ArrayList&lt;ProtocolConfig&gt;();  
+            // modified by lishen; fix dubbo&apos;s bug  
+            for (String protocolId : service.protocol()) {  
+                if (protocolId != null &amp;&amp; protocolId.length() &gt; 0) {  
+                    protocolConfigs.add((ProtocolConfig)applicationContext.getBean(protocolId, ProtocolConfig.class));  
+                }  
+            }  
+            serviceConfig.setProtocols(protocolConfigs);  
+        }  
+        try {  
+            serviceConfig.afterPropertiesSet();  
+        } catch (RuntimeException e) {  
+            throw (RuntimeException) e;  
+        } catch (Exception e) {  
+            throw new IllegalStateException(e.getMessage(), e);  
+        }  
+    }  
+    serviceConfig.setRef(bean);  
+    serviceConfigs.add(serviceConfig);  
+    serviceConfig.export();  
+}  
+return bean;  
+</code></pre><p>  }<br>       <br>       主要是先获取类上面的@servcie注解，然后new 一个对应的ServiceBean，ServiceBean继承于ServiceConfig，同时实现了spring bean的相关接口  InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware。<br>   最后该serviceBean保存到线程安全的容器里面去。<br>       @service解析是在 postProcessAfterInitialization里面<br>       @Reference解析是在postProcessBeforeInitialization里面，两者的时机是不一样的。<br>       <pre><code><br>           String key = reference.group() + “/“ + interfaceName + “:” + reference.version();<br>        ReferenceBean&lt;?&gt; referenceConfig = referenceConfigs.get(key);<br>       </code></pre><br>       从该代码可以看出，服务接口的唯一性，由group，interfaceName 和vesion一起决定。 </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/15/5/" rel="next" title="dubbo源码研究之config-spring模块">
+                <i class="fa fa-chevron-left"></i> dubbo源码研究之config-spring模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/15/7/" rel="prev" title="浅谈分布式项目日志监控">
+                浅谈分布式项目日志监控 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/head.jpg"
+               alt="陈勋" />
+          <p class="site-author-name" itemprop="name">陈勋</p>
+          <p class="site-description motion-element" itemprop="description">我以为文字可以宣泄过往，但终究写不出流年。我以为时间可以磨平菱角，但终究不曾被改变。繁华散尽，不如归去。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dubbo源码研究之config模块"><span class="nav-text">dubbo源码研究之config模块</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈勋</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

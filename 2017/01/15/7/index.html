@@ -1,0 +1,717 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dubbo,java,spring," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="浅谈分布式项目日志监控  目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。  这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。  但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。   分布式情况下，每个日志分散到各自服务所在机器，   日志的收集和分析使用原来古老的模式，肯定是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈分布式项目日志监控">
+<meta property="og:url" content="www.chenxun.wiki/2017/01/15/7/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="浅谈分布式项目日志监控  目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。  这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。  但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。   分布式情况下，每个日志分散到各自服务所在机器，   日志的收集和分析使用原来古老的模式，肯定是">
+<meta property="og:image" content="www.chenxun.wiki/images/f.png">
+<meta property="og:updated_time" content="2017-01-15T02:32:53.532Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈分布式项目日志监控">
+<meta name="twitter:description" content="浅谈分布式项目日志监控  目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。  这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。  但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。   分布式情况下，每个日志分散到各自服务所在机器，   日志的收集和分析使用原来古老的模式，肯定是">
+<meta name="twitter:image" content="www.chenxun.wiki/images/f.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="www.chenxun.wiki/2017/01/15/7/"/>
+
+
+
+
+
+  <title> 浅谈分布式项目日志监控 | 陈公子的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">陈公子的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">文字可以宣泄过往，但终究写不出流年。</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/7/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                浅谈分布式项目日志监控
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="浅谈分布式项目日志监控"><a href="#浅谈分布式项目日志监控" class="headerlink" title="浅谈分布式项目日志监控"></a>浅谈分布式项目日志监控</h1><p>  目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。<br>  这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。<br>  但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。<br>   分布式情况下，每个日志分散到各自服务所在机器，<br>   日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小还好，数量一大，我想不管是运维人员还是开发人员都会头疼。<br>   目前处理这个需求最为火热的中间套件，自然首选是ELK，ELK是java技术栈的。<br>   也符合目前公司需求。ELK的安装就不讲述了，感兴趣的可以查看官网或者自行百度，资料还是挺多的。<br>   确定了日志收集和分析的中间件，剩下一个就是日志埋点和怎么把日志串起来了。<br>   以前单个应用的时代，系统级别的日志可以通过aop解决。在分布式情况下对每一个独立服务而言，自身的日志系统还是通过aop解决，唯一需要的就是怎么把分散到各自不同应用的日志串起来。<br>   这个有个高大上的说法叫做业务链监控。<br>   目前国内开源的产品有大众点评的cat，是整套业务链监控解决方案。<br>   对于我公司目前来说太重了，我这边日志已经有elk，就没必要在额外引入cat。那如何自己实现呢。<br>   既然是链路，那自然有入口有出口。我们需要做的就是在入口出生成一个全局唯一的traceId，然后把这个traceId按照业务链路传递到各个服务中去。<br> traceId就是一根线，把各个服务的日志串起来。注意一点，服务的时间要同步，因为是根据来时间排序的。<br> traceId的生成，简单方案可以采用uuid，其次推荐使用twiiter的snowflake算法。<br> traceId的传递，需要根据rpc框架来实现了。dubbo框架采用dubbo的fiter来实现，参考代码如下：<br>   <pre><code><br>             // 调用过程拦截<br>    public Result invoke(Invoker&lt;?&gt; invoker, Invocation invocation) throws RpcException {<br>        //异步获取serviceId，没获取到不进行采样<br>        String serviceId = tracer.getServiceId(RpcContext.getContext().getUrl().getServiceInterface());<br>        if (serviceId == null) {<br>            Tracer.startTraceWork();<br>            return invoker.invoke(invocation);<br>        }<br>        long start = System.currentTimeMillis();<br>        RpcContext context = RpcContext.getContext();<br>        boolean isConsumerSide = context.isConsumerSide();<br>        Span span = null;<br>        Endpoint endpoint = null;<br>        try {<br>            endpoint = tracer.newEndPoint();<br>              endpoint.setServiceName(serviceId);<br>            endpoint.setIp(context.getLocalAddressString());<br>            endpoint.setPort(context.getLocalPort());<br>            if (context.isConsumerSide()) { //是否是消费者<br>                Span span1 = tracer.getParentSpan();<br>                if (span1 == null) { //为rootSpan<br>                    span = tracer.newSpan(context.getMethodName(), endpoint, serviceId);//生成root Span<br>                } else {<br>                    span = tracer.genSpan(span1.getTraceId(), span1.getId(), tracer.genSpanId(), context.getMethodName(), span1.isSample(), null);<br>                }<br>            } else if (context.isProviderSide()) {<br>                Long traceId, parentId, spanId;<br>                traceId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.TID));<br>                parentId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.PID));<br>                spanId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.SID));<br>                boolean isSample = (traceId != null);<br>                span = tracer.genSpan(traceId, parentId, spanId, context.getMethodName(), isSample, serviceId);<br>            }<br>            invokerBefore(invocation, span, endpoint, start);//记录annotation<br>            RpcInvocation invocation1 = (RpcInvocation) invocation;<br>            setAttachment(span, invocation1);//设置需要向下游传递的参数<br>            Result result = invoker.invoke(invocation);<br>            if (result.getException() != null){<br>                catchException(result.getException(), endpoint);<br>            }<br>            return result;<br>        }catch (RpcException e) {<br>            if (e.getCause() != null &amp;&amp; e.getCause() instanceof TimeoutException){<br>                catchTimeoutException(e, endpoint);<br>            }else {<br>                catchException(e, endpoint);<br>            }<br>            throw e;<br>        }finally {<br>            if (span != null) {<br>                long end = System.currentTimeMillis();<br>                invokerAfter(invocation, endpoint, span, end, isConsumerSide);//调用后记录annotation<br>            }<br>        }<br>    }<br>       </code></pre><br>  dubbo通过invocation.setAttachmen来在消费者和调用者之间传递traceId。<br>     如果是http接口调用实现的rpc建议采用在request的head里面传递traceId。<br>     在本地服务里面通过threadlocal变量来传递traceId。<br>     如果想打印sql语句，通过orm框架的拦截器机制实现，以下是mybatis的参考代码<br>  <pre><code><br>       @Intercepts({ @Signature(type = Executor.class, method = “update”, args = { MappedStatement.class, Object.class }),<br>        @Signature(type = Executor.class, method = “query”, args = { MappedStatement.class, Object.class,<br>                RowBounds.class, ResultHandler.class }) })<br>public class MidaiLogMybatisPlugn implements Interceptor {<br>    @Override<br>    public Object intercept(Invocation invocation) throws Throwable {<br>        Object result = null;<br>        //从当前线程获取trace<br>        MidaiLogTrace trace = MidaiLogTraceService.getMidaiLogTrace();<br>        if(trace !=null){<br>          Object[] arguments = invocation.getArgs();<br>          MidaiLogTraceService.traceSqlLog(trace.getTraceId(), getSqlStatement(arguments));<br>        }<br>        try {<br>            result = invocation.proceed();<br>        } catch (Exception e) {<br>            throw e;<br>        }<br>        return result;<br>    }<br>    @Override<br>    public Object plugin(Object target) {<br>        return Plugin.wrap(target, this); // mybatis提供的包装工具类<br>    }<br>    @Override<br>    public void setProperties(Properties properties) {<br>    }<br>    private String getSqlStatement(Object[] arguments) {<br>        MappedStatement mappedStatement = (MappedStatement) arguments[0];<br>        Object parameter = null;<br>        if (arguments.length &gt; 1) {<br>            parameter = arguments[1];<br>        }<br>        String sqlId = mappedStatement.getId();<br>        BoundSql boundSql = mappedStatement.getBoundSql(parameter);<br>        Configuration configuration = mappedStatement.getConfiguration();<br>        String sql = showSql(configuration, boundSql);<br>        StringBuilder str = new StringBuilder(100);<br>        str.append(sqlId);<br>        str.append(“:”);<br>        str.append(sql);<br>        str.append(“:”);<br>        return str.toString();<br>    }<br>    public String showSql(Configuration configuration, BoundSql boundSql) {<br>        Object parameterObject = boundSql.getParameterObject();<br>        List<parametermapping> parameterMappings = boundSql.getParameterMappings();<br>        String sql = boundSql.getSql().replaceAll(“[\s]+”, “ “);<br>        if (parameterMappings.size() &gt; 0 &amp;&amp; parameterObject != null) {<br>            TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();<br>            if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {<br>                sql = sql.replaceFirst(“\?”, getParameterValue(parameterObject));<br>            } else {<br>                MetaObject metaObject = configuration.newMetaObject(parameterObject);<br>                for (ParameterMapping parameterMapping : parameterMappings) {<br>                    String propertyName = parameterMapping.getProperty();<br>                    if (metaObject.hasGetter(propertyName)) {<br>                        Object obj = metaObject.getValue(propertyName);<br>                        sql = sql.replaceFirst(“\?”, getParameterValue(obj));<br>                    } else if (boundSql.hasAdditionalParameter(propertyName)) {<br>                        Object obj = boundSql.getAdditionalParameter(propertyName);<br>                        sql = sql.replaceFirst(“\?”, getParameterValue(obj));<br>                    }<br>                }<br>            }<br>        }<br>        return sql;<br>    }<br>    private static String getParameterValue(Object obj) {<br>        String value = null;<br>        if (obj instanceof String) {<br>            value = “‘“ + obj.toString() + “‘“;<br>        } else if (obj instanceof Date) {<br>            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);<br>            value = “‘“ + formatter.format(new Date()) + “‘“;<br>        } else {<br>            if (obj != null) {<br>                value = obj.toString();<br>            } else {<br>                value = “”;<br>            }  </parametermapping></code></pre></p>
+<pre><code>    }  
+    return value;  
+}  
+</code></pre><p> }<br>    <br>    当系统并发达到一定数量级，log4j日志打印本身会成为瓶颈，这个时候需要mq来解耦了，<br>    不在打印日志，而是发送mq消息，由mq消费端处理。因为目前公司项目并发数量还不足以导致该问题，因此尚未采用。<br>  elk收集日志之后，通过kibana可以提供搜索。<br>  <img src="/images/f.png"><br>     剩下最后的工作量就是提供一个web界面来更好的分析和展示数据。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/15/6/" rel="next" title="dubbo源码研究之config模块">
+                <i class="fa fa-chevron-left"></i> dubbo源码研究之config模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/15/8/" rel="prev" title="基于jquery把表单转成成json对象">
+                基于jquery把表单转成成json对象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/head.jpg"
+               alt="陈勋" />
+          <p class="site-author-name" itemprop="name">陈勋</p>
+          <p class="site-description motion-element" itemprop="description">我以为文字可以宣泄过往，但终究写不出流年。我以为时间可以磨平菱角，但终究不曾被改变。繁华散尽，不如归去。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#浅谈分布式项目日志监控"><span class="nav-text">浅谈分布式项目日志监控</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈勋</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

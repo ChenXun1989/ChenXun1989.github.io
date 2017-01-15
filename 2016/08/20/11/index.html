@@ -1,0 +1,964 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="solr," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="solrcloud搭建群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
+  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：      cd D:\app\solr-5.0.0\bin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="solrcloud搭建">
+<meta property="og:url" content="www.chenxun.wiki/2016/08/20/11/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="solrcloud搭建群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
+  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：      cd D:\app\solr-5.0.0\bin">
+<meta property="og:updated_time" content="2017-01-15T02:55:21.088Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="solrcloud搭建">
+<meta name="twitter:description" content="solrcloud搭建群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
+  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：      cd D:\app\solr-5.0.0\bin">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="www.chenxun.wiki/2016/08/20/11/"/>
+
+
+
+
+
+  <title> solrcloud搭建 | 陈公子的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">陈公子的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">文字可以宣泄过往，但终究写不出流年。</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2016/08/20/11/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                solrcloud搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-20T09:46:06+08:00">
+                2016-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/solr/" itemprop="url" rel="index">
+                    <span itemprop="name">solr</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="solrcloud搭建"><a href="#solrcloud搭建" class="headerlink" title="solrcloud搭建"></a>solrcloud搭建</h1><pre><code>群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
+</code></pre><p>  solr版本：5.0<br>  solr链接：<a href="http://archive.apache.org/dist/lucene/solr/5.0.0/" target="_blank" rel="external">http://archive.apache.org/dist/lucene/solr/5.0.0/</a><br>  jdk版本：1.70+<br>  windows环境安装：<br>  <pre><code><br>    cd D:\app\solr-5.0.0\bin<br>    solr.cmd -c -z localhost:2181 -p 8983<br>    cd D:\app\solr-5.0.0-01\bin<br>    solr.cmd -c -z localhost:2181 -p 8984<br>    cd D:\app\solr-5.0.0-02\bin<br>    solr.cmd -c -z localhost:2181 -p 8985<br>  </code></pre><br>    注意端口号不要冲突-z 表示zookeeper连接配置 ，zookeeper服务要先启动。<br>     服务全部启动好，之后校验下是否成功。<br>    <pre><code> <a href="http://localhost:8983/solr/#/~cloud?view=tree" target="_blank" rel="external">http://localhost:8983/solr/#/~cloud?view=tree</a>  </code></pre><br>    创建conlection<br>    <pre><code><br>    cd D:\app\solr-5.0.0\bin<br>    solr.cmd create_collection -c example -d ../example/example-DIH/solr/solr/conf/ -shards 3 -replicationFactor 2<br>    </code></pre><br>    参数说明：<br>  -c : collection名称<br>  -d : 配置文件的路径，可以使用上面提供的实例配置<br>  -n : 配置名称可以和collection名称不同，默认这个参数不填的话，会使用collection名称作为config名称<br>  -shards : 创建的shard个数，建议和集群节点数量一致。<br>  -replicationFactor : 每个shard的副本数，综合考虑为了保证集群的稳定性，建议配置为 最少2个，最多集群节点数量/shard数量 * 2<br>    校验结果：<a href="http://localhost:8983/solr/#/~cloud" target="_blank" rel="external">http://localhost:8983/solr/#/~cloud</a><br>    服务端配置暂时告一段落，之后补上中文分词。<br>    客户端配置：<br>    使用spring-boot-starter-solr来简化集成。核心是spring-data-solr<br>    <pre><code><br>         <parent><br>        <groupid>org.springframework.boot</groupid><br>        <artifactid>spring-boot-starter-parent</artifactid><br>        <version>1.4.0.RELEASE</version><br>        <relativepath> <!-- lookup parent from repository --><br>    </relativepath></parent>  </code></pre></p>
+<pre><code>&lt;properties&gt;  
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;  
+    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;  
+    &lt;java.version&gt;1.7&lt;/java.version&gt;  
+&lt;/properties&gt;  
+
+&lt;dependencies&gt;  
+    &lt;dependency&gt;  
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
+        &lt;artifactId&gt;spring-boot-starter-data-solr&lt;/artifactId&gt;  
+    &lt;/dependency&gt;  
+    &lt;dependency&gt;  
+        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;  
+        &lt;artifactId&gt;lombok&lt;/artifactId&gt;  
+    &lt;/dependency&gt;  
+    &lt;dependency&gt;  
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;  
+    &lt;/dependency&gt;  
+
+    &lt;dependency&gt;  
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;  
+        &lt;scope&gt;test&lt;/scope&gt;  
+    &lt;/dependency&gt;  
+&lt;/dependencies&gt;  
+
+&lt;build&gt;  
+    &lt;plugins&gt;  
+        &lt;plugin&gt;  
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;  
+        &lt;/plugin&gt;  
+    &lt;/plugins&gt;  
+&lt;/build&gt;  
+&lt;/code&gt;&lt;/pre&gt;
+剩下就是javaconfig了 
+&lt;pre&gt;&lt;code&gt;
+      /** 
+ * Project Name:chenxun-solr 
+ * File Name:SolrConfig.java 
+ * Package Name:com.chenxun.solr.config 
+ * Date:2016年8月20日下午3:11:32 
+ * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. 
+ * 
+ */  
+
+package com.chenxun.solr.config;  
+
+import org.apache.solr.client.solrj.SolrClient;  
+import org.apache.solr.client.solrj.impl.CloudSolrClient;  
+import org.springframework.beans.factory.annotation.Value;  
+import org.springframework.context.annotation.Bean;  
+import org.springframework.context.annotation.Configuration;  
+import org.springframework.data.solr.core.SolrTemplate;  
+import org.springframework.data.solr.core.convert.CustomConversions;  
+import org.springframework.data.solr.core.convert.MappingSolrConverter;  
+import org.springframework.data.solr.core.convert.SolrConverter;  
+import org.springframework.data.solr.core.mapping.SimpleSolrMappingContext;  
+import org.springframework.data.solr.repository.config.EnableSolrRepositories;  
+
+/** 
+ * ClassName:SolrConfig &lt;br/&gt; 
+ * Function: TODO ADD FUNCTION. &lt;br/&gt; 
+ * Reason: TODO ADD REASON. &lt;br/&gt; 
+ * Date: 2016年8月20日 下午3:11:32 &lt;br/&gt; 
+ *  
+ * @author 陈勋 
+ * @version 
+ * @since JDK 1.7 
+ * @see 
+ */  
+@Configuration  
+@EnableSolrRepositories(basePackages = { &quot;com.chenxun.solr&quot; }, multicoreSupport = true)  
+public class SolrConfig {  
+
+    @Value(&quot;${spring.data.solr.zk-host}&quot;)  
+    private String zkHost;  
+
+    @Bean  
+    public SolrClient solrClient() {  
+        return new CloudSolrClient(zkHost);  
+    }  
+
+    @Bean  
+    public SolrTemplate solrTemplate(SolrClient solrClient,SolrConverter solrConverter) throws Exception {  
+        SolrTemplate solrTemplate =  new SolrTemplate(solrClient);  
+        solrTemplate.setSolrConverter(solrConverter);  
+        return solrTemplate;  
+    }  
+
+    @Bean  
+    public SolrConverter solrConverter(SimpleSolrMappingContext simpleSolrMappingContext,CustomConversions customConversions){  
+        MappingSolrConverter solrConverter=new MappingSolrConverter(simpleSolrMappingContext);  
+        solrConverter.setCustomConversions(customConversions);        
+        return solrConverter;  
+
+    }  
+
+    @Bean  
+    public SimpleSolrMappingContext simpleSolrMappingContext(){  
+        SimpleSolrMappingContext simpleSolrMappingContext=new SimpleSolrMappingContext();  
+        return simpleSolrMappingContext;  
+    }  
+
+    @Bean  
+    public CustomConversions customConversions(){  
+        CustomConversions customConversions=new CustomConversions();  
+    //  customConversions.registerConvertersIn(new GenericConversionService(){});  
+        return customConversions;  
+    }  
+}  
+&lt;/code&gt;&lt;/pre&gt;
+实体 
+&lt;pre&gt;&lt;code&gt;
+       /** 
+ * Project Name:chenxun-solr 
+ * File Name:Product.java 
+ * Package Name:com.chenxun.solr.model 
+ * Date:2016年8月20日下午4:48:36 
+ * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. 
+ * 
+*/  
+
+package com.chenxun.solr.model;  
+
+import java.util.HashMap;  
+import java.util.List;  
+import java.util.Map;  
+
+import lombok.Data;  
+
+import org.apache.solr.client.solrj.beans.Field;  
+import org.springframework.data.annotation.Id;  
+import org.springframework.data.solr.core.mapping.Dynamic;  
+import org.springframework.data.solr.core.mapping.Indexed;  
+import org.springframework.data.solr.core.mapping.SolrDocument;  
+import org.springframework.stereotype.Component;  
+
+/** 
+ * ClassName:Product &lt;br/&gt; 
+ * Function: TODO ADD FUNCTION. &lt;br/&gt; 
+ * Reason:   TODO ADD REASON. &lt;br/&gt; 
+ * Date:     2016年8月20日 下午4:48:36 &lt;br/&gt; 
+ * @author   陈勋 
+ * @version   
+ * @since    JDK 1.7 
+ * @see       
+ */  
+@SolrDocument(solrCoreName=&quot;example&quot;) // Solr collection name  
+@Data  
+public class Product {  
+
+      @Field(&quot;id&quot;)                  // Specify field name in solr  
+      @Id    
+      private String id;  
+
+      @Field  
+      private float price;  
+
+      @Field  
+      private String name;  
+
+      @Field(&quot;*_s&quot;)  
+      @Dynamic  
+      private Map&lt;String,String&gt; map =new HashMap&lt;String, String&gt;();       
+    }  
+&lt;/code&gt;&lt;/pre&gt;
+ 业务层 
+ &lt;pre&gt;&lt;code&gt;
+  /** 
+</code></pre><ul>
+<li>Project Name:chenxun-solr </li>
+<li>File Name:ProductRepository.java </li>
+<li>Package Name:com.chenxun.solr.repository </li>
+<li>Date:2016年8月20日下午4:54:24 </li>
+<li>Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. </li>
+<li>*/  </li>
+</ul>
+<p>package com.chenxun.solr.repository;  </p>
+<p>import org.springframework.data.solr.repository.SolrCrudRepository;  </p>
+<p>import com.chenxun.solr.model.Product;  </p>
+<p>/** </p>
+<ul>
+<li>ClassName:ProductRepository <br> </li>
+<li>Function: TODO ADD FUNCTION. <br> </li>
+<li>Reason:   TODO ADD REASON. <br> </li>
+<li>Date:     2016年8月20日 下午4:54:24 <br> </li>
+<li>@author   陈勋 </li>
+<li>@version   </li>
+<li>@since    JDK 1.7 </li>
+<li>@see<br>*/<br>public interface ProductRepository  extends SolrCrudRepository<product, string="">{<br> Iterable<product>  findByName(String name);  </product></product,></li>
+</ul>
+<p>}<br>     <br>     资源文件配置：<br>     <pre><code><br>         spring.data.solr.zk-host=localhost:2181<br>     </code></pre><br>      测试<br>      <pre><code><br>          package com.chenxun;  </code></pre></p>
+<pre><code>import java.util.ArrayList;  
+import java.util.HashMap;  
+import java.util.Iterator;  
+import java.util.List;  
+import java.util.Map;  
+
+import org.junit.Assert;  
+import org.junit.Test;  
+import org.junit.runner.RunWith;  
+import org.springframework.beans.factory.annotation.Autowired;  
+import org.springframework.boot.test.context.SpringBootTest;  
+import org.springframework.test.context.junit4.SpringRunner;  
+
+import com.chenxun.solr.model.Product;  
+import com.chenxun.solr.repository.ProductRepository;  
+
+@RunWith(SpringRunner.class)  
+@SpringBootTest  
+public class ChenxunSolrApplicationTests {  
+
+    @Autowired  
+    private ProductRepository productRepository;  
+
+    @Test  
+    public void contextLoads() {  
+        productRepository.deleteAll();  
+        long count=productRepository.count();  
+        Assert.assertTrue(&quot;empty count&quot;, count==0);  
+        Product product=new Product();  
+        product.setId(&quot;product-001&quot;);  
+        product.setName(&quot;xxx&quot;);  
+        Map&lt;String,String&gt; map=new HashMap&lt;&gt;();  
+        map.put(&quot;key01&quot;, &quot;abc&quot;);  
+        map.put(&quot;key02&quot;, &quot;123&quot;);  
+        product.setMap(map);      
+        productRepository.save(product);  
+
+        Product product1=new Product();  
+        product1.setId(&quot;product-002&quot;);    
+        product1.setName(&quot;yyy&quot;);  
+        Map&lt;String,String&gt; map1=new HashMap&lt;&gt;();  
+        map1.put(&quot;key01&quot;, &quot;abc1&quot;);  
+        map1.put(&quot;key02&quot;, &quot;1234&quot;);  
+        product1.setMap(map1);        
+        productRepository.save(product1);  
+
+        count=productRepository.count();  
+        Assert.assertTrue(count==2);  
+
+
+        Iterator&lt;Product&gt; it=productRepository.findByName(&quot;yyy&quot;).iterator();  
+        while(it.hasNext()){  
+            Assert.assertTrue( it.next().getId().equals(&quot;product-002&quot;));  
+        }  
+
+
+
+    }  
+
+}  
+  &lt;/code&gt;&lt;/pre&gt;
+   到此大功告成，下一篇补上中文分词就OK了。
+  代码地址：  [https://github.com/ChenXun1989/chenxun-solr](https://github.com/ChenXun1989/chenxun-solr)
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/solr/" rel="tag"># solr</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/21/12/" rel="prev" title="solr中文分词">
+                solr中文分词 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/head.jpg"
+               alt="陈勋" />
+          <p class="site-author-name" itemprop="name">陈勋</p>
+          <p class="site-description motion-element" itemprop="description">我以为文字可以宣泄过往，但终究写不出流年。我以为时间可以磨平菱角，但终究不曾被改变。繁华散尽，不如归去。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#solrcloud搭建"><span class="nav-text">solrcloud搭建</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈勋</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
