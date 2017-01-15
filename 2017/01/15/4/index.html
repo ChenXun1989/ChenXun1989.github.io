@@ -84,26 +84,17 @@
 
 
 
-<meta name="description" content="dubbo源码研究之container模块  dubbo-container模块是dubbo启动顺序中的第一个模块，  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。        /** 
- * Container. (SPI, Singleton, ThreadSafe) 
- *  
- * @author wil">
+<meta name="description" content="dubbo源码研究之container模块  dubbo-container模块是dubbo启动顺序中的第一个模块，  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。 1234567891011121314151617181920  /**  * Container. (SPI, Singleton, ThreadS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="dubbo源码研究之container模块">
 <meta property="og:url" content="www.chenxun.wiki/2017/01/15/4/index.html">
 <meta property="og:site_name" content="陈公子的博客">
-<meta property="og:description" content="dubbo源码研究之container模块  dubbo-container模块是dubbo启动顺序中的第一个模块，  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。        /** 
- * Container. (SPI, Singleton, ThreadSafe) 
- *  
- * @author wil">
+<meta property="og:description" content="dubbo源码研究之container模块  dubbo-container模块是dubbo启动顺序中的第一个模块，  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。 1234567891011121314151617181920  /**  * Container. (SPI, Singleton, ThreadS">
 <meta property="og:image" content="www.chenxun.wiki/images/b.png">
-<meta property="og:updated_time" content="2017-01-15T01:54:38.160Z">
+<meta property="og:updated_time" content="2017-01-15T06:27:33.570Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dubbo源码研究之container模块">
-<meta name="twitter:description" content="dubbo源码研究之container模块  dubbo-container模块是dubbo启动顺序中的第一个模块，  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。        /** 
- * Container. (SPI, Singleton, ThreadSafe) 
- *  
- * @author wil">
+<meta name="twitter:description" content="dubbo源码研究之container模块  dubbo-container模块是dubbo启动顺序中的第一个模块，  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。 1234567891011121314151617181920  /**  * Container. (SPI, Singleton, ThreadS">
 <meta name="twitter:image" content="www.chenxun.wiki/images/b.png">
 
 
@@ -378,111 +369,7 @@
       
 
       
-        <h1 id="dubbo源码研究之container模块"><a href="#dubbo源码研究之container模块" class="headerlink" title="dubbo源码研究之container模块"></a>dubbo源码研究之container模块</h1><p>  dubbo-container模块是dubbo启动顺序中的第一个模块，<br>  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。<br>  <pre><code><br>      /** </code></pre></p>
-<pre><code> * Container. (SPI, Singleton, ThreadSafe) 
- *  
- * @author william.liangf 
- */  
-@SPI(&quot;spring&quot;)  
-public interface Container {  
-
-    /** 
-     * start. 
-     */  
-    void start();  
-
-    /** 
-     * stop. 
-     */  
-    void stop();  
-
-}  
-</code></pre><p>  <br>  container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>       细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。<br>  Container 接口的主要实现<br>  <img src="/images/b.png"><br>       其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>       使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>  SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。<br>  <pre><code><br>      **  </code></pre></p>
-<pre><code> * SpringContainer. (SPI, Singleton, ThreadSafe)  
- *   
- * @author william.liangf  
- */  
-public class SpringContainer implements Container {  
-
-    private static final Logger logger = LoggerFactory.getLogger(SpringContainer.class);  
-
-    public static final String SPRING_CONFIG = &quot;dubbo.spring.config&quot;;  
-
-    public static final String DEFAULT_SPRING_CONFIG = &quot;classpath*:META-INF/spring/*.xml&quot;;  
-
-    static ClassPathXmlApplicationContext context;  
-
-    public static ClassPathXmlApplicationContext getContext() {  
-        return context;  
-    }  
-
-    public void start() {  
-        String configPath = ConfigUtils.getProperty(SPRING_CONFIG);  
-        if (configPath == null || configPath.length() == 0) {  
-            configPath = DEFAULT_SPRING_CONFIG;  
-        }  
-        context = new ClassPathXmlApplicationContext(configPath.split(&quot;[,\\s]+&quot;));  
-        context.start();  
-    }  
-
-    public void stop() {  
-        try {  
-            if (context != null) {  
-                context.stop();  
-                context.close();  
-                context = null;  
-            }  
-        } catch (Throwable e) {  
-            logger.error(e.getMessage(), e);  
-        }  
-    }  
-
-}  
-</code></pre><p>  <br>       其他几个实现类似，重点讲下com.alibaba.dubbo.container.Main。这个是dubbo自带的main函数入口。<br>  <pre><code><br>  public static void main(String[] args) {<br>       try {<br>           if (args == null || args.length == 0) {<br>               String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());<br>               args = Constants.COMMA_SPLIT_PATTERN.split(config);<br>           }  </code></pre></p>
-<pre><code>    final List&lt;Container&gt; containers = new ArrayList&lt;Container&gt;();  
-    for (int i = 0; i &lt; args.length; i ++) {  
-        containers.add(loader.getExtension(args[i]));  
-    }  
-    logger.info(&quot;Use container type(&quot; + Arrays.toString(args) + &quot;) to run dubbo serivce.&quot;);  
-
-    if (&quot;true&quot;.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) {  
-     Runtime.getRuntime().addShutdownHook(new Thread() {  
-         public void run() {  
-             for (Container container : containers) {  
-                 try {  
-                     container.stop();  
-                     logger.info(&quot;Dubbo &quot; + container.getClass().getSimpleName() + &quot; stopped!&quot;);  
-                 } catch (Throwable t) {  
-                     logger.error(t.getMessage(), t);  
-                 }  
-                 synchronized (Main.class) {  
-                     running = false;  
-                     Main.class.notify();  
-                 }  
-             }  
-         }  
-     });  
-    }  
-
-    for (Container container : containers) {  
-        container.start();  
-        logger.info(&quot;Dubbo &quot; + container.getClass().getSimpleName() + &quot; started!&quot;);  
-    }  
-    System.out.println(new SimpleDateFormat(&quot;[yyyy-MM-dd HH:mm:ss]&quot;).format(new Date()) + &quot; Dubbo service server started!&quot;);  
-} catch (RuntimeException e) {  
-    e.printStackTrace();  
-    logger.error(e.getMessage(), e);  
-    System.exit(1);  
-}  
-synchronized (Main.class) {  
-    while (running) {  
-        try {  
-            Main.class.wait();  
-        } catch (Throwable e) {  
-        }  
-    }  
-}  
-</code></pre><p>   }<br>  <br>  该方法通过钩子 Runtime.getRuntime().addShutdownHook来实现优雅停机，同时还支持通过启动参数来加载扩展点，<br> containers.add(loader.getExtension(args[i]))。但是没有类似spring boot 的CommandLineRunner 接口，<br>    在容器启动完毕之后执行一些初始化动作。建议使用dubbo的童鞋如没有特殊需求，可以使用该类作为程序启动类。 </p>
+        <h1 id="dubbo源码研究之container模块"><a href="#dubbo源码研究之container模块" class="headerlink" title="dubbo源码研究之container模块"></a>dubbo源码研究之container模块</h1><p>  dubbo-container模块是dubbo启动顺序中的第一个模块，<br>  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/** </span></div><div class="line"> * Container. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"spring"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * start. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * stop. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>       细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。<br>  Container 接口的主要实现<br>  <img src="/images/b.png"><br>       其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>       使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>  SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">  **  </div><div class="line"> * SpringContainer. (SPI, Singleton, ThreadSafe)  </div><div class="line"> *   </div><div class="line"> * <span class="meta">@author</span> william.liangf  </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringContainer</span> <span class="keyword">implements</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(SpringContainer.class);  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPRING_CONFIG = <span class="string">"dubbo.spring.config"</span>;  </div><div class="line">      </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_SPRING_CONFIG = <span class="string">"classpath*:META-INF/spring/*.xml"</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> ClassPathXmlApplicationContext context;  </div><div class="line">      </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassPathXmlApplicationContext <span class="title">getContext</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> context;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;  </div><div class="line">        String configPath = ConfigUtils.getProperty(SPRING_CONFIG);  </div><div class="line">        <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;  </div><div class="line">            configPath = DEFAULT_SPRING_CONFIG;  </div><div class="line">        &#125;  </div><div class="line">        context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));  </div><div class="line">        context.start();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span>) &#123;  </div><div class="line">                context.stop();  </div><div class="line">                context.close();  </div><div class="line">                context = <span class="keyword">null</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">            logger.error(e.getMessage(), e);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>       其他几个实现类似，重点讲下com.alibaba.dubbo.container.Main。这个是dubbo自带的main函数入口。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;  </div><div class="line">             String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());  </div><div class="line">             args = Constants.COMMA_SPLIT_PATTERN.split(config);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">final</span> List&lt;Container&gt; containers = <span class="keyword">new</span> ArrayList&lt;Container&gt;();  </div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i ++) &#123;  </div><div class="line">             containers.add(loader.getExtension(args[i]));  </div><div class="line">         &#125;  </div><div class="line">         logger.info(<span class="string">"Use container type("</span> + Arrays.toString(args) + <span class="string">") to run dubbo serivce."</span>);  </div><div class="line">           </div><div class="line">         <span class="keyword">if</span> (<span class="string">"true"</span>.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) &#123;  </div><div class="line">          Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;  </div><div class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                  <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">                      <span class="keyword">try</span> &#123;  </div><div class="line">                          container.stop();  </div><div class="line">                          logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" stopped!"</span>);  </div><div class="line">                      &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">                          logger.error(t.getMessage(), t);  </div><div class="line">                      &#125;  </div><div class="line">                      <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">                          running = <span class="keyword">false</span>;  </div><div class="line">                          Main.class.notify();  </div><div class="line">                      &#125;  </div><div class="line">                  &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">             container.start();  </div><div class="line">             logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" started!"</span>);  </div><div class="line">         &#125;  </div><div class="line">         System.out.println(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"[yyyy-MM-dd HH:mm:ss]"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" Dubbo service server started!"</span>);  </div><div class="line">     &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">         e.printStackTrace();  </div><div class="line">         logger.error(e.getMessage(), e);  </div><div class="line">         System.exit(<span class="number">1</span>);  </div><div class="line">     &#125;  </div><div class="line">     <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">         <span class="keyword">while</span> (running) &#123;  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 Main.class.wait();  </div><div class="line">             &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;  </div><div class="line"> &#125;   </div><div class="line"> </div></pre></td></tr></table></figure><br>  该方法通过钩子 Runtime.getRuntime().addShutdownHook来实现优雅停机，同时还支持通过启动参数来加载扩展点，<br> containers.add(loader.getExtension(args[i]))。但是没有类似spring boot 的CommandLineRunner 接口，<br>    在容器启动完毕之后执行一些初始化动作。建议使用dubbo的童鞋如没有特殊需求，可以使用该类作为程序启动类。 </p>
 
       
     </div>
