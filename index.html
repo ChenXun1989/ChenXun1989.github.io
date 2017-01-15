@@ -271,6 +271,147 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/6/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/6/" itemprop="url">
+                  dubbo源码研究之config模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="dubbo源码研究之config模块"><a href="#dubbo源码研究之config模块" class="headerlink" title="dubbo源码研究之config模块"></a>dubbo源码研究之config模块</h1><p>   dubbo模块说明<br>   dubbo-common 公共逻辑模块，包括Util类和通用模型。<br>   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。<br>   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。<br>   dubbo-cluster 集群模块，将多个服务提供方伪装为一个提供方，包括：负载均衡, 容错，路由等，集群的地址列表可以是静态配置的，也可以是由注册中心下发。<br>   dubbo-registry 注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。<br>   dubbo-monitor 监控模块，统计服务调用次数，调用时间的，调用链跟踪的服务。<br>   dubbo-config 配置模块，是Dubbo对外的API，用户通过Config使用Dubbo，隐藏Dubbo所有细节。<br>   dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat/JBoss等Web容器的特性，没必要用Web容器去加载服务。<br>  今天开始从dubbo入口，config模块开始研究。<br>   config模块和Service模块是API，其他为SPI实现。<br>   config模块uml类图<br>    <img src="/images/e.png"><br>    AbstractConfig类提供几个主要的方法       appendAnnotation，appendProperties，appendParameters，appendAttributes<br>  其他子类提供相关自身的属性。<br>    AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></div><div class="line">      logger.warn(t.getMessage(), t);  </div><div class="line">      <span class="keyword">return</span> <span class="keyword">super</span>.toString();  </div><div class="line">  &#125;  </div><div class="line">	</div></pre></td></tr></table></figure><br>     防御性容错在此处使用，提升代码健壮性。<br>    AnnotationBean是子类里面一个比较特殊的类。因为该类是处于com.alibaba.dubbo.config.spring包下面。<br>该类属于config模块的spring 扩展，支持通过注解来配置dubbo。<br>      AnnotationBean实现了DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, ApplicationContextAware这四个接口。<br>       DisposableBean：资源清理接口<br>       BeanFactoryPostProcessor，BeanPostProcessor：作用类似，都是在bean创建之后的扩展接口。<br>       ApplicationContextAware：获取spring上下文接口。<br>   通过该类可以看出，dubbo注解实际上是spring注解的扩展，也就是说使用dubbo注解的前提是使用spring作为dubbo的容器。<br>       @servcie暴露dubbo服务配置的代码<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"> 	<span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span>  </span></div><div class="line">        <span class="keyword">throws</span> BeansException &#123;  </div><div class="line">    <span class="keyword">if</span> (! isMatchPackage(bean)) &#123;  </div><div class="line">        <span class="keyword">return</span> bean;  </div><div class="line">    &#125;  </div><div class="line">    Class&lt;?&gt; clazz = bean.getClass();  </div><div class="line">    <span class="keyword">if</span>(isProxyBean(bean))&#123;  </div><div class="line">        clazz = AopUtils.getTargetClass(bean);  </div><div class="line">    &#125;  </div><div class="line">    Service service = clazz.getAnnotation(Service.class);  </div><div class="line">    <span class="keyword">if</span> (service != <span class="keyword">null</span>) &#123;  </div><div class="line">        ServiceBean&lt;Object&gt; serviceConfig = <span class="keyword">new</span> ServiceBean&lt;Object&gt;(service);  </div><div class="line">        <span class="keyword">if</span> (<span class="keyword">void</span>.class.equals(service.interfaceClass())  </div><div class="line">                &amp;&amp; <span class="string">""</span>.equals(service.interfaceName())) &#123;  </div><div class="line">            <span class="keyword">if</span> (clazz.getInterfaces().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setInterface(clazz.getInterfaces()[<span class="number">0</span>]);  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Failed to export remote service class "</span> + clazz.getName() + <span class="string">", cause: The @Service undefined interfaceClass or interfaceName, and the service class unimplemented any interfaces."</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">if</span> (applicationContext != <span class="keyword">null</span>) &#123;  </div><div class="line">            serviceConfig.setApplicationContext(applicationContext);  </div><div class="line">            <span class="keyword">if</span> (service.registry() != <span class="keyword">null</span> &amp;&amp; service.registry().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                List&lt;RegistryConfig&gt; registryConfigs = <span class="keyword">new</span> ArrayList&lt;RegistryConfig&gt;();  </div><div class="line">                <span class="keyword">for</span> (String registryId : service.registry()) &#123;  </div><div class="line">                    <span class="keyword">if</span> (registryId != <span class="keyword">null</span> &amp;&amp; registryId.length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                        registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">                serviceConfig.setRegistries(registryConfigs);  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.provider() != <span class="keyword">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(),ProviderConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.monitor() != <span class="keyword">null</span> &amp;&amp; service.monitor().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setMonitor((MonitorConfig)applicationContext.getBean(service.monitor(), MonitorConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.application() != <span class="keyword">null</span> &amp;&amp; service.application().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setApplication((ApplicationConfig)applicationContext.getBean(service.application(), ApplicationConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.<span class="keyword">module</span>() != <span class="keyword">null</span> &amp;&amp; service.<span class="keyword">module</span>().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setModule((ModuleConfig)applicationContext.getBean(service.<span class="keyword">module</span>(), ModuleConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.provider() != <span class="keyword">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(), ProviderConfig.class));  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.protocol() != <span class="keyword">null</span> &amp;&amp; service.protocol().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                List&lt;ProtocolConfig&gt; protocolConfigs = <span class="keyword">new</span> ArrayList&lt;ProtocolConfig&gt;();  </div><div class="line">                <span class="comment">// modified by lishen; fix dubbo's bug  </span></div><div class="line">                <span class="keyword">for</span> (String protocolId : service.protocol()) &#123;  </div><div class="line">                    <span class="keyword">if</span> (protocolId != <span class="keyword">null</span> &amp;&amp; protocolId.length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                        protocolConfigs.add((ProtocolConfig)applicationContext.getBean(protocolId, ProtocolConfig.class));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">                serviceConfig.setProtocols(protocolConfigs);  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">try</span> &#123;  </div><div class="line">                serviceConfig.afterPropertiesSet();  </div><div class="line">            &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">                <span class="keyword">throw</span> (RuntimeException) e;  </div><div class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(e.getMessage(), e);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        serviceConfig.setRef(bean);  </div><div class="line">        serviceConfigs.add(serviceConfig);  </div><div class="line">        serviceConfig.export();  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> bean;  </div><div class="line">&#125;</div><div class="line"> 	</div></pre></td></tr></table></figure><br>       主要是先获取类上面的@servcie注解，然后new 一个对应的ServiceBean，ServiceBean继承于ServiceConfig，同时实现了spring bean的相关接口  InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware。<br>   最后该serviceBean保存到线程安全的容器里面去。<br>       @service解析是在 postProcessAfterInitialization里面<br>       @Reference解析是在postProcessBeforeInitialization里面，两者的时机是不一样的。<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String key = reference.group() + <span class="string">"/"</span> + interfaceName + <span class="string">":"</span> + reference.version();  </div><div class="line">ReferenceBean&lt;?&gt; referenceConfig = referenceConfigs.get(key);  </div><div class="line">   	</div></pre></td></tr></table></figure><br>       从该代码可以看出，服务接口的唯一性，由group，interfaceName 和vesion一起决定。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -694,288 +835,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/4/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/4/" itemprop="url">
-                  dubbo源码研究之container模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="dubbo源码研究之container模块"><a href="#dubbo源码研究之container模块" class="headerlink" title="dubbo源码研究之container模块"></a>dubbo源码研究之container模块</h1><p>  dubbo-container模块是dubbo启动顺序中的第一个模块，<br>  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/** </span></div><div class="line"> * Container. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"spring"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * start. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * stop. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>       细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。<br>  Container 接口的主要实现<br>  <img src="/images/b.png"><br>       其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>       使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>  SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">  **  </div><div class="line"> * SpringContainer. (SPI, Singleton, ThreadSafe)  </div><div class="line"> *   </div><div class="line"> * <span class="meta">@author</span> william.liangf  </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringContainer</span> <span class="keyword">implements</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(SpringContainer.class);  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPRING_CONFIG = <span class="string">"dubbo.spring.config"</span>;  </div><div class="line">      </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_SPRING_CONFIG = <span class="string">"classpath*:META-INF/spring/*.xml"</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> ClassPathXmlApplicationContext context;  </div><div class="line">      </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassPathXmlApplicationContext <span class="title">getContext</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> context;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;  </div><div class="line">        String configPath = ConfigUtils.getProperty(SPRING_CONFIG);  </div><div class="line">        <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;  </div><div class="line">            configPath = DEFAULT_SPRING_CONFIG;  </div><div class="line">        &#125;  </div><div class="line">        context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));  </div><div class="line">        context.start();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span>) &#123;  </div><div class="line">                context.stop();  </div><div class="line">                context.close();  </div><div class="line">                context = <span class="keyword">null</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">            logger.error(e.getMessage(), e);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>       其他几个实现类似，重点讲下com.alibaba.dubbo.container.Main。这个是dubbo自带的main函数入口。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;  </div><div class="line">             String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());  </div><div class="line">             args = Constants.COMMA_SPLIT_PATTERN.split(config);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">final</span> List&lt;Container&gt; containers = <span class="keyword">new</span> ArrayList&lt;Container&gt;();  </div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i ++) &#123;  </div><div class="line">             containers.add(loader.getExtension(args[i]));  </div><div class="line">         &#125;  </div><div class="line">         logger.info(<span class="string">"Use container type("</span> + Arrays.toString(args) + <span class="string">") to run dubbo serivce."</span>);  </div><div class="line">           </div><div class="line">         <span class="keyword">if</span> (<span class="string">"true"</span>.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) &#123;  </div><div class="line">          Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;  </div><div class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                  <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">                      <span class="keyword">try</span> &#123;  </div><div class="line">                          container.stop();  </div><div class="line">                          logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" stopped!"</span>);  </div><div class="line">                      &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">                          logger.error(t.getMessage(), t);  </div><div class="line">                      &#125;  </div><div class="line">                      <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">                          running = <span class="keyword">false</span>;  </div><div class="line">                          Main.class.notify();  </div><div class="line">                      &#125;  </div><div class="line">                  &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">             container.start();  </div><div class="line">             logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" started!"</span>);  </div><div class="line">         &#125;  </div><div class="line">         System.out.println(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"[yyyy-MM-dd HH:mm:ss]"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" Dubbo service server started!"</span>);  </div><div class="line">     &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">         e.printStackTrace();  </div><div class="line">         logger.error(e.getMessage(), e);  </div><div class="line">         System.exit(<span class="number">1</span>);  </div><div class="line">     &#125;  </div><div class="line">     <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">         <span class="keyword">while</span> (running) &#123;  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 Main.class.wait();  </div><div class="line">             &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;  </div><div class="line"> &#125;   </div><div class="line"> </div></pre></td></tr></table></figure><br>  该方法通过钩子 Runtime.getRuntime().addShutdownHook来实现优雅停机，同时还支持通过启动参数来加载扩展点，<br> containers.add(loader.getExtension(args[i]))。但是没有类似spring boot 的CommandLineRunner 接口，<br>    在容器启动完毕之后执行一些初始化动作。建议使用dubbo的童鞋如没有特殊需求，可以使用该类作为程序启动类。 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/6/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/6/" itemprop="url">
-                  dubbo源码研究之config模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="dubbo源码研究之config模块"><a href="#dubbo源码研究之config模块" class="headerlink" title="dubbo源码研究之config模块"></a>dubbo源码研究之config模块</h1><p>   dubbo模块说明<br>   dubbo-common 公共逻辑模块，包括Util类和通用模型。<br>   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。<br>   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。<br>   dubbo-cluster 集群模块，将多个服务提供方伪装为一个提供方，包括：负载均衡, 容错，路由等，集群的地址列表可以是静态配置的，也可以是由注册中心下发。<br>   dubbo-registry 注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。<br>   dubbo-monitor 监控模块，统计服务调用次数，调用时间的，调用链跟踪的服务。<br>   dubbo-config 配置模块，是Dubbo对外的API，用户通过Config使用Dubbo，隐藏Dubbo所有细节。<br>   dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat/JBoss等Web容器的特性，没必要用Web容器去加载服务。<br>  今天开始从dubbo入口，config模块开始研究。<br>   config模块和Service模块是API，其他为SPI实现。<br>   config模块uml类图<br>    <img src="/images/e.png"><br>    AbstractConfig类提供几个主要的方法       appendAnnotation，appendProperties，appendParameters，appendAttributes<br>  其他子类提供相关自身的属性。<br>    AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></div><div class="line">      logger.warn(t.getMessage(), t);  </div><div class="line">      <span class="keyword">return</span> <span class="keyword">super</span>.toString();  </div><div class="line">  &#125;  </div><div class="line">	</div></pre></td></tr></table></figure><br>     防御性容错在此处使用，提升代码健壮性。<br>    AnnotationBean是子类里面一个比较特殊的类。因为该类是处于com.alibaba.dubbo.config.spring包下面。<br>该类属于config模块的spring 扩展，支持通过注解来配置dubbo。<br>      AnnotationBean实现了DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, ApplicationContextAware这四个接口。<br>       DisposableBean：资源清理接口<br>       BeanFactoryPostProcessor，BeanPostProcessor：作用类似，都是在bean创建之后的扩展接口。<br>       ApplicationContextAware：获取spring上下文接口。<br>   通过该类可以看出，dubbo注解实际上是spring注解的扩展，也就是说使用dubbo注解的前提是使用spring作为dubbo的容器。<br>       @servcie暴露dubbo服务配置的代码<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"> 	<span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span>  </span></div><div class="line">        <span class="keyword">throws</span> BeansException &#123;  </div><div class="line">    <span class="keyword">if</span> (! isMatchPackage(bean)) &#123;  </div><div class="line">        <span class="keyword">return</span> bean;  </div><div class="line">    &#125;  </div><div class="line">    Class&lt;?&gt; clazz = bean.getClass();  </div><div class="line">    <span class="keyword">if</span>(isProxyBean(bean))&#123;  </div><div class="line">        clazz = AopUtils.getTargetClass(bean);  </div><div class="line">    &#125;  </div><div class="line">    Service service = clazz.getAnnotation(Service.class);  </div><div class="line">    <span class="keyword">if</span> (service != <span class="keyword">null</span>) &#123;  </div><div class="line">        ServiceBean&lt;Object&gt; serviceConfig = <span class="keyword">new</span> ServiceBean&lt;Object&gt;(service);  </div><div class="line">        <span class="keyword">if</span> (<span class="keyword">void</span>.class.equals(service.interfaceClass())  </div><div class="line">                &amp;&amp; <span class="string">""</span>.equals(service.interfaceName())) &#123;  </div><div class="line">            <span class="keyword">if</span> (clazz.getInterfaces().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setInterface(clazz.getInterfaces()[<span class="number">0</span>]);  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Failed to export remote service class "</span> + clazz.getName() + <span class="string">", cause: The @Service undefined interfaceClass or interfaceName, and the service class unimplemented any interfaces."</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">if</span> (applicationContext != <span class="keyword">null</span>) &#123;  </div><div class="line">            serviceConfig.setApplicationContext(applicationContext);  </div><div class="line">            <span class="keyword">if</span> (service.registry() != <span class="keyword">null</span> &amp;&amp; service.registry().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                List&lt;RegistryConfig&gt; registryConfigs = <span class="keyword">new</span> ArrayList&lt;RegistryConfig&gt;();  </div><div class="line">                <span class="keyword">for</span> (String registryId : service.registry()) &#123;  </div><div class="line">                    <span class="keyword">if</span> (registryId != <span class="keyword">null</span> &amp;&amp; registryId.length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                        registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">                serviceConfig.setRegistries(registryConfigs);  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.provider() != <span class="keyword">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(),ProviderConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.monitor() != <span class="keyword">null</span> &amp;&amp; service.monitor().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setMonitor((MonitorConfig)applicationContext.getBean(service.monitor(), MonitorConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.application() != <span class="keyword">null</span> &amp;&amp; service.application().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setApplication((ApplicationConfig)applicationContext.getBean(service.application(), ApplicationConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.<span class="keyword">module</span>() != <span class="keyword">null</span> &amp;&amp; service.<span class="keyword">module</span>().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setModule((ModuleConfig)applicationContext.getBean(service.<span class="keyword">module</span>(), ModuleConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.provider() != <span class="keyword">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(), ProviderConfig.class));  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.protocol() != <span class="keyword">null</span> &amp;&amp; service.protocol().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                List&lt;ProtocolConfig&gt; protocolConfigs = <span class="keyword">new</span> ArrayList&lt;ProtocolConfig&gt;();  </div><div class="line">                <span class="comment">// modified by lishen; fix dubbo's bug  </span></div><div class="line">                <span class="keyword">for</span> (String protocolId : service.protocol()) &#123;  </div><div class="line">                    <span class="keyword">if</span> (protocolId != <span class="keyword">null</span> &amp;&amp; protocolId.length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                        protocolConfigs.add((ProtocolConfig)applicationContext.getBean(protocolId, ProtocolConfig.class));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">                serviceConfig.setProtocols(protocolConfigs);  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">try</span> &#123;  </div><div class="line">                serviceConfig.afterPropertiesSet();  </div><div class="line">            &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">                <span class="keyword">throw</span> (RuntimeException) e;  </div><div class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(e.getMessage(), e);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        serviceConfig.setRef(bean);  </div><div class="line">        serviceConfigs.add(serviceConfig);  </div><div class="line">        serviceConfig.export();  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> bean;  </div><div class="line">&#125;</div><div class="line"> 	</div></pre></td></tr></table></figure><br>       主要是先获取类上面的@servcie注解，然后new 一个对应的ServiceBean，ServiceBean继承于ServiceConfig，同时实现了spring bean的相关接口  InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware。<br>   最后该serviceBean保存到线程安全的容器里面去。<br>       @service解析是在 postProcessAfterInitialization里面<br>       @Reference解析是在postProcessBeforeInitialization里面，两者的时机是不一样的。<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String key = reference.group() + <span class="string">"/"</span> + interfaceName + <span class="string">":"</span> + reference.version();  </div><div class="line">ReferenceBean&lt;?&gt; referenceConfig = referenceConfigs.get(key);  </div><div class="line">   	</div></pre></td></tr></table></figure><br>       从该代码可以看出，服务接口的唯一性，由group，interfaceName 和vesion一起决定。 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/5/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1221,6 +1080,147 @@
         
           
             <h1 id="浅谈分布式项目日志监控"><a href="#浅谈分布式项目日志监控" class="headerlink" title="浅谈分布式项目日志监控"></a>浅谈分布式项目日志监控</h1><p>  目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。<br>  这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。<br>  但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。<br>   分布式情况下，每个日志分散到各自服务所在机器，<br>   日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小还好，数量一大，我想不管是运维人员还是开发人员都会头疼。<br>   目前处理这个需求最为火热的中间套件，自然首选是ELK，ELK是java技术栈的。<br>   也符合目前公司需求。ELK的安装就不讲述了，感兴趣的可以查看官网或者自行百度，资料还是挺多的。<br>   确定了日志收集和分析的中间件，剩下一个就是日志埋点和怎么把日志串起来了。<br>   以前单个应用的时代，系统级别的日志可以通过aop解决。在分布式情况下对每一个独立服务而言，自身的日志系统还是通过aop解决，唯一需要的就是怎么把分散到各自不同应用的日志串起来。<br>   这个有个高大上的说法叫做业务链监控。<br>   目前国内开源的产品有大众点评的cat，是整套业务链监控解决方案。<br>   对于我公司目前来说太重了，我这边日志已经有elk，就没必要在额外引入cat。那如何自己实现呢。<br>   既然是链路，那自然有入口有出口。我们需要做的就是在入口出生成一个全局唯一的traceId，然后把这个traceId按照业务链路传递到各个服务中去。<br> traceId就是一根线，把各个服务的日志串起来。注意一点，服务的时间要同步，因为是根据来时间排序的。<br> traceId的生成，简单方案可以采用uuid，其次推荐使用twiiter的snowflake算法。<br> traceId的传递，需要根据rpc框架来实现了。dubbo框架采用dubbo的fiter来实现，参考代码如下：<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">// 调用过程拦截  </span></div><div class="line"><span class="function"><span class="keyword">public</span> Result <span class="title">invoke</span><span class="params">(Invoker&lt;?&gt; invoker, Invocation invocation)</span> <span class="keyword">throws</span> RpcException </span>&#123;  </div><div class="line">    <span class="comment">//异步获取serviceId，没获取到不进行采样  </span></div><div class="line">    String serviceId = tracer.getServiceId(RpcContext.getContext().getUrl().getServiceInterface());  </div><div class="line">    <span class="keyword">if</span> (serviceId == <span class="keyword">null</span>) &#123;  </div><div class="line">        Tracer.startTraceWork();  </div><div class="line">        <span class="keyword">return</span> invoker.invoke(invocation);  </div><div class="line">    &#125;        </div><div class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();  </div><div class="line">    RpcContext context = RpcContext.getContext();  </div><div class="line">    <span class="keyword">boolean</span> isConsumerSide = context.isConsumerSide();  </div><div class="line">    Span span = <span class="keyword">null</span>;  </div><div class="line">    Endpoint endpoint = <span class="keyword">null</span>;  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        endpoint = tracer.newEndPoint();  </div><div class="line">          endpoint.setServiceName(serviceId);  </div><div class="line">        endpoint.setIp(context.getLocalAddressString());  </div><div class="line">        endpoint.setPort(context.getLocalPort());  </div><div class="line">        <span class="keyword">if</span> (context.isConsumerSide()) &#123; <span class="comment">//是否是消费者  </span></div><div class="line">            Span span1 = tracer.getParentSpan();  </div><div class="line">            <span class="keyword">if</span> (span1 == <span class="keyword">null</span>) &#123; <span class="comment">//为rootSpan  </span></div><div class="line">                span = tracer.newSpan(context.getMethodName(), endpoint, serviceId);<span class="comment">//生成root Span  </span></div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                span = tracer.genSpan(span1.getTraceId(), span1.getId(), tracer.genSpanId(), context.getMethodName(), span1.isSample(), <span class="keyword">null</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (context.isProviderSide()) &#123;  </div><div class="line">            Long traceId, parentId, spanId;  </div><div class="line">            traceId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.TID));  </div><div class="line">            parentId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.PID));  </div><div class="line">            spanId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.SID));  </div><div class="line">            <span class="keyword">boolean</span> isSample = (traceId != <span class="keyword">null</span>);  </div><div class="line">            span = tracer.genSpan(traceId, parentId, spanId, context.getMethodName(), isSample, serviceId);  </div><div class="line">        &#125;  </div><div class="line">        invokerBefore(invocation, span, endpoint, start);<span class="comment">//记录annotation  </span></div><div class="line">        RpcInvocation invocation1 = (RpcInvocation) invocation;  </div><div class="line">        setAttachment(span, invocation1);<span class="comment">//设置需要向下游传递的参数  </span></div><div class="line">        Result result = invoker.invoke(invocation);  </div><div class="line">        <span class="keyword">if</span> (result.getException() != <span class="keyword">null</span>)&#123;  </div><div class="line">            catchException(result.getException(), endpoint);  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> result;  </div><div class="line">    &#125;<span class="keyword">catch</span> (RpcException e) &#123;  </div><div class="line">        <span class="keyword">if</span> (e.getCause() != <span class="keyword">null</span> &amp;&amp; e.getCause() <span class="keyword">instanceof</span> TimeoutException)&#123;  </div><div class="line">            catchTimeoutException(e, endpoint);  </div><div class="line">        &#125;<span class="keyword">else</span> &#123;  </div><div class="line">            catchException(e, endpoint);  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">throw</span> e;  </div><div class="line">    &#125;<span class="keyword">finally</span> &#123;  </div><div class="line">        <span class="keyword">if</span> (span != <span class="keyword">null</span>) &#123;  </div><div class="line">            <span class="keyword">long</span> end = System.currentTimeMillis();  </div><div class="line">            invokerAfter(invocation, endpoint, span, end, isConsumerSide);<span class="comment">//调用后记录annotation  </span></div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  dubbo通过invocation.setAttachmen来在消费者和调用者之间传递traceId。<br>     如果是http接口调用实现的rpc建议采用在request的head里面传递traceId。<br>     在本地服务里面通过threadlocal变量来传递traceId。<br>     如果想打印sql语句，通过orm框架的拦截器机制实现，以下是mybatis的参考代码<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">  	 <span class="meta">@Intercepts</span>(&#123; <span class="meta">@Signature</span>(type = Executor.class, method = <span class="string">"update"</span>, args = &#123; MappedStatement.class, Object.class &#125;),  </div><div class="line">        <span class="meta">@Signature</span>(type = Executor.class, method = <span class="string">"query"</span>, args = &#123; MappedStatement.class, Object.class,  </div><div class="line">                RowBounds.class, ResultHandler.class &#125;) &#125;)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MidaiLogMybatisPlugn</span> <span class="keyword">implements</span> <span class="title">Interceptor</span> </span>&#123;  </div><div class="line">    <span class="meta">@Override</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;    </div><div class="line">        Object result = <span class="keyword">null</span>;  </div><div class="line">        <span class="comment">//从当前线程获取trace  </span></div><div class="line">        MidaiLogTrace trace = MidaiLogTraceService.getMidaiLogTrace();  </div><div class="line">        <span class="keyword">if</span>(trace !=<span class="keyword">null</span>)&#123;  </div><div class="line">          Object[] arguments = invocation.getArgs();  </div><div class="line">          MidaiLogTraceService.traceSqlLog(trace.getTraceId(), getSqlStatement(arguments));  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            result = invocation.proceed();        </div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">            <span class="keyword">throw</span> e;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> result;  </div><div class="line">    &#125;    </div><div class="line">    <span class="meta">@Override</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">plugin</span><span class="params">(Object target)</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> Plugin.wrap(target, <span class="keyword">this</span>); <span class="comment">// mybatis提供的包装工具类  </span></div><div class="line">    &#125;    </div><div class="line">    <span class="meta">@Override</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setProperties</span><span class="params">(Properties properties)</span> </span>&#123;  </div><div class="line">    &#125;   </div><div class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getSqlStatement</span><span class="params">(Object[] arguments)</span> </span>&#123;  </div><div class="line">        MappedStatement mappedStatement = (MappedStatement) arguments[<span class="number">0</span>];  </div><div class="line">        Object parameter = <span class="keyword">null</span>;  </div><div class="line">        <span class="keyword">if</span> (arguments.length &gt; <span class="number">1</span>) &#123;  </div><div class="line">            parameter = arguments[<span class="number">1</span>];  </div><div class="line">        &#125;  </div><div class="line">        String sqlId = mappedStatement.getId();  </div><div class="line">        BoundSql boundSql = mappedStatement.getBoundSql(parameter);  </div><div class="line">        Configuration configuration = mappedStatement.getConfiguration();  </div><div class="line">        String sql = showSql(configuration, boundSql);  </div><div class="line">        StringBuilder str = <span class="keyword">new</span> StringBuilder(<span class="number">100</span>);  </div><div class="line">        str.append(sqlId);  </div><div class="line">        str.append(<span class="string">":"</span>);  </div><div class="line">        str.append(sql);  </div><div class="line">        str.append(<span class="string">":"</span>);  </div><div class="line">        <span class="keyword">return</span> str.toString();  </div><div class="line">    &#125;    </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">showSql</span><span class="params">(Configuration configuration, BoundSql boundSql)</span> </span>&#123;  </div><div class="line">        Object parameterObject = boundSql.getParameterObject();  </div><div class="line">        List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();  </div><div class="line">        String sql = boundSql.getSql().replaceAll(<span class="string">"[\\s]+"</span>, <span class="string">" "</span>);  </div><div class="line">        <span class="keyword">if</span> (parameterMappings.size() &gt; <span class="number">0</span> &amp;&amp; parameterObject != <span class="keyword">null</span>) &#123;  </div><div class="line">            TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();  </div><div class="line">            <span class="keyword">if</span> (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) &#123;  </div><div class="line">                sql = sql.replaceFirst(<span class="string">"\\?"</span>, getParameterValue(parameterObject));    </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                MetaObject metaObject = configuration.newMetaObject(parameterObject);  </div><div class="line">                <span class="keyword">for</span> (ParameterMapping parameterMapping : parameterMappings) &#123;  </div><div class="line">                    String propertyName = parameterMapping.getProperty();  </div><div class="line">                    <span class="keyword">if</span> (metaObject.hasGetter(propertyName)) &#123;  </div><div class="line">                        Object obj = metaObject.getValue(propertyName);  </div><div class="line">                        sql = sql.replaceFirst(<span class="string">"\\?"</span>, getParameterValue(obj));  </div><div class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (boundSql.hasAdditionalParameter(propertyName)) &#123;  </div><div class="line">                        Object obj = boundSql.getAdditionalParameter(propertyName);  </div><div class="line">                        sql = sql.replaceFirst(<span class="string">"\\?"</span>, getParameterValue(obj));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> sql;  </div><div class="line">    &#125;   </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getParameterValue</span><span class="params">(Object obj)</span> </span>&#123;  </div><div class="line">        String value = <span class="keyword">null</span>;  </div><div class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;  </div><div class="line">            value = <span class="string">"‘"</span> + obj.toString() + <span class="string">"‘"</span>;  </div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Date) &#123;  </div><div class="line">            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);  </div><div class="line">            value = <span class="string">"‘"</span> + formatter.format(<span class="keyword">new</span> Date()) + <span class="string">"‘"</span>;  </div><div class="line">        &#125; <span class="keyword">else</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (obj != <span class="keyword">null</span>) &#123;  </div><div class="line">                value = obj.toString();  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                value = <span class="string">""</span>;  </div><div class="line">            &#125;  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> value;  </div><div class="line">    &#125;  </div><div class="line"> &#125;    	</div><div class="line">   </div></pre></td></tr></table></figure><br>    当系统并发达到一定数量级，log4j日志打印本身会成为瓶颈，这个时候需要mq来解耦了，<br>    不在打印日志，而是发送mq消息，由mq消费端处理。因为目前公司项目并发数量还不足以导致该问题，因此尚未采用。<br>  elk收集日志之后，通过kibana可以提供搜索。<br>  <img src="/images/f.png"><br>     剩下最后的工作量就是提供一个web界面来更好的分析和展示数据。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/4/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/4/" itemprop="url">
+                  dubbo源码研究之container模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="dubbo源码研究之container模块"><a href="#dubbo源码研究之container模块" class="headerlink" title="dubbo源码研究之container模块"></a>dubbo源码研究之container模块</h1><p>  dubbo-container模块是dubbo启动顺序中的第一个模块，<br>  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/** </span></div><div class="line"> * Container. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"spring"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * start. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * stop. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>       细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。<br>  Container 接口的主要实现<br>  <img src="/images/b.png"><br>       其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>       使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>  SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">  **  </div><div class="line"> * SpringContainer. (SPI, Singleton, ThreadSafe)  </div><div class="line"> *   </div><div class="line"> * <span class="meta">@author</span> william.liangf  </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringContainer</span> <span class="keyword">implements</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(SpringContainer.class);  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPRING_CONFIG = <span class="string">"dubbo.spring.config"</span>;  </div><div class="line">      </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_SPRING_CONFIG = <span class="string">"classpath*:META-INF/spring/*.xml"</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> ClassPathXmlApplicationContext context;  </div><div class="line">      </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassPathXmlApplicationContext <span class="title">getContext</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> context;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;  </div><div class="line">        String configPath = ConfigUtils.getProperty(SPRING_CONFIG);  </div><div class="line">        <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;  </div><div class="line">            configPath = DEFAULT_SPRING_CONFIG;  </div><div class="line">        &#125;  </div><div class="line">        context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));  </div><div class="line">        context.start();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span>) &#123;  </div><div class="line">                context.stop();  </div><div class="line">                context.close();  </div><div class="line">                context = <span class="keyword">null</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">            logger.error(e.getMessage(), e);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>       其他几个实现类似，重点讲下com.alibaba.dubbo.container.Main。这个是dubbo自带的main函数入口。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;  </div><div class="line">             String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());  </div><div class="line">             args = Constants.COMMA_SPLIT_PATTERN.split(config);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">final</span> List&lt;Container&gt; containers = <span class="keyword">new</span> ArrayList&lt;Container&gt;();  </div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i ++) &#123;  </div><div class="line">             containers.add(loader.getExtension(args[i]));  </div><div class="line">         &#125;  </div><div class="line">         logger.info(<span class="string">"Use container type("</span> + Arrays.toString(args) + <span class="string">") to run dubbo serivce."</span>);  </div><div class="line">           </div><div class="line">         <span class="keyword">if</span> (<span class="string">"true"</span>.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) &#123;  </div><div class="line">          Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;  </div><div class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                  <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">                      <span class="keyword">try</span> &#123;  </div><div class="line">                          container.stop();  </div><div class="line">                          logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" stopped!"</span>);  </div><div class="line">                      &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">                          logger.error(t.getMessage(), t);  </div><div class="line">                      &#125;  </div><div class="line">                      <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">                          running = <span class="keyword">false</span>;  </div><div class="line">                          Main.class.notify();  </div><div class="line">                      &#125;  </div><div class="line">                  &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">             container.start();  </div><div class="line">             logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" started!"</span>);  </div><div class="line">         &#125;  </div><div class="line">         System.out.println(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"[yyyy-MM-dd HH:mm:ss]"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" Dubbo service server started!"</span>);  </div><div class="line">     &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">         e.printStackTrace();  </div><div class="line">         logger.error(e.getMessage(), e);  </div><div class="line">         System.exit(<span class="number">1</span>);  </div><div class="line">     &#125;  </div><div class="line">     <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">         <span class="keyword">while</span> (running) &#123;  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 Main.class.wait();  </div><div class="line">             &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;  </div><div class="line"> &#125;   </div><div class="line"> </div></pre></td></tr></table></figure><br>  该方法通过钩子 Runtime.getRuntime().addShutdownHook来实现优雅停机，同时还支持通过启动参数来加载扩展点，<br> containers.add(loader.getExtension(args[i]))。但是没有类似spring boot 的CommandLineRunner 接口，<br>    在容器启动完毕之后执行一些初始化动作。建议使用dubbo的童鞋如没有特殊需求，可以使用该类作为程序启动类。 </p>
 
           
         
