@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="jqueyr插件helloworld版本  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码        &amp;lt;!DOCTYPE html&amp;gt;                                        .message{          position: fixed;          top: 30%;">
+<meta name="description" content="jqueyr插件helloworld版本  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758  &amp;lt;!DOCTYPE htm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jqueyr插件helloworld版本">
 <meta property="og:url" content="www.chenxun.wiki/2017/01/15/10/index.html">
 <meta property="og:site_name" content="陈公子的博客">
-<meta property="og:description" content="jqueyr插件helloworld版本  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码        &amp;lt;!DOCTYPE html&amp;gt;                                        .message{          position: fixed;          top: 30%;">
-<meta property="og:updated_time" content="2017-01-15T02:43:33.045Z">
+<meta property="og:description" content="jqueyr插件helloworld版本  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758  &amp;lt;!DOCTYPE htm">
+<meta property="og:updated_time" content="2017-01-15T14:29:40.391Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jqueyr插件helloworld版本">
-<meta name="twitter:description" content="jqueyr插件helloworld版本  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码        &amp;lt;!DOCTYPE html&amp;gt;                                        .message{          position: fixed;          top: 30%;">
+<meta name="twitter:description" content="jqueyr插件helloworld版本  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758  &amp;lt;!DOCTYPE htm">
 
 
 
@@ -367,145 +367,7 @@
       
 
       
-        <h1 id="jqueyr插件helloworld版本"><a href="#jqueyr插件helloworld版本" class="headerlink" title="jqueyr插件helloworld版本"></a>jqueyr插件helloworld版本</h1><p>  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码<br>  <pre><code><br>      &lt;!DOCTYPE html&gt;<br>    <html><br>    <head lang="en"><br>        <meta charset="UTF-8"><br>        <title></title><br>        <style><br>        .message{<br>          position: fixed;<br>          top: 30%;<br>          left: 30%;<br>          z-index: 1;<br>          border: 1px black solid;<br>          width: 200px;<br>          height: 150px;<br>          text-align: center;<br>        }<br>        .message button{<br>          display: block;<br>          margin: 0 auto;<br>        }  </p>
-<pre><code>    &lt;/style&gt;  
-    &lt;script src=&quot;jquery.min.js&quot;&gt;&lt;/script&gt;  
-
-    &lt;script&gt;  
-        (function($){  
-            $.extend({  
-                message:function(obj) {  
-
-                   var $body=$(&quot;body&quot;);  
-                   var $div=$(&quot;&lt;div class=&apos;message&apos;&gt; hello world&lt;/div&gt;&quot;);  
-                   var $close=$(&quot;&lt;button&gt;关闭&lt;/button&gt;&quot;);  
-                    $div.append($close);  
-                    $body.append($div);  
-
-                    $close.on(&quot;click&quot;,function(){  
-                        $div.remove();  
-
-                    });  
-
-                }  
-            });  
-        })(jQuery);  
-    &lt;/script&gt;  
-&lt;/head&gt;  
-&lt;button id=&quot;testDel&quot;&gt;删除&lt;/button&gt;  
-&lt;body&gt;  
-&lt;script&gt;  
-$(function(){  
-    $(&quot;#testDel&quot;).click(function(){  
-        $.message();  
-
-    });  
-});  
-&lt;/script&gt;  
-&lt;/body&gt;  
-&lt;/html&gt;  
-</code></pre><p>  </code></pre><br>  这个只是实现一个最简单的提示框，主要熟悉jquery.extend<br>  进阶篇<br> <pre><code><br>     &lt;!DOCTYPE html&gt;<br>    <html><br>    <head lang="en"><br>        <meta charset="UTF-8"><br>        <title></title><br>            <style><br>        .message{<br>          position: fixed;<br>          top: 30%;<br>          left: 30%;<br>          z-index: 1;<br>          border: 1px black solid;<br>          width: 200px;<br>          height: 150px;<br>          text-align: center;<br>        }<br>        .message button{<br>          display: block;<br>          margin: 0 auto;<br>        }  </p>
-<pre><code>    &lt;/style&gt;  
-    &lt;script src=&quot;jquery.min.js&quot;&gt;&lt;/script&gt;  
-
-    &lt;script&gt;  
-        (function($){  
-            $.extend({  
-                message: function(message) {  
-                   var $body=$(&quot;body&quot;);  
-                   var $div=$(&quot;&lt;div class=&apos;message&apos;&gt;&lt;/div&gt;&quot;);                     
-                      $div.text(message||&quot;是否要执行此操作&quot;);  
-                     var $close=$(&quot;&lt;button&gt;关闭&lt;/button&gt;&quot;);  
-                    $div.append($close);  
-                    $body.append($div);  
-
-                    $close.on(&quot;click&quot;,function(){  
-                        $div.remove();  
-
-                    });  
-
-
-                }  
-            });  
-        })(jQuery);  
-    &lt;/script&gt;  
-&lt;/head&gt;  
-&lt;button id=&quot;testDel&quot;&gt;删除&lt;/button&gt;  
-&lt;body&gt;  
-&lt;script&gt;  
-$(function(){  
-
-       $(&quot;#testDel&quot;).click(function(){  
-          //  $.message();  
-          $.message(&quot;hello   ！！！！！！！！！！！！&quot;);  
-
-        });  
-});  
-&lt;/script&gt;  
-&lt;/body&gt;  
-&lt;/html&gt;  
-</code></pre><p> </code></pre><br> 进阶篇新增参数注入和参数默认值。<br>  高级篇<br>  <pre><code><br>      &lt;!DOCTYPE html&gt;<br>    <html><br>    <head lang="en"><br>        <meta charset="UTF-8"><br>        <title></title><br>        <style><br>        .message{<br>          position: fixed;<br>          top: 30%;<br>          left: 30%;<br>          z-index: 1;<br>          border: 1px black solid;<br>          width: 200px;<br>          height: 150px;<br>          text-align: center;<br>        }<br>        .message button{<br>          display: block;<br>          margin: 0 auto;<br>        }<br>        </style><br>        <script src="jquery.min.js"></script>  </head></html></code></pre></p>
-<pre><code>    &lt;script&gt;  
-        (function($){  
-            $.extend({  
-                message:function(obj) {  
-
-                    var success=obj.success;  
-                    var fail=obj.fail;  
-                    var message=obj.message||&quot;您确定要执行此操作吗&quot;;  
-
-                   var $body=$(&quot;body&quot;);  
-                   var $div=$(&quot;&lt;div class=&apos;message&apos;&gt;&lt;/div&gt;message&quot;);  
-                    $div.text(message);  
-
-                    var $t=$(&quot;&lt;button&gt;同意&lt;/button&gt;&quot;);  
-                    var $f=$(&quot;&lt;button&gt;不同意&lt;/button&gt;&quot;);  
-                    $div.append($t);  
-                    $div.append($f);  
-                    $body.append($div);  
-
-                    $t.on(&quot;click&quot;,function(){  
-                        $div.remove();  
-                       if(success &amp;&amp;  typeof(success) === &apos;function&apos;){  
-                            success();  
-                        }  
-                    });  
-                    $f.on(&quot;click&quot;,function(){  
-                        $div.remove();  
-                        if(fail &amp;&amp; typeof(fail) === &apos;function&apos;){  
-                            fail();  
-                        }  
-                    });  
-                }  
-            });  
-        })(jQuery);  
-    &lt;/script&gt;  
-&lt;/head&gt;  
-
-&lt;body&gt;  
-&lt;button id=&quot;testDel&quot;&gt;删除&lt;/button&gt;  
-
-&lt;script&gt;  
-$(function(){  
-
-       $(&quot;#testDel&quot;).click(function(){  
-          $.message({  
-            message:&quot;hellow!!!!!&quot;,  
-            success:function(){  
-              alert(&quot;执行同意操作&quot;);  
-            },  
-            fail:function(){  
-              alert(&quot;执行取消操作&quot;);  
-            }  
-
-          });  
-
-        });  
-});  
-&lt;/script&gt;  
-&lt;/body&gt;  
-&lt;/html&gt;  
-</code></pre><p>  <br>  高级篇参数扩展为单个复杂对象，方便以后添加参数。注入相关调用函数。<br>  至此一个简单的helloworld级别的jquery插件demo结束。</p>
+        <h1 id="jqueyr插件helloworld版本"><a href="#jqueyr插件helloworld版本" class="headerlink" title="jqueyr插件helloworld版本"></a>jqueyr插件helloworld版本</h1><p>  最近有童鞋找我要jquery插件入门的demo，我把之前的找出来分享下，欢迎拍砖。闲话少说，直接上代码<br>  <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">  &lt;!DOCTYPE html&gt;  </div><div class="line">&lt;html&gt;  </div><div class="line">&lt;head lang="en"&gt;  </div><div class="line">    &lt;meta charset="UTF-8"&gt;  </div><div class="line">    &lt;title&gt;&lt;/title&gt;  </div><div class="line">    &lt;style&gt;  </div><div class="line">    .message&#123;  </div><div class="line">      position: fixed;  </div><div class="line">      top: 30%;  </div><div class="line">      left: 30%;  </div><div class="line">      z-index: 1;  </div><div class="line">      border: 1px black solid;  </div><div class="line">      width: 200px;  </div><div class="line">      height: 150px;  </div><div class="line">      text-align: center;  </div><div class="line">    &#125;  </div><div class="line">    .message button&#123;  </div><div class="line">      display: block;  </div><div class="line">      margin: 0 auto;  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    &lt;/style&gt;  </div><div class="line">    &lt;script src="jquery.min.js"&gt;&lt;/script&gt;  </div><div class="line">  </div><div class="line">    &lt;script&gt;  </div><div class="line">        (function($)&#123;  </div><div class="line">            $.extend(&#123;  </div><div class="line">                message:function(obj) &#123;  </div><div class="line">  </div><div class="line">                   var $body=$("body");  </div><div class="line">                   var $div=$("&lt;div class='message'&gt; hello world&lt;/div&gt;");  </div><div class="line">                   var $close=$("&lt;button&gt;关闭&lt;/button&gt;");  </div><div class="line">                    $div.append($close);  </div><div class="line">                    $body.append($div);  </div><div class="line">  </div><div class="line">                    $close.on("click",function()&#123;  </div><div class="line">                        $div.remove();  </div><div class="line">                        </div><div class="line">                    &#125;);  </div><div class="line">              </div><div class="line">                &#125;  </div><div class="line">            &#125;);  </div><div class="line">        &#125;)(jQuery);  </div><div class="line">    &lt;/script&gt;  </div><div class="line">&lt;/head&gt;  </div><div class="line">&lt;button id="testDel"&gt;删除&lt;/button&gt;  </div><div class="line">&lt;body&gt;  </div><div class="line">&lt;script&gt;  </div><div class="line">$(function()&#123;  </div><div class="line">    $("#testDel").click(function()&#123;  </div><div class="line">        $.message();  </div><div class="line">         </div><div class="line">    &#125;);  </div><div class="line">&#125;);  </div><div class="line">&lt;/script&gt;  </div><div class="line">&lt;/body&gt;  </div><div class="line">&lt;/html&gt;  </div><div class="line">   </div></pre></td></tr></table></figure><br>  这个只是实现一个最简单的提示框，主要熟悉jquery.extend<br>  进阶篇<br> <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"> &lt;!DOCTYPE html&gt;  </div><div class="line">&lt;html&gt;  </div><div class="line">&lt;head lang="en"&gt;  </div><div class="line">    &lt;meta charset="UTF-8"&gt;  </div><div class="line">    &lt;title&gt;&lt;/title&gt;  </div><div class="line">        &lt;style&gt;  </div><div class="line">    .message&#123;  </div><div class="line">      position: fixed;  </div><div class="line">      top: 30%;  </div><div class="line">      left: 30%;  </div><div class="line">      z-index: 1;  </div><div class="line">      border: 1px black solid;  </div><div class="line">      width: 200px;  </div><div class="line">      height: 150px;  </div><div class="line">      text-align: center;  </div><div class="line">    &#125;  </div><div class="line">    .message button&#123;  </div><div class="line">      display: block;  </div><div class="line">      margin: 0 auto;  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    &lt;/style&gt;  </div><div class="line">    &lt;script src="jquery.min.js"&gt;&lt;/script&gt;  </div><div class="line">  </div><div class="line">    &lt;script&gt;  </div><div class="line">        (function($)&#123;  </div><div class="line">            $.extend(&#123;  </div><div class="line">                message: function(message) &#123;  </div><div class="line">                   var $body=$("body");  </div><div class="line">                   var $div=$("&lt;div class='message'&gt;&lt;/div&gt;");                     </div><div class="line">                      $div.text(message||"是否要执行此操作");  </div><div class="line">                     var $close=$("&lt;button&gt;关闭&lt;/button&gt;");  </div><div class="line">                    $div.append($close);  </div><div class="line">                    $body.append($div);  </div><div class="line">  </div><div class="line">                    $close.on("click",function()&#123;  </div><div class="line">                        $div.remove();  </div><div class="line">                        </div><div class="line">                    &#125;);  </div><div class="line">  </div><div class="line">                     </div><div class="line">                &#125;  </div><div class="line">            &#125;);  </div><div class="line">        &#125;)(jQuery);  </div><div class="line">    &lt;/script&gt;  </div><div class="line">&lt;/head&gt;  </div><div class="line">&lt;button id="testDel"&gt;删除&lt;/button&gt;  </div><div class="line">&lt;body&gt;  </div><div class="line">&lt;script&gt;  </div><div class="line">$(function()&#123;  </div><div class="line">      </div><div class="line">       $("#testDel").click(function()&#123;  </div><div class="line">          //  $.message();  </div><div class="line">          $.message("hello   ！！！！！！！！！！！！");  </div><div class="line">         </div><div class="line">        &#125;);  </div><div class="line">&#125;);  </div><div class="line">&lt;/script&gt;  </div><div class="line">&lt;/body&gt;  </div><div class="line">&lt;/html&gt;  </div><div class="line"> </div></pre></td></tr></table></figure><br> 进阶篇新增参数注入和参数默认值。<br>  高级篇<br>  <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line">  &lt;!DOCTYPE html&gt;  </div><div class="line">&lt;html&gt;  </div><div class="line">&lt;head lang="en"&gt;  </div><div class="line">    &lt;meta charset="UTF-8"&gt;  </div><div class="line">    &lt;title&gt;&lt;/title&gt;  </div><div class="line">    &lt;style&gt;  </div><div class="line">    .message&#123;  </div><div class="line">      position: fixed;  </div><div class="line">      top: 30%;  </div><div class="line">      left: 30%;  </div><div class="line">      z-index: 1;  </div><div class="line">      border: 1px black solid;  </div><div class="line">      width: 200px;  </div><div class="line">      height: 150px;  </div><div class="line">      text-align: center;  </div><div class="line">    &#125;  </div><div class="line">    .message button&#123;  </div><div class="line">      display: block;  </div><div class="line">      margin: 0 auto;  </div><div class="line">    &#125;  </div><div class="line">    &lt;/style&gt;  </div><div class="line">    &lt;script src="jquery.min.js"&gt;&lt;/script&gt;  </div><div class="line">  </div><div class="line">    &lt;script&gt;  </div><div class="line">        (function($)&#123;  </div><div class="line">            $.extend(&#123;  </div><div class="line">                message:function(obj) &#123;  </div><div class="line">  </div><div class="line">                    var success=obj.success;  </div><div class="line">                    var fail=obj.fail;  </div><div class="line">                    var message=obj.message||"您确定要执行此操作吗";  </div><div class="line">  </div><div class="line">                   var $body=$("body");  </div><div class="line">                   var $div=$("&lt;div class='message'&gt;&lt;/div&gt;message");  </div><div class="line">                    $div.text(message);  </div><div class="line">  </div><div class="line">                    var $t=$("&lt;button&gt;同意&lt;/button&gt;");  </div><div class="line">                    var $f=$("&lt;button&gt;不同意&lt;/button&gt;");  </div><div class="line">                    $div.append($t);  </div><div class="line">                    $div.append($f);  </div><div class="line">                    $body.append($div);  </div><div class="line">  </div><div class="line">                    $t.on("click",function()&#123;  </div><div class="line">                        $div.remove();  </div><div class="line">                       if(success &amp;&amp;  typeof(success) === 'function')&#123;  </div><div class="line">                            success();  </div><div class="line">                        &#125;  </div><div class="line">                    &#125;);  </div><div class="line">                    $f.on("click",function()&#123;  </div><div class="line">                        $div.remove();  </div><div class="line">                        if(fail &amp;&amp; typeof(fail) === 'function')&#123;  </div><div class="line">                            fail();  </div><div class="line">                        &#125;  </div><div class="line">                    &#125;);  </div><div class="line">                &#125;  </div><div class="line">            &#125;);  </div><div class="line">        &#125;)(jQuery);  </div><div class="line">    &lt;/script&gt;  </div><div class="line">&lt;/head&gt;  </div><div class="line">  </div><div class="line">&lt;body&gt;  </div><div class="line">&lt;button id="testDel"&gt;删除&lt;/button&gt;  </div><div class="line">  </div><div class="line">&lt;script&gt;  </div><div class="line">$(function()&#123;  </div><div class="line">      </div><div class="line">       $("#testDel").click(function()&#123;  </div><div class="line">          $.message(&#123;  </div><div class="line">            message:"hellow!!!!!",  </div><div class="line">            success:function()&#123;  </div><div class="line">              alert("执行同意操作");  </div><div class="line">            &#125;,  </div><div class="line">            fail:function()&#123;  </div><div class="line">              alert("执行取消操作");  </div><div class="line">            &#125;  </div><div class="line">            </div><div class="line">          &#125;);  </div><div class="line">         </div><div class="line">        &#125;);  </div><div class="line">&#125;);  </div><div class="line">&lt;/script&gt;  </div><div class="line">&lt;/body&gt;  </div><div class="line">&lt;/html&gt;  </div><div class="line"> </div></pre></td></tr></table></figure><br>  高级篇参数扩展为单个复杂对象，方便以后添加参数。注入相关调用函数。<br>  至此一个简单的helloworld级别的jquery插件demo结束。</p>
 
       
     </div>
@@ -542,8 +404,8 @@ $(function(){
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/15/2/" rel="next" title="dubbo源码研究之dubbo-registry模块">
-                <i class="fa fa-chevron-left"></i> dubbo源码研究之dubbo-registry模块
+              <a href="/2017/01/15/8/" rel="next" title="基于jquery把表单转成成json对象">
+                <i class="fa fa-chevron-left"></i> 基于jquery把表单转成成json对象
               </a>
             
           </div>
@@ -552,8 +414,8 @@ $(function(){
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/15/6/" rel="prev" title="dubbo源码研究之config模块">
-                dubbo源码研究之config模块 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/15/9/" rel="prev" title="jQuery基于json对象自动给表单元素赋值">
+                jQuery基于json对象自动给表单元素赋值 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -707,14 +569,12 @@ $(function(){
 
 
 <div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  本文由<b>陈勋</b>创作和发表,采用<b>BY</b>-<b>NC</b>-<b>SA</b>国际许可协议进行许可,转载请注明作者和原始链接。
 </div>
 
 <div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Pisces
-  </a>
+  联系方式：email:576481228@qq.com -
+
 </div>
 
 

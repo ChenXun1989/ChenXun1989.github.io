@@ -85,18 +85,18 @@
 
 
 <meta name="description" content="solrcloud搭建群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
-  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：      cd D:\app\solr-5.0.0\bin">
+  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：  1234567cd D:\app\solr-5.0.0\bin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="solrcloud搭建">
 <meta property="og:url" content="www.chenxun.wiki/2016/08/20/11/index.html">
 <meta property="og:site_name" content="陈公子的博客">
 <meta property="og:description" content="solrcloud搭建群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
-  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：      cd D:\app\solr-5.0.0\bin">
-<meta property="og:updated_time" content="2017-01-15T02:55:21.088Z">
+  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：  1234567cd D:\app\solr-5.0.0\bin">
+<meta property="og:updated_time" content="2017-01-15T14:20:17.203Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="solrcloud搭建">
 <meta name="twitter:description" content="solrcloud搭建群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
-  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：      cd D:\app\solr-5.0.0\bin">
+  solr版本：5.0  solr链接：http://archive.apache.org/dist/lucene/solr/5.0.0/  jdk版本：1.70+  windows环境安装：  1234567cd D:\app\solr-5.0.0\bin">
 
 
 
@@ -371,265 +371,8 @@
 
       
         <h1 id="solrcloud搭建"><a href="#solrcloud搭建" class="headerlink" title="solrcloud搭建"></a>solrcloud搭建</h1><pre><code>群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。
-</code></pre><p>  solr版本：5.0<br>  solr链接：<a href="http://archive.apache.org/dist/lucene/solr/5.0.0/" target="_blank" rel="external">http://archive.apache.org/dist/lucene/solr/5.0.0/</a><br>  jdk版本：1.70+<br>  windows环境安装：<br>  <pre><code><br>    cd D:\app\solr-5.0.0\bin<br>    solr.cmd -c -z localhost:2181 -p 8983<br>    cd D:\app\solr-5.0.0-01\bin<br>    solr.cmd -c -z localhost:2181 -p 8984<br>    cd D:\app\solr-5.0.0-02\bin<br>    solr.cmd -c -z localhost:2181 -p 8985<br>  </code></pre><br>    注意端口号不要冲突-z 表示zookeeper连接配置 ，zookeeper服务要先启动。<br>     服务全部启动好，之后校验下是否成功。<br>    <pre><code> <a href="http://localhost:8983/solr/#/~cloud?view=tree" target="_blank" rel="external">http://localhost:8983/solr/#/~cloud?view=tree</a>  </code></pre><br>    创建conlection<br>    <pre><code><br>    cd D:\app\solr-5.0.0\bin<br>    solr.cmd create_collection -c example -d ../example/example-DIH/solr/solr/conf/ -shards 3 -replicationFactor 2<br>    </code></pre><br>    参数说明：<br>  -c : collection名称<br>  -d : 配置文件的路径，可以使用上面提供的实例配置<br>  -n : 配置名称可以和collection名称不同，默认这个参数不填的话，会使用collection名称作为config名称<br>  -shards : 创建的shard个数，建议和集群节点数量一致。<br>  -replicationFactor : 每个shard的副本数，综合考虑为了保证集群的稳定性，建议配置为 最少2个，最多集群节点数量/shard数量 * 2<br>    校验结果：<a href="http://localhost:8983/solr/#/~cloud" target="_blank" rel="external">http://localhost:8983/solr/#/~cloud</a><br>    服务端配置暂时告一段落，之后补上中文分词。<br>    客户端配置：<br>    使用spring-boot-starter-solr来简化集成。核心是spring-data-solr<br>    <pre><code><br>         <parent><br>        <groupid>org.springframework.boot</groupid><br>        <artifactid>spring-boot-starter-parent</artifactid><br>        <version>1.4.0.RELEASE</version><br>        <relativepath> <!-- lookup parent from repository --><br>    </relativepath></parent>  </code></pre></p>
-<pre><code>&lt;properties&gt;  
-    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;  
-    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;  
-    &lt;java.version&gt;1.7&lt;/java.version&gt;  
-&lt;/properties&gt;  
+</code></pre><p>  solr版本：5.0<br>  solr链接：<a href="http://archive.apache.org/dist/lucene/solr/5.0.0/" target="_blank" rel="external">http://archive.apache.org/dist/lucene/solr/5.0.0/</a><br>  jdk版本：1.70+<br>  windows环境安装：<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cd D:\app\solr-<span class="number">5.0</span>.0\bin  </div><div class="line">solr.cmd -c -z localhost:<span class="number">2181</span> -p <span class="number">8983</span>  </div><div class="line">cd D:\app\solr-<span class="number">5.0</span>.0-<span class="number">01</span>\bin  </div><div class="line">solr.cmd -c -z localhost:<span class="number">2181</span> -p <span class="number">8984</span>  </div><div class="line">cd D:\app\solr-<span class="number">5.0</span>.0-<span class="number">02</span>\bin  </div><div class="line">solr.cmd -c -z localhost:<span class="number">2181</span> -p <span class="number">8985</span>  </div><div class="line">  </div></pre></td></tr></table></figure><br>    注意端口号不要冲突-z 表示zookeeper连接配置 ，zookeeper服务要先启动。<br>     服务全部启动好，之后校验下是否成功。<br>     <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http:<span class="comment">//localhost:8983/solr/#/~cloud?view=tree  </span></div><div class="line">   </div></pre></td></tr></table></figure><br>    创建conlection<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd D:\app\solr-<span class="number">5.0</span>.0\bin  </div><div class="line">solr.cmd create_collection -c example -d ../example/example-DIH/solr/solr/conf/ -shards <span class="number">3</span> -replicationFactor <span class="number">2</span>  </div><div class="line"> </div></pre></td></tr></table></figure><br>    参数说明：<br>  -c : collection名称<br>  -d : 配置文件的路径，可以使用上面提供的实例配置<br>  -n : 配置名称可以和collection名称不同，默认这个参数不填的话，会使用collection名称作为config名称<br>  -shards : 创建的shard个数，建议和集群节点数量一致。<br>  -replicationFactor : 每个shard的副本数，综合考虑为了保证集群的稳定性，建议配置为 最少2个，最多集群节点数量/shard数量 * 2<br>    校验结果：<a href="http://localhost:8983/solr/#/~cloud" target="_blank" rel="external">http://localhost:8983/solr/#/~cloud</a><br>    服务端配置暂时告一段落，之后补上中文分词。<br>    客户端配置：<br>    使用spring-boot-starter-solr来简化集成。核心是spring-data-solr<br>   <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">     <span class="tag">&lt;<span class="name">parent</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span> <span class="comment">&lt;!-- lookup parent from repository --&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span>  </div><div class="line">  </div><div class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">project.reporting.outputEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.reporting.outputEncoding</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span>  </div><div class="line">  </div><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-solr<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>  </div><div class="line">  </div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span>  </div><div class="line">  </div><div class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span>  </div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span>  </div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span>  </div><div class="line"> </div></pre></td></tr></table></figure><br>    剩下就是javaconfig了<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">/** </span></div><div class="line"> * Project Name:chenxun-solr </div><div class="line"> * File Name:SolrConfig.java </div><div class="line"> * Package Name:com.chenxun.solr.config </div><div class="line"> * Date:2016年8月20日下午3:11:32 </div><div class="line"> * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. </div><div class="line"> * </div><div class="line"> */  </div><div class="line">  </div><div class="line"><span class="keyword">package</span> com.chenxun.solr.config;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> org.apache.solr.client.solrj.SolrClient;  </div><div class="line"><span class="keyword">import</span> org.apache.solr.client.solrj.impl.CloudSolrClient;  </div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;  </div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;  </div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.SolrTemplate;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.convert.CustomConversions;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.convert.MappingSolrConverter;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.convert.SolrConverter;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.mapping.SimpleSolrMappingContext;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.repository.config.EnableSolrRepositories;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"> * ClassName:SolrConfig &lt;br/&gt; </div><div class="line"> * Function: TODO ADD FUNCTION. &lt;br/&gt; </div><div class="line"> * Reason: TODO ADD REASON. &lt;br/&gt; </div><div class="line"> * Date: 2016年8月20日 下午3:11:32 &lt;br/&gt; </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> 陈勋 </div><div class="line"> * <span class="doctag">@version</span> </div><div class="line"> * <span class="doctag">@since</span> JDK 1.7 </div><div class="line"> * <span class="doctag">@see</span> </div><div class="line"> */  </div><div class="line"><span class="meta">@Configuration</span>  </div><div class="line"><span class="meta">@EnableSolrRepositories</span>(basePackages = &#123; <span class="string">"com.chenxun.solr"</span> &#125;, multicoreSupport = <span class="keyword">true</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SolrConfig</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;spring.data.solr.zk-host&#125;"</span>)  </div><div class="line">    <span class="keyword">private</span> String zkHost;  </div><div class="line">  </div><div class="line">    <span class="meta">@Bean</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> SolrClient <span class="title">solrClient</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CloudSolrClient(zkHost);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="meta">@Bean</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> SolrTemplate <span class="title">solrTemplate</span><span class="params">(SolrClient solrClient,SolrConverter solrConverter)</span> <span class="keyword">throws</span> Exception </span>&#123;  </div><div class="line">        SolrTemplate solrTemplate =  <span class="keyword">new</span> SolrTemplate(solrClient);  </div><div class="line">        solrTemplate.setSolrConverter(solrConverter);  </div><div class="line">        <span class="keyword">return</span> solrTemplate;  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    <span class="meta">@Bean</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> SolrConverter <span class="title">solrConverter</span><span class="params">(SimpleSolrMappingContext simpleSolrMappingContext,CustomConversions customConversions)</span></span>&#123;  </div><div class="line">        MappingSolrConverter solrConverter=<span class="keyword">new</span> MappingSolrConverter(simpleSolrMappingContext);  </div><div class="line">        solrConverter.setCustomConversions(customConversions);        </div><div class="line">        <span class="keyword">return</span> solrConverter;  </div><div class="line">          </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    <span class="meta">@Bean</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> SimpleSolrMappingContext <span class="title">simpleSolrMappingContext</span><span class="params">()</span></span>&#123;  </div><div class="line">        SimpleSolrMappingContext simpleSolrMappingContext=<span class="keyword">new</span> SimpleSolrMappingContext();  </div><div class="line">        <span class="keyword">return</span> simpleSolrMappingContext;  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    <span class="meta">@Bean</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> CustomConversions <span class="title">customConversions</span><span class="params">()</span></span>&#123;  </div><div class="line">        CustomConversions customConversions=<span class="keyword">new</span> CustomConversions();  </div><div class="line">    <span class="comment">//  customConversions.registerConvertersIn(new GenericConversionService()&#123;&#125;);  </span></div><div class="line">        <span class="keyword">return</span> customConversions;  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div></pre></td></tr></table></figure><br>    实体<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">       <span class="comment">/** </span></div><div class="line"> * Project Name:chenxun-solr </div><div class="line"> * File Name:Product.java </div><div class="line"> * Package Name:com.chenxun.solr.model </div><div class="line"> * Date:2016年8月20日下午4:48:36 </div><div class="line"> * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. </div><div class="line"> * </div><div class="line">*/  </div><div class="line">  </div><div class="line"><span class="keyword">package</span> com.chenxun.solr.model;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> java.util.HashMap;  </div><div class="line"><span class="keyword">import</span> java.util.List;  </div><div class="line"><span class="keyword">import</span> java.util.Map;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> lombok.Data;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> org.apache.solr.client.solrj.beans.Field;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.annotation.Id;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.mapping.Dynamic;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.mapping.Indexed;  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.core.mapping.SolrDocument;  </div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"> * ClassName:Product &lt;br/&gt; </div><div class="line"> * Function: TODO ADD FUNCTION. &lt;br/&gt; </div><div class="line"> * Reason:   TODO ADD REASON. &lt;br/&gt; </div><div class="line"> * Date:     2016年8月20日 下午4:48:36 &lt;br/&gt; </div><div class="line"> * <span class="doctag">@author</span>   陈勋 </div><div class="line"> * <span class="doctag">@version</span>   </div><div class="line"> * <span class="doctag">@since</span>    JDK 1.7 </div><div class="line"> * <span class="doctag">@see</span>       </div><div class="line"> */  </div><div class="line"><span class="meta">@SolrDocument</span>(solrCoreName=<span class="string">"example"</span>) <span class="comment">// Solr collection name  </span></div><div class="line"><span class="meta">@Data</span>  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;  </div><div class="line">      </div><div class="line">      <span class="meta">@Field</span>(<span class="string">"id"</span>)                  <span class="comment">// Specify field name in solr  </span></div><div class="line">      <span class="meta">@Id</span>    </div><div class="line">      <span class="keyword">private</span> String id;  </div><div class="line">      </div><div class="line">      <span class="meta">@Field</span>  </div><div class="line">      <span class="keyword">private</span> <span class="keyword">float</span> price;  </div><div class="line">        </div><div class="line">      <span class="meta">@Field</span>  </div><div class="line">      <span class="keyword">private</span> String name;  </div><div class="line">        </div><div class="line">      <span class="meta">@Field</span>(<span class="string">"*_s"</span>)  </div><div class="line">      <span class="meta">@Dynamic</span>  </div><div class="line">      <span class="keyword">private</span> Map&lt;String,String&gt; map =<span class="keyword">new</span> HashMap&lt;String, String&gt;();       </div><div class="line">    &#125;  </div><div class="line"> </div></pre></td></tr></table></figure><br>     业务层<br>     <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">/** </span></div><div class="line"> * Project Name:chenxun-solr </div><div class="line"> * File Name:ProductRepository.java </div><div class="line"> * Package Name:com.chenxun.solr.repository </div><div class="line"> * Date:2016年8月20日下午4:54:24 </div><div class="line"> * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. </div><div class="line"> * </div><div class="line">*/  </div><div class="line">  </div><div class="line"><span class="keyword">package</span> com.chenxun.solr.repository;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> org.springframework.data.solr.repository.SolrCrudRepository;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> com.chenxun.solr.model.Product;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"> * ClassName:ProductRepository &lt;br/&gt; </div><div class="line"> * Function: TODO ADD FUNCTION. &lt;br/&gt; </div><div class="line"> * Reason:   TODO ADD REASON. &lt;br/&gt; </div><div class="line"> * Date:     2016年8月20日 下午4:54:24 &lt;br/&gt; </div><div class="line"> * <span class="doctag">@author</span>   陈勋 </div><div class="line"> * <span class="doctag">@version</span>   </div><div class="line"> * <span class="doctag">@since</span>    JDK 1.7 </div><div class="line"> * <span class="doctag">@see</span>       </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ProductRepository</span>  <span class="keyword">extends</span> <span class="title">SolrCrudRepository</span>&lt;<span class="title">Product</span>, <span class="title">String</span>&gt;</span>&#123;       </div><div class="line">    <span class="function">Iterable&lt;Product&gt;  <span class="title">findByName</span><span class="params">(String name)</span></span>;  </div><div class="line">      </div><div class="line">&#125;  </div><div class="line">    </div></pre></td></tr></table></figure><br>     资源文件配置：<br>      <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">spring.data.solr.zk-host=localhost:<span class="number">2181</span>  </div><div class="line">     </div></pre></td></tr></table></figure><br>      测试<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">      <span class="keyword">package</span> com.chenxun;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> java.util.ArrayList;  </div><div class="line"><span class="keyword">import</span> java.util.HashMap;  </div><div class="line"><span class="keyword">import</span> java.util.Iterator;  </div><div class="line"><span class="keyword">import</span> java.util.List;  </div><div class="line"><span class="keyword">import</span> java.util.Map;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> org.junit.Assert;  </div><div class="line"><span class="keyword">import</span> org.junit.Test;  </div><div class="line"><span class="keyword">import</span> org.junit.runner.RunWith;  </div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;  </div><div class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;  </div><div class="line"><span class="keyword">import</span> org.springframework.test.context.junit4.SpringRunner;  </div><div class="line">  </div><div class="line"><span class="keyword">import</span> com.chenxun.solr.model.Product;  </div><div class="line"><span class="keyword">import</span> com.chenxun.solr.repository.ProductRepository;  </div><div class="line">  </div><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)  </div><div class="line"><span class="meta">@SpringBootTest</span>  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChenxunSolrApplicationTests</span> </span>&#123;  </div><div class="line">      </div><div class="line">    <span class="meta">@Autowired</span>  </div><div class="line">    <span class="keyword">private</span> ProductRepository productRepository;  </div><div class="line">  </div><div class="line">    <span class="meta">@Test</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">contextLoads</span><span class="params">()</span> </span>&#123;  </div><div class="line">        productRepository.deleteAll();  </div><div class="line">        <span class="keyword">long</span> count=productRepository.count();  </div><div class="line">        Assert.assertTrue(<span class="string">"empty count"</span>, count==<span class="number">0</span>);  </div><div class="line">        Product product=<span class="keyword">new</span> Product();  </div><div class="line">        product.setId(<span class="string">"product-001"</span>);  </div><div class="line">        product.setName(<span class="string">"xxx"</span>);  </div><div class="line">        Map&lt;String,String&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();  </div><div class="line">        map.put(<span class="string">"key01"</span>, <span class="string">"abc"</span>);  </div><div class="line">        map.put(<span class="string">"key02"</span>, <span class="string">"123"</span>);  </div><div class="line">        product.setMap(map);      </div><div class="line">        productRepository.save(product);  </div><div class="line">          </div><div class="line">        Product product1=<span class="keyword">new</span> Product();  </div><div class="line">        product1.setId(<span class="string">"product-002"</span>);    </div><div class="line">        product1.setName(<span class="string">"yyy"</span>);  </div><div class="line">        Map&lt;String,String&gt; map1=<span class="keyword">new</span> HashMap&lt;&gt;();  </div><div class="line">        map1.put(<span class="string">"key01"</span>, <span class="string">"abc1"</span>);  </div><div class="line">        map1.put(<span class="string">"key02"</span>, <span class="string">"1234"</span>);  </div><div class="line">        product1.setMap(map1);        </div><div class="line">        productRepository.save(product1);  </div><div class="line">          </div><div class="line">        count=productRepository.count();  </div><div class="line">        Assert.assertTrue(count==<span class="number">2</span>);  </div><div class="line">          </div><div class="line">          </div><div class="line">        Iterator&lt;Product&gt; it=productRepository.findByName(<span class="string">"yyy"</span>).iterator();  </div><div class="line">        <span class="keyword">while</span>(it.hasNext())&#123;  </div><div class="line">            Assert.assertTrue( it.next().getId().equals(<span class="string">"product-002"</span>));  </div><div class="line">        &#125;  </div><div class="line">          </div><div class="line">          </div><div class="line">          </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line"> </div></pre></td></tr></table></figure><br>       到此大功告成，下一篇补上中文分词就OK了。<br>      代码地址：  <a href="https://github.com/ChenXun1989/chenxun-solr" target="_blank" rel="external">https://github.com/ChenXun1989/chenxun-solr</a></p>
 
-&lt;dependencies&gt;  
-    &lt;dependency&gt;  
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
-        &lt;artifactId&gt;spring-boot-starter-data-solr&lt;/artifactId&gt;  
-    &lt;/dependency&gt;  
-    &lt;dependency&gt;  
-        &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;  
-        &lt;artifactId&gt;lombok&lt;/artifactId&gt;  
-    &lt;/dependency&gt;  
-    &lt;dependency&gt;  
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
-        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;  
-    &lt;/dependency&gt;  
-
-    &lt;dependency&gt;  
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
-        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;  
-        &lt;scope&gt;test&lt;/scope&gt;  
-    &lt;/dependency&gt;  
-&lt;/dependencies&gt;  
-
-&lt;build&gt;  
-    &lt;plugins&gt;  
-        &lt;plugin&gt;  
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;  
-            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;  
-        &lt;/plugin&gt;  
-    &lt;/plugins&gt;  
-&lt;/build&gt;  
-&lt;/code&gt;&lt;/pre&gt;
-剩下就是javaconfig了 
-&lt;pre&gt;&lt;code&gt;
-      /** 
- * Project Name:chenxun-solr 
- * File Name:SolrConfig.java 
- * Package Name:com.chenxun.solr.config 
- * Date:2016年8月20日下午3:11:32 
- * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. 
- * 
- */  
-
-package com.chenxun.solr.config;  
-
-import org.apache.solr.client.solrj.SolrClient;  
-import org.apache.solr.client.solrj.impl.CloudSolrClient;  
-import org.springframework.beans.factory.annotation.Value;  
-import org.springframework.context.annotation.Bean;  
-import org.springframework.context.annotation.Configuration;  
-import org.springframework.data.solr.core.SolrTemplate;  
-import org.springframework.data.solr.core.convert.CustomConversions;  
-import org.springframework.data.solr.core.convert.MappingSolrConverter;  
-import org.springframework.data.solr.core.convert.SolrConverter;  
-import org.springframework.data.solr.core.mapping.SimpleSolrMappingContext;  
-import org.springframework.data.solr.repository.config.EnableSolrRepositories;  
-
-/** 
- * ClassName:SolrConfig &lt;br/&gt; 
- * Function: TODO ADD FUNCTION. &lt;br/&gt; 
- * Reason: TODO ADD REASON. &lt;br/&gt; 
- * Date: 2016年8月20日 下午3:11:32 &lt;br/&gt; 
- *  
- * @author 陈勋 
- * @version 
- * @since JDK 1.7 
- * @see 
- */  
-@Configuration  
-@EnableSolrRepositories(basePackages = { &quot;com.chenxun.solr&quot; }, multicoreSupport = true)  
-public class SolrConfig {  
-
-    @Value(&quot;${spring.data.solr.zk-host}&quot;)  
-    private String zkHost;  
-
-    @Bean  
-    public SolrClient solrClient() {  
-        return new CloudSolrClient(zkHost);  
-    }  
-
-    @Bean  
-    public SolrTemplate solrTemplate(SolrClient solrClient,SolrConverter solrConverter) throws Exception {  
-        SolrTemplate solrTemplate =  new SolrTemplate(solrClient);  
-        solrTemplate.setSolrConverter(solrConverter);  
-        return solrTemplate;  
-    }  
-
-    @Bean  
-    public SolrConverter solrConverter(SimpleSolrMappingContext simpleSolrMappingContext,CustomConversions customConversions){  
-        MappingSolrConverter solrConverter=new MappingSolrConverter(simpleSolrMappingContext);  
-        solrConverter.setCustomConversions(customConversions);        
-        return solrConverter;  
-
-    }  
-
-    @Bean  
-    public SimpleSolrMappingContext simpleSolrMappingContext(){  
-        SimpleSolrMappingContext simpleSolrMappingContext=new SimpleSolrMappingContext();  
-        return simpleSolrMappingContext;  
-    }  
-
-    @Bean  
-    public CustomConversions customConversions(){  
-        CustomConversions customConversions=new CustomConversions();  
-    //  customConversions.registerConvertersIn(new GenericConversionService(){});  
-        return customConversions;  
-    }  
-}  
-&lt;/code&gt;&lt;/pre&gt;
-实体 
-&lt;pre&gt;&lt;code&gt;
-       /** 
- * Project Name:chenxun-solr 
- * File Name:Product.java 
- * Package Name:com.chenxun.solr.model 
- * Date:2016年8月20日下午4:48:36 
- * Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. 
- * 
-*/  
-
-package com.chenxun.solr.model;  
-
-import java.util.HashMap;  
-import java.util.List;  
-import java.util.Map;  
-
-import lombok.Data;  
-
-import org.apache.solr.client.solrj.beans.Field;  
-import org.springframework.data.annotation.Id;  
-import org.springframework.data.solr.core.mapping.Dynamic;  
-import org.springframework.data.solr.core.mapping.Indexed;  
-import org.springframework.data.solr.core.mapping.SolrDocument;  
-import org.springframework.stereotype.Component;  
-
-/** 
- * ClassName:Product &lt;br/&gt; 
- * Function: TODO ADD FUNCTION. &lt;br/&gt; 
- * Reason:   TODO ADD REASON. &lt;br/&gt; 
- * Date:     2016年8月20日 下午4:48:36 &lt;br/&gt; 
- * @author   陈勋 
- * @version   
- * @since    JDK 1.7 
- * @see       
- */  
-@SolrDocument(solrCoreName=&quot;example&quot;) // Solr collection name  
-@Data  
-public class Product {  
-
-      @Field(&quot;id&quot;)                  // Specify field name in solr  
-      @Id    
-      private String id;  
-
-      @Field  
-      private float price;  
-
-      @Field  
-      private String name;  
-
-      @Field(&quot;*_s&quot;)  
-      @Dynamic  
-      private Map&lt;String,String&gt; map =new HashMap&lt;String, String&gt;();       
-    }  
-&lt;/code&gt;&lt;/pre&gt;
- 业务层 
- &lt;pre&gt;&lt;code&gt;
-  /** 
-</code></pre><ul>
-<li>Project Name:chenxun-solr </li>
-<li>File Name:ProductRepository.java </li>
-<li>Package Name:com.chenxun.solr.repository </li>
-<li>Date:2016年8月20日下午4:54:24 </li>
-<li>Copyright (c) 2016, www midaigroup com Technology Co., Ltd. All Rights Reserved. </li>
-<li>*/  </li>
-</ul>
-<p>package com.chenxun.solr.repository;  </p>
-<p>import org.springframework.data.solr.repository.SolrCrudRepository;  </p>
-<p>import com.chenxun.solr.model.Product;  </p>
-<p>/** </p>
-<ul>
-<li>ClassName:ProductRepository <br> </li>
-<li>Function: TODO ADD FUNCTION. <br> </li>
-<li>Reason:   TODO ADD REASON. <br> </li>
-<li>Date:     2016年8月20日 下午4:54:24 <br> </li>
-<li>@author   陈勋 </li>
-<li>@version   </li>
-<li>@since    JDK 1.7 </li>
-<li>@see<br>*/<br>public interface ProductRepository  extends SolrCrudRepository<product, string="">{<br> Iterable<product>  findByName(String name);  </product></product,></li>
-</ul>
-<p>}<br>     <br>     资源文件配置：<br>     <pre><code><br>         spring.data.solr.zk-host=localhost:2181<br>     </code></pre><br>      测试<br>      <pre><code><br>          package com.chenxun;  </code></pre></p>
-<pre><code>import java.util.ArrayList;  
-import java.util.HashMap;  
-import java.util.Iterator;  
-import java.util.List;  
-import java.util.Map;  
-
-import org.junit.Assert;  
-import org.junit.Test;  
-import org.junit.runner.RunWith;  
-import org.springframework.beans.factory.annotation.Autowired;  
-import org.springframework.boot.test.context.SpringBootTest;  
-import org.springframework.test.context.junit4.SpringRunner;  
-
-import com.chenxun.solr.model.Product;  
-import com.chenxun.solr.repository.ProductRepository;  
-
-@RunWith(SpringRunner.class)  
-@SpringBootTest  
-public class ChenxunSolrApplicationTests {  
-
-    @Autowired  
-    private ProductRepository productRepository;  
-
-    @Test  
-    public void contextLoads() {  
-        productRepository.deleteAll();  
-        long count=productRepository.count();  
-        Assert.assertTrue(&quot;empty count&quot;, count==0);  
-        Product product=new Product();  
-        product.setId(&quot;product-001&quot;);  
-        product.setName(&quot;xxx&quot;);  
-        Map&lt;String,String&gt; map=new HashMap&lt;&gt;();  
-        map.put(&quot;key01&quot;, &quot;abc&quot;);  
-        map.put(&quot;key02&quot;, &quot;123&quot;);  
-        product.setMap(map);      
-        productRepository.save(product);  
-
-        Product product1=new Product();  
-        product1.setId(&quot;product-002&quot;);    
-        product1.setName(&quot;yyy&quot;);  
-        Map&lt;String,String&gt; map1=new HashMap&lt;&gt;();  
-        map1.put(&quot;key01&quot;, &quot;abc1&quot;);  
-        map1.put(&quot;key02&quot;, &quot;1234&quot;);  
-        product1.setMap(map1);        
-        productRepository.save(product1);  
-
-        count=productRepository.count();  
-        Assert.assertTrue(count==2);  
-
-
-        Iterator&lt;Product&gt; it=productRepository.findByName(&quot;yyy&quot;).iterator();  
-        while(it.hasNext()){  
-            Assert.assertTrue( it.next().getId().equals(&quot;product-002&quot;));  
-        }  
-
-
-
-    }  
-
-}  
-  &lt;/code&gt;&lt;/pre&gt;
-   到此大功告成，下一篇补上中文分词就OK了。
-  代码地址：  [https://github.com/ChenXun1989/chenxun-solr](https://github.com/ChenXun1989/chenxun-solr)
-</code></pre>
       
     </div>
 
@@ -822,14 +565,12 @@ public class ChenxunSolrApplicationTests {
 
 
 <div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  本文由<b>陈勋</b>创作和发表,采用<b>BY</b>-<b>NC</b>-<b>SA</b>国际许可协议进行许可,转载请注明作者和原始链接。
 </div>
 
 <div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Pisces
-  </a>
+  联系方式：email:576481228@qq.com -
+
 </div>
 
 
