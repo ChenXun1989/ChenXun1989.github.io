@@ -304,6 +304,149 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/17/thread-05/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/17/thread-05/" itemprop="url">
+                  并发容器和同步容器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-17T13:14:21+08:00">
+                2017-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java多线程/" itemprop="url" rel="index">
+                    <span itemprop="name">java多线程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="并发容器和同步容器"><a href="#并发容器和同步容器" class="headerlink" title="并发容器和同步容器"></a>并发容器和同步容器</h1><h2 id="同步容器"><a href="#同步容器" class="headerlink" title="同步容器"></a>同步容器</h2><p>  java的同步容器有Vector和Hashtable。<br>  vecotor和hashtbale通过synchronized来锁定对容器状态的访问，例如get方法<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (index &gt;= elementCount)</div><div class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line"></div><div class="line">     <span class="keyword">return</span> elementData(index);</div><div class="line"> &#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure><br>  同步容器类是线程安全的，但复合操作不一定是线程安全的，需要客户端额外加锁来保证线程安全。</p>
+<h2 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h2><p>  同步容器将所有对容器状态的访问都串行化，以实现线程安全。这种性能比较低，<br> java5.0 引入了并发容器,在java.util.concurrent包下面</p>
+<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><p> ConcurrentHashMap采用了分段锁的设计，只有在同一个分段内才存在竞态关系，不同的分段锁之间没有锁竞争。<br> <strong> ConcurrentHashMap是弱一致性的，get，clear都是弱一致性的  </strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/16/thread-04/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -411,7 +554,7 @@
 <ul>
 <li>偏向锁： 存在java对象头里面。</li>
 <li>轻量级锁：存在当前线程的栈帧里面</li>
-<li>重量级锁： 存在当前对象的monitor对象里面<br>锁升级过程：<br>无锁状态到偏向锁，当前地线程通过cas修改java对象头的锁标志位。<br>谝向锁到轻量级锁, 当前现场把java对象头的锁信息copy到栈帧里面<br>偏向锁到重量级锁，把栈帧里面的锁信息copy到对象的monitor里面。</li>
+<li>重量级锁： 存在当前对象的monitor对象里面<br>锁升级过程：<br>无锁状态到偏向锁，当前线程通过cas修改java对象头的锁标志位。<br>谝向锁到轻量级锁, 当前线程把java对象头的锁信息copy到栈帧里面<br>轻量级锁到重量级锁，把栈帧里面的锁信息copy到对象的monitor里面。</li>
 </ul>
 <ul>
 <li>偏向锁和轻量级锁采用cas自旋修改锁状态，重量级锁通过线程信号来实现*  </li>
@@ -900,288 +1043,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/9/" itemprop="url">
-                  jQuery基于json对象自动给表单元素赋值
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="jQuery基于json对象自动给表单元素赋值"><a href="#jQuery基于json对象自动给表单元素赋值" class="headerlink" title="jQuery基于json对象自动给表单元素赋值"></a>jQuery基于json对象自动给表单元素赋值</h1><p>  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">json2form:<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;  </div><div class="line">       <span class="keyword">var</span> nodeParent = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> value = <span class="literal">undefined</span>;  </div><div class="line">      <span class="keyword">var</span> $el = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> nodeName = <span class="string">""</span>;  </div><div class="line">       <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;  </div><div class="line">          value= obj[i] ;  </div><div class="line">          <span class="keyword">if</span>(value === <span class="literal">undefined</span> || value===<span class="literal">null</span>)&#123;  </div><div class="line">              <span class="keyword">continue</span>;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">if</span>(<span class="keyword">typeof</span> value == <span class="string">'object'</span>)&#123;  </div><div class="line">              nodeParent=obj.nodeParent;  </div><div class="line">              value.nodeParent=nodeParent?nodeParent+<span class="string">"."</span>+i : i;  </div><div class="line">              <span class="keyword">if</span>(value <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;  </div><div class="line">                  <span class="keyword">for</span>(<span class="keyword">var</span> mm=<span class="number">0</span>;mm&lt;value.length;mm++)&#123;  </div><div class="line">                      <span class="keyword">var</span> ms=value[mm];  </div><div class="line">                      <span class="keyword">if</span>(<span class="keyword">typeof</span> ms == <span class="string">'object'</span>)&#123;  </div><div class="line">                          nodeParent=ms.nodeParent;  </div><div class="line">                          ms.nodeParent=ms.nodeParent?ms.nodeParent+<span class="string">"."</span>+i+<span class="string">"["</span>+mm+<span class="string">"]"</span>:i+<span class="string">"["</span>+mm+<span class="string">"]"</span>;  </div><div class="line">                          <span class="built_in">arguments</span>.callee(ms);  </div><div class="line">                      &#125;  </div><div class="line"></div><div class="line">                  &#125;  </div><div class="line"></div><div class="line">                  $el=$(<span class="string">"[name='"</span>+i+<span class="string">"']"</span>);  </div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":checkbox"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">                  <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">              &#125;<span class="keyword">else</span>&#123;  <span class="comment">//递归  </span></div><div class="line">                  <span class="built_in">arguments</span>.callee(value);  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">else</span>&#123;  </div><div class="line">              nodeName=obj.nodeParent?obj.nodeParent+<span class="string">"."</span>+i : i ;  </div><div class="line"></div><div class="line">              $el=$(<span class="string">"[name='"</span>+nodeName+<span class="string">"']"</span>);  </div><div class="line">              <span class="keyword">if</span>($el.length &gt; <span class="number">0</span>)&#123;  </div><div class="line">              <span class="comment">// console.log("匹配数据名称："+nodeName+"值："+value);  </span></div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":text"</span>)||$el.attr(<span class="string">"type"</span>)==<span class="string">"hidden"</span>)&#123;  </div><div class="line">                      <span class="keyword">if</span>($el.data(<span class="string">"money"</span>) &amp;&amp; $el.data(<span class="string">"money"</span>) == <span class="string">"money"</span>)&#123;  </div><div class="line">                          value = outputdollars(value);  </div><div class="line">                      &#125;  </div><div class="line">                      $el.val(value);  </div><div class="line">                          </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                     $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                        <span class="keyword">if</span>($(<span class="keyword">this</span>).val()==value)&#123;  </div><div class="line">                            $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                        &#125;  </div><div class="line">                     &#125;)  </div><div class="line">                 &#125;  </div><div class="line">                 <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"select"</span>))&#123;  </div><div class="line">                    $el.find(<span class="string">"option"</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> $(<span class="keyword">this</span>).val() == obj[i];&#125;).prop(<span class="string">"selected"</span>,<span class="literal">true</span>);  </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"textarea"</span>))&#123;  </div><div class="line">                    $el.val(value)  </div><div class="line">                 &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">      &#125;      </div><div class="line">         </div><div class="line">   &#125; </div><div class="line"></div><div class="line"> </div></pre></td></tr></table></figure><br>  注意： 表单的name属于与json对象的属性名为一致，保持继承链。<br>  例如 input name=’a.b.c’   表示json对象里面的a属性里面的b属性的c属性。 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/8/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/8/" itemprop="url">
-                  基于jquery把表单转成成json对象
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="基于jquery把表单转成成json对象"><a href="#基于jquery把表单转成成json对象" class="headerlink" title="基于jquery把表单转成成json对象"></a>基于jquery把表单转成成json对象</h1><p>  最近前端框架修改，小伙伴希望能像以前写jsp一样使用 对象.属性作为表单元素的name值<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"test-form"</span>&gt;</span>   </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.c"</span> <span class="attr">value</span>=<span class="string">"abc"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.d"</span> <span class="attr">value</span>=<span class="string">"abd"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"x"</span> <span class="attr">value</span>=<span class="string">"x"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.f"</span> <span class="attr">value</span>=<span class="string">"af"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"0"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"y2"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].c"</span> <span class="attr">value</span>=<span class="string">"m0c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].d"</span> <span class="attr">value</span>=<span class="string">"m0d"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].c"</span> <span class="attr">value</span>=<span class="string">"m1c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].d"</span> <span class="attr">value</span>=<span class="string">"m1d"</span>&gt;</span>   </div><div class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"test-btn"</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span>  </div></pre></td></tr></table></figure><br>   我这种懒人第一反应肯定去找度娘，发现度娘居然没有，只好自己造了轮子。<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">form2Json</span>(<span class="params">params</span>)</span>&#123;  </div><div class="line"><span class="keyword">var</span> selector=params.form;  </div><div class="line"><span class="keyword">var</span> values= $(selector).serializeArray();  </div><div class="line"><span class="keyword">var</span> obj=&#123;&#125;;  </div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; values.length; ++index)      </div><div class="line">  &#123;      </div><div class="line">     <span class="keyword">var</span> temp=obj; <span class="comment">//上一级       </span></div><div class="line">     <span class="keyword">var</span> n=values[index].name;    </div><div class="line">     <span class="keyword">if</span>(n.indexOf(<span class="string">"."</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">         <span class="keyword">var</span> arr=n.split(<span class="string">"."</span>);    </div><div class="line">         <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;arr.length<span class="number">-1</span>;i++)&#123;       </div><div class="line">             <span class="keyword">if</span>(arr[i].indexOf(<span class="string">"["</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">                 <span class="keyword">var</span> a=arr[i].substring(<span class="number">0</span>,arr[i].indexOf(<span class="string">"["</span>));    </div><div class="line">                 temp[a]=temp[a]||[];    </div><div class="line">                 <span class="keyword">var</span> y=arr[i].substring(arr[i].indexOf(<span class="string">"["</span>)+<span class="number">1</span>,arr[i].indexOf(<span class="string">"]"</span>));    </div><div class="line">                 temp[a][y]=temp[a][y]||&#123;&#125;;    </div><div class="line">                 temp=temp[a][y];    </div><div class="line">             &#125;<span class="keyword">else</span>&#123;    </div><div class="line">                 temp[arr[i]]=temp[arr[i]] || &#123;&#125;;       </div><div class="line">                 temp=temp[arr[i]];    </div><div class="line">             &#125;    </div><div class="line">         &#125;  </div><div class="line">         temp[arr[arr.length<span class="number">-1</span>]]=values[index].value;         </div><div class="line">     &#125;<span class="keyword">else</span>&#123;    </div><div class="line">         <span class="keyword">if</span>(obj[n] !==<span class="literal">undefined</span> &amp;&amp; obj[n]!=<span class="literal">null</span>)&#123;    </div><div class="line">            <span class="keyword">if</span>( !$.isArray(obj[n]))&#123;    </div><div class="line">                <span class="keyword">var</span> v=obj[n];    </div><div class="line">                obj[n]=[];    </div><div class="line">                obj[n].push(v);    </div><div class="line">            &#125;  </div><div class="line">              </div><div class="line">            obj[n].push(values[index].value);    </div><div class="line">         &#125;<span class="keyword">else</span>&#123;     </div><div class="line">             obj[n]=values[index].value;    </div><div class="line">         &#125;    </div><div class="line">     &#125;       </div><div class="line">  &#125;       </div><div class="line"><span class="keyword">return</span> obj;  </div><div class="line">   </div></pre></td></tr></table></figure><br>   该轮子支持复杂对象，支持对象数组，支持简单属性<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">    $(<span class="string">"#test-btn"</span>).on(<span class="string">"click"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line"> <span class="keyword">var</span> json=form2Json(&#123;  </div><div class="line">  <span class="attr">form</span>:<span class="string">"#test-form"</span>  </div><div class="line"> &#125;);  </div><div class="line"><span class="built_in">console</span>.log(json);  </div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(json));  </div><div class="line">&#125;);  </div><div class="line">   </div></pre></td></tr></table></figure><br>     最终结果如下<br>     <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"a"</span>:&#123;<span class="string">"b"</span>:&#123;<span class="string">"c"</span>:<span class="string">"abc"</span>,<span class="string">"d"</span>:<span class="string">"abd"</span>&#125;,<span class="string">"f"</span>:<span class="string">"af"</span>&#125;,<span class="string">"x"</span>:<span class="string">"x"</span>,<span class="string">"y"</span>:[<span class="string">"0"</span>,<span class="string">"y2"</span>],<span class="string">"m"</span>:[&#123;<span class="string">"c"</span>:<span class="string">"m0c"</span>,<span class="string">"d"</span>:<span class="string">"m0d"</span>&#125;,&#123;<span class="string">"c"</span>:<span class="string">"m1c"</span>,<span class="string">"d"</span>:<span class="string">"m1d"</span>&#125;]&#125;  </div><div class="line">     </div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/4/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1606,7 +1467,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/7/">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="陈勋">
@@ -1631,8 +1492,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/15/7/" itemprop="url">
-                  浅谈分布式项目日志监控
+                <a class="post-title-link" href="/2017/01/15/9/" itemprop="url">
+                  jQuery基于json对象自动给表单元素赋值
                 </a>
               
             
@@ -1671,8 +1532,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
                   </a>
                 </span>
 
@@ -1708,7 +1569,148 @@
       
         
           
-            <h1 id="浅谈分布式项目日志监控"><a href="#浅谈分布式项目日志监控" class="headerlink" title="浅谈分布式项目日志监控"></a>浅谈分布式项目日志监控</h1><p>  目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。<br>  这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。<br>  但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。<br>   分布式情况下，每个日志分散到各自服务所在机器，<br>   日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小还好，数量一大，我想不管是运维人员还是开发人员都会头疼。<br>   目前处理这个需求最为火热的中间套件，自然首选是ELK，ELK是java技术栈的。<br>   也符合目前公司需求。ELK的安装就不讲述了，感兴趣的可以查看官网或者自行百度，资料还是挺多的。<br>   确定了日志收集和分析的中间件，剩下一个就是日志埋点和怎么把日志串起来了。<br>   以前单个应用的时代，系统级别的日志可以通过aop解决。在分布式情况下对每一个独立服务而言，自身的日志系统还是通过aop解决，唯一需要的就是怎么把分散到各自不同应用的日志串起来。<br>   这个有个高大上的说法叫做业务链监控。<br>   目前国内开源的产品有大众点评的cat，是整套业务链监控解决方案。<br>   对于我公司目前来说太重了，我这边日志已经有elk，就没必要在额外引入cat。那如何自己实现呢。<br>   既然是链路，那自然有入口有出口。我们需要做的就是在入口出生成一个全局唯一的traceId，然后把这个traceId按照业务链路传递到各个服务中去。<br> traceId就是一根线，把各个服务的日志串起来。注意一点，服务的时间要同步，因为是根据来时间排序的。<br> traceId的生成，简单方案可以采用uuid，其次推荐使用twiiter的snowflake算法。<br> traceId的传递，需要根据rpc框架来实现了。dubbo框架采用dubbo的fiter来实现，参考代码如下：<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">      <span class="comment">// 调用过程拦截  </span></div><div class="line"><span class="function"><span class="keyword">public</span> Result <span class="title">invoke</span><span class="params">(Invoker&lt;?&gt; invoker, Invocation invocation)</span> <span class="keyword">throws</span> RpcException </span>&#123;  </div><div class="line">    <span class="comment">//异步获取serviceId，没获取到不进行采样  </span></div><div class="line">    String serviceId = tracer.getServiceId(RpcContext.getContext().getUrl().getServiceInterface());  </div><div class="line">    <span class="keyword">if</span> (serviceId == <span class="keyword">null</span>) &#123;  </div><div class="line">        Tracer.startTraceWork();  </div><div class="line">        <span class="keyword">return</span> invoker.invoke(invocation);  </div><div class="line">    &#125;        </div><div class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();  </div><div class="line">    RpcContext context = RpcContext.getContext();  </div><div class="line">    <span class="keyword">boolean</span> isConsumerSide = context.isConsumerSide();  </div><div class="line">    Span span = <span class="keyword">null</span>;  </div><div class="line">    Endpoint endpoint = <span class="keyword">null</span>;  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        endpoint = tracer.newEndPoint();  </div><div class="line">          endpoint.setServiceName(serviceId);  </div><div class="line">        endpoint.setIp(context.getLocalAddressString());  </div><div class="line">        endpoint.setPort(context.getLocalPort());  </div><div class="line">        <span class="keyword">if</span> (context.isConsumerSide()) &#123; <span class="comment">//是否是消费者  </span></div><div class="line">            Span span1 = tracer.getParentSpan();  </div><div class="line">            <span class="keyword">if</span> (span1 == <span class="keyword">null</span>) &#123; <span class="comment">//为rootSpan  </span></div><div class="line">                span = tracer.newSpan(context.getMethodName(), endpoint, serviceId);<span class="comment">//生成root Span  </span></div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                span = tracer.genSpan(span1.getTraceId(), span1.getId(), tracer.genSpanId(), context.getMethodName(), span1.isSample(), <span class="keyword">null</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (context.isProviderSide()) &#123;  </div><div class="line">            Long traceId, parentId, spanId;  </div><div class="line">            traceId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.TID));  </div><div class="line">            parentId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.PID));  </div><div class="line">            spanId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.SID));  </div><div class="line">            <span class="keyword">boolean</span> isSample = (traceId != <span class="keyword">null</span>);  </div><div class="line">            span = tracer.genSpan(traceId, parentId, spanId, context.getMethodName(), isSample, serviceId);  </div><div class="line">        &#125;  </div><div class="line">        invokerBefore(invocation, span, endpoint, start);<span class="comment">//记录annotation  </span></div><div class="line">        RpcInvocation invocation1 = (RpcInvocation) invocation;  </div><div class="line">        setAttachment(span, invocation1);<span class="comment">//设置需要向下游传递的参数  </span></div><div class="line">        Result result = invoker.invoke(invocation);  </div><div class="line">        <span class="keyword">if</span> (result.getException() != <span class="keyword">null</span>)&#123;  </div><div class="line">            catchException(result.getException(), endpoint);  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> result;  </div><div class="line">    &#125;<span class="keyword">catch</span> (RpcException e) &#123;  </div><div class="line">        <span class="keyword">if</span> (e.getCause() != <span class="keyword">null</span> &amp;&amp; e.getCause() <span class="keyword">instanceof</span> TimeoutException)&#123;  </div><div class="line">            catchTimeoutException(e, endpoint);  </div><div class="line">        &#125;<span class="keyword">else</span> &#123;  </div><div class="line">            catchException(e, endpoint);  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">throw</span> e;  </div><div class="line">    &#125;<span class="keyword">finally</span> &#123;  </div><div class="line">        <span class="keyword">if</span> (span != <span class="keyword">null</span>) &#123;  </div><div class="line">            <span class="keyword">long</span> end = System.currentTimeMillis();  </div><div class="line">            invokerAfter(invocation, endpoint, span, end, isConsumerSide);<span class="comment">//调用后记录annotation  </span></div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  dubbo通过invocation.setAttachmen来在消费者和调用者之间传递traceId。<br>     如果是http接口调用实现的rpc建议采用在request的head里面传递traceId。<br>     在本地服务里面通过threadlocal变量来传递traceId。<br>     如果想打印sql语句，通过orm框架的拦截器机制实现，以下是mybatis的参考代码<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">  	 <span class="meta">@Intercepts</span>(&#123; <span class="meta">@Signature</span>(type = Executor.class, method = <span class="string">"update"</span>, args = &#123; MappedStatement.class, Object.class &#125;),  </div><div class="line">        <span class="meta">@Signature</span>(type = Executor.class, method = <span class="string">"query"</span>, args = &#123; MappedStatement.class, Object.class,  </div><div class="line">                RowBounds.class, ResultHandler.class &#125;) &#125;)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MidaiLogMybatisPlugn</span> <span class="keyword">implements</span> <span class="title">Interceptor</span> </span>&#123;  </div><div class="line">    <span class="meta">@Override</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;    </div><div class="line">        Object result = <span class="keyword">null</span>;  </div><div class="line">        <span class="comment">//从当前线程获取trace  </span></div><div class="line">        MidaiLogTrace trace = MidaiLogTraceService.getMidaiLogTrace();  </div><div class="line">        <span class="keyword">if</span>(trace !=<span class="keyword">null</span>)&#123;  </div><div class="line">          Object[] arguments = invocation.getArgs();  </div><div class="line">          MidaiLogTraceService.traceSqlLog(trace.getTraceId(), getSqlStatement(arguments));  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            result = invocation.proceed();        </div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">            <span class="keyword">throw</span> e;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> result;  </div><div class="line">    &#125;    </div><div class="line">    <span class="meta">@Override</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">plugin</span><span class="params">(Object target)</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> Plugin.wrap(target, <span class="keyword">this</span>); <span class="comment">// mybatis提供的包装工具类  </span></div><div class="line">    &#125;    </div><div class="line">    <span class="meta">@Override</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setProperties</span><span class="params">(Properties properties)</span> </span>&#123;  </div><div class="line">    &#125;   </div><div class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getSqlStatement</span><span class="params">(Object[] arguments)</span> </span>&#123;  </div><div class="line">        MappedStatement mappedStatement = (MappedStatement) arguments[<span class="number">0</span>];  </div><div class="line">        Object parameter = <span class="keyword">null</span>;  </div><div class="line">        <span class="keyword">if</span> (arguments.length &gt; <span class="number">1</span>) &#123;  </div><div class="line">            parameter = arguments[<span class="number">1</span>];  </div><div class="line">        &#125;  </div><div class="line">        String sqlId = mappedStatement.getId();  </div><div class="line">        BoundSql boundSql = mappedStatement.getBoundSql(parameter);  </div><div class="line">        Configuration configuration = mappedStatement.getConfiguration();  </div><div class="line">        String sql = showSql(configuration, boundSql);  </div><div class="line">        StringBuilder str = <span class="keyword">new</span> StringBuilder(<span class="number">100</span>);  </div><div class="line">        str.append(sqlId);  </div><div class="line">        str.append(<span class="string">":"</span>);  </div><div class="line">        str.append(sql);  </div><div class="line">        str.append(<span class="string">":"</span>);  </div><div class="line">        <span class="keyword">return</span> str.toString();  </div><div class="line">    &#125;    </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">showSql</span><span class="params">(Configuration configuration, BoundSql boundSql)</span> </span>&#123;  </div><div class="line">        Object parameterObject = boundSql.getParameterObject();  </div><div class="line">        List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();  </div><div class="line">        String sql = boundSql.getSql().replaceAll(<span class="string">"[\\s]+"</span>, <span class="string">" "</span>);  </div><div class="line">        <span class="keyword">if</span> (parameterMappings.size() &gt; <span class="number">0</span> &amp;&amp; parameterObject != <span class="keyword">null</span>) &#123;  </div><div class="line">            TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();  </div><div class="line">            <span class="keyword">if</span> (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) &#123;  </div><div class="line">                sql = sql.replaceFirst(<span class="string">"\\?"</span>, getParameterValue(parameterObject));    </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                MetaObject metaObject = configuration.newMetaObject(parameterObject);  </div><div class="line">                <span class="keyword">for</span> (ParameterMapping parameterMapping : parameterMappings) &#123;  </div><div class="line">                    String propertyName = parameterMapping.getProperty();  </div><div class="line">                    <span class="keyword">if</span> (metaObject.hasGetter(propertyName)) &#123;  </div><div class="line">                        Object obj = metaObject.getValue(propertyName);  </div><div class="line">                        sql = sql.replaceFirst(<span class="string">"\\?"</span>, getParameterValue(obj));  </div><div class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (boundSql.hasAdditionalParameter(propertyName)) &#123;  </div><div class="line">                        Object obj = boundSql.getAdditionalParameter(propertyName);  </div><div class="line">                        sql = sql.replaceFirst(<span class="string">"\\?"</span>, getParameterValue(obj));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> sql;  </div><div class="line">    &#125;   </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getParameterValue</span><span class="params">(Object obj)</span> </span>&#123;  </div><div class="line">        String value = <span class="keyword">null</span>;  </div><div class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;  </div><div class="line">            value = <span class="string">"‘"</span> + obj.toString() + <span class="string">"‘"</span>;  </div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Date) &#123;  </div><div class="line">            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);  </div><div class="line">            value = <span class="string">"‘"</span> + formatter.format(<span class="keyword">new</span> Date()) + <span class="string">"‘"</span>;  </div><div class="line">        &#125; <span class="keyword">else</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (obj != <span class="keyword">null</span>) &#123;  </div><div class="line">                value = obj.toString();  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                value = <span class="string">""</span>;  </div><div class="line">            &#125;  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> value;  </div><div class="line">    &#125;  </div><div class="line"> &#125;    	</div><div class="line">   </div></pre></td></tr></table></figure><br>    当系统并发达到一定数量级，log4j日志打印本身会成为瓶颈，这个时候需要mq来解耦了，<br>    不在打印日志，而是发送mq消息，由mq消费端处理。因为目前公司项目并发数量还不足以导致该问题，因此尚未采用。<br>  elk收集日志之后，通过kibana可以提供搜索。<br>  <img src="/images/f.png"><br>     剩下最后的工作量就是提供一个web界面来更好的分析和展示数据。</p>
+            <h1 id="jQuery基于json对象自动给表单元素赋值"><a href="#jQuery基于json对象自动给表单元素赋值" class="headerlink" title="jQuery基于json对象自动给表单元素赋值"></a>jQuery基于json对象自动给表单元素赋值</h1><p>  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">json2form:<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;  </div><div class="line">       <span class="keyword">var</span> nodeParent = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> value = <span class="literal">undefined</span>;  </div><div class="line">      <span class="keyword">var</span> $el = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> nodeName = <span class="string">""</span>;  </div><div class="line">       <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;  </div><div class="line">          value= obj[i] ;  </div><div class="line">          <span class="keyword">if</span>(value === <span class="literal">undefined</span> || value===<span class="literal">null</span>)&#123;  </div><div class="line">              <span class="keyword">continue</span>;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">if</span>(<span class="keyword">typeof</span> value == <span class="string">'object'</span>)&#123;  </div><div class="line">              nodeParent=obj.nodeParent;  </div><div class="line">              value.nodeParent=nodeParent?nodeParent+<span class="string">"."</span>+i : i;  </div><div class="line">              <span class="keyword">if</span>(value <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;  </div><div class="line">                  <span class="keyword">for</span>(<span class="keyword">var</span> mm=<span class="number">0</span>;mm&lt;value.length;mm++)&#123;  </div><div class="line">                      <span class="keyword">var</span> ms=value[mm];  </div><div class="line">                      <span class="keyword">if</span>(<span class="keyword">typeof</span> ms == <span class="string">'object'</span>)&#123;  </div><div class="line">                          nodeParent=ms.nodeParent;  </div><div class="line">                          ms.nodeParent=ms.nodeParent?ms.nodeParent+<span class="string">"."</span>+i+<span class="string">"["</span>+mm+<span class="string">"]"</span>:i+<span class="string">"["</span>+mm+<span class="string">"]"</span>;  </div><div class="line">                          <span class="built_in">arguments</span>.callee(ms);  </div><div class="line">                      &#125;  </div><div class="line"></div><div class="line">                  &#125;  </div><div class="line"></div><div class="line">                  $el=$(<span class="string">"[name='"</span>+i+<span class="string">"']"</span>);  </div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":checkbox"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">                  <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">              &#125;<span class="keyword">else</span>&#123;  <span class="comment">//递归  </span></div><div class="line">                  <span class="built_in">arguments</span>.callee(value);  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">else</span>&#123;  </div><div class="line">              nodeName=obj.nodeParent?obj.nodeParent+<span class="string">"."</span>+i : i ;  </div><div class="line"></div><div class="line">              $el=$(<span class="string">"[name='"</span>+nodeName+<span class="string">"']"</span>);  </div><div class="line">              <span class="keyword">if</span>($el.length &gt; <span class="number">0</span>)&#123;  </div><div class="line">              <span class="comment">// console.log("匹配数据名称："+nodeName+"值："+value);  </span></div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":text"</span>)||$el.attr(<span class="string">"type"</span>)==<span class="string">"hidden"</span>)&#123;  </div><div class="line">                      <span class="keyword">if</span>($el.data(<span class="string">"money"</span>) &amp;&amp; $el.data(<span class="string">"money"</span>) == <span class="string">"money"</span>)&#123;  </div><div class="line">                          value = outputdollars(value);  </div><div class="line">                      &#125;  </div><div class="line">                      $el.val(value);  </div><div class="line">                          </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                     $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                        <span class="keyword">if</span>($(<span class="keyword">this</span>).val()==value)&#123;  </div><div class="line">                            $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                        &#125;  </div><div class="line">                     &#125;)  </div><div class="line">                 &#125;  </div><div class="line">                 <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"select"</span>))&#123;  </div><div class="line">                    $el.find(<span class="string">"option"</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> $(<span class="keyword">this</span>).val() == obj[i];&#125;).prop(<span class="string">"selected"</span>,<span class="literal">true</span>);  </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"textarea"</span>))&#123;  </div><div class="line">                    $el.val(value)  </div><div class="line">                 &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">      &#125;      </div><div class="line">         </div><div class="line">   &#125; </div><div class="line"></div><div class="line"> </div></pre></td></tr></table></figure><br>  注意： 表单的name属于与json对象的属性名为一致，保持继承链。<br>  例如 input name=’a.b.c’   表示json对象里面的a属性里面的b属性的c属性。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/8/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/8/" itemprop="url">
+                  基于jquery把表单转成成json对象
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="基于jquery把表单转成成json对象"><a href="#基于jquery把表单转成成json对象" class="headerlink" title="基于jquery把表单转成成json对象"></a>基于jquery把表单转成成json对象</h1><p>  最近前端框架修改，小伙伴希望能像以前写jsp一样使用 对象.属性作为表单元素的name值<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"test-form"</span>&gt;</span>   </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.c"</span> <span class="attr">value</span>=<span class="string">"abc"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.d"</span> <span class="attr">value</span>=<span class="string">"abd"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"x"</span> <span class="attr">value</span>=<span class="string">"x"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.f"</span> <span class="attr">value</span>=<span class="string">"af"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"0"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"y2"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].c"</span> <span class="attr">value</span>=<span class="string">"m0c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].d"</span> <span class="attr">value</span>=<span class="string">"m0d"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].c"</span> <span class="attr">value</span>=<span class="string">"m1c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].d"</span> <span class="attr">value</span>=<span class="string">"m1d"</span>&gt;</span>   </div><div class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"test-btn"</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span>  </div></pre></td></tr></table></figure><br>   我这种懒人第一反应肯定去找度娘，发现度娘居然没有，只好自己造了轮子。<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">form2Json</span>(<span class="params">params</span>)</span>&#123;  </div><div class="line"><span class="keyword">var</span> selector=params.form;  </div><div class="line"><span class="keyword">var</span> values= $(selector).serializeArray();  </div><div class="line"><span class="keyword">var</span> obj=&#123;&#125;;  </div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; values.length; ++index)      </div><div class="line">  &#123;      </div><div class="line">     <span class="keyword">var</span> temp=obj; <span class="comment">//上一级       </span></div><div class="line">     <span class="keyword">var</span> n=values[index].name;    </div><div class="line">     <span class="keyword">if</span>(n.indexOf(<span class="string">"."</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">         <span class="keyword">var</span> arr=n.split(<span class="string">"."</span>);    </div><div class="line">         <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;arr.length<span class="number">-1</span>;i++)&#123;       </div><div class="line">             <span class="keyword">if</span>(arr[i].indexOf(<span class="string">"["</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">                 <span class="keyword">var</span> a=arr[i].substring(<span class="number">0</span>,arr[i].indexOf(<span class="string">"["</span>));    </div><div class="line">                 temp[a]=temp[a]||[];    </div><div class="line">                 <span class="keyword">var</span> y=arr[i].substring(arr[i].indexOf(<span class="string">"["</span>)+<span class="number">1</span>,arr[i].indexOf(<span class="string">"]"</span>));    </div><div class="line">                 temp[a][y]=temp[a][y]||&#123;&#125;;    </div><div class="line">                 temp=temp[a][y];    </div><div class="line">             &#125;<span class="keyword">else</span>&#123;    </div><div class="line">                 temp[arr[i]]=temp[arr[i]] || &#123;&#125;;       </div><div class="line">                 temp=temp[arr[i]];    </div><div class="line">             &#125;    </div><div class="line">         &#125;  </div><div class="line">         temp[arr[arr.length<span class="number">-1</span>]]=values[index].value;         </div><div class="line">     &#125;<span class="keyword">else</span>&#123;    </div><div class="line">         <span class="keyword">if</span>(obj[n] !==<span class="literal">undefined</span> &amp;&amp; obj[n]!=<span class="literal">null</span>)&#123;    </div><div class="line">            <span class="keyword">if</span>( !$.isArray(obj[n]))&#123;    </div><div class="line">                <span class="keyword">var</span> v=obj[n];    </div><div class="line">                obj[n]=[];    </div><div class="line">                obj[n].push(v);    </div><div class="line">            &#125;  </div><div class="line">              </div><div class="line">            obj[n].push(values[index].value);    </div><div class="line">         &#125;<span class="keyword">else</span>&#123;     </div><div class="line">             obj[n]=values[index].value;    </div><div class="line">         &#125;    </div><div class="line">     &#125;       </div><div class="line">  &#125;       </div><div class="line"><span class="keyword">return</span> obj;  </div><div class="line">   </div></pre></td></tr></table></figure><br>   该轮子支持复杂对象，支持对象数组，支持简单属性<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">    $(<span class="string">"#test-btn"</span>).on(<span class="string">"click"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line"> <span class="keyword">var</span> json=form2Json(&#123;  </div><div class="line">  <span class="attr">form</span>:<span class="string">"#test-form"</span>  </div><div class="line"> &#125;);  </div><div class="line"><span class="built_in">console</span>.log(json);  </div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(json));  </div><div class="line">&#125;);  </div><div class="line">   </div></pre></td></tr></table></figure><br>     最终结果如下<br>     <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"a"</span>:&#123;<span class="string">"b"</span>:&#123;<span class="string">"c"</span>:<span class="string">"abc"</span>,<span class="string">"d"</span>:<span class="string">"abd"</span>&#125;,<span class="string">"f"</span>:<span class="string">"af"</span>&#125;,<span class="string">"x"</span>:<span class="string">"x"</span>,<span class="string">"y"</span>:[<span class="string">"0"</span>,<span class="string">"y2"</span>],<span class="string">"m"</span>:[&#123;<span class="string">"c"</span>:<span class="string">"m0c"</span>,<span class="string">"d"</span>:<span class="string">"m0d"</span>&#125;,&#123;<span class="string">"c"</span>:<span class="string">"m1c"</span>,<span class="string">"d"</span>:<span class="string">"m1d"</span>&#125;]&#125;  </div><div class="line">     </div></pre></td></tr></table></figure></p>
 
           
         
@@ -1785,7 +1787,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

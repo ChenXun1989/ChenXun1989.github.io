@@ -90,7 +90,7 @@
 <meta property="og:url" content="www.chenxun.wiki/2017/01/16/thread-04/index.html">
 <meta property="og:site_name" content="陈公子的博客">
 <meta property="og:description" content="synchronized原理解析synchronized的三种方式  对于普通同步方法,锁的是当前实例对象  1234  synchronized void test1()&amp;#123;   //do something	&amp;#125;   对于静态方同步方法，锁的是当前类的Class对象  1234   static synchronized void test2()&amp;#123;   	//do s">
-<meta property="og:updated_time" content="2017-01-16T07:39:25.000Z">
+<meta property="og:updated_time" content="2017-01-17T10:09:51.944Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="synchronized原理解析">
 <meta name="twitter:description" content="synchronized原理解析synchronized的三种方式  对于普通同步方法,锁的是当前实例对象  1234  synchronized void test1()&amp;#123;   //do something	&amp;#125;   对于静态方同步方法，锁的是当前类的Class对象  1234   static synchronized void test2()&amp;#123;   	//do s">
@@ -405,7 +405,7 @@
 <ul>
 <li>偏向锁： 存在java对象头里面。</li>
 <li>轻量级锁：存在当前线程的栈帧里面</li>
-<li>重量级锁： 存在当前对象的monitor对象里面<br>锁升级过程：<br>无锁状态到偏向锁，当前地线程通过cas修改java对象头的锁标志位。<br>谝向锁到轻量级锁, 当前现场把java对象头的锁信息copy到栈帧里面<br>偏向锁到重量级锁，把栈帧里面的锁信息copy到对象的monitor里面。</li>
+<li>重量级锁： 存在当前对象的monitor对象里面<br>锁升级过程：<br>无锁状态到偏向锁，当前线程通过cas修改java对象头的锁标志位。<br>谝向锁到轻量级锁, 当前线程把java对象头的锁信息copy到栈帧里面<br>轻量级锁到重量级锁，把栈帧里面的锁信息copy到对象的monitor里面。</li>
 </ul>
 <ul>
 <li>偏向锁和轻量级锁采用cas自旋修改锁状态，重量级锁通过线程信号来实现*  </li>
@@ -453,6 +453,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/17/thread-05/" rel="prev" title="并发容器和同步容器">
+                并发容器和同步容器 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -522,7 +526,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
