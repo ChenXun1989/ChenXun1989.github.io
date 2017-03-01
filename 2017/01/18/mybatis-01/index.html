@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="dubbo,java," />
+  <meta name="keywords" content="mybatis," />
 
 
 
@@ -84,22 +84,24 @@
 
 
 
-<meta name="description" content="dubbo源码研究之rpc模块  dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。    dubbo的rpc模块以Invocation和Result为中心，扩展接口为Protocol、Invoker和Exporter。  Protocol是服务域，它是Invoker暴露和引用的主功能入口，它负责Invoker的生命周期管理。  I">
+<meta name="description" content="核心接口（对象）sqlSessionFactory对象  sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。
+sqlSession接口一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建
+Executor接口  对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行sql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dubbo源码研究之rpc模块">
-<meta property="og:url" content="www.chenxun.wiki/2017/01/14/3/index.html">
+<meta property="og:title" content="mybatis源码分析（一）">
+<meta property="og:url" content="www.chenxun.wiki/2017/01/18/mybatis-01/index.html">
 <meta property="og:site_name" content="陈公子的博客">
-<meta property="og:description" content="dubbo源码研究之rpc模块  dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。    dubbo的rpc模块以Invocation和Result为中心，扩展接口为Protocol、Invoker和Exporter。  Protocol是服务域，它是Invoker暴露和引用的主功能入口，它负责Invoker的生命周期管理。  I">
-<meta property="og:image" content="www.chenxun.wiki/images/1.png">
-<meta property="og:image" content="www.chenxun.wiki/images/4.png">
-<meta property="og:image" content="www.chenxun.wiki/images/5.png">
-<meta property="og:image" content="www.chenxun.wiki/images/2.jpg">
-<meta property="og:image" content="www.chenxun.wiki/images/3.jpg">
-<meta property="og:updated_time" content="2017-01-15T01:35:03.476Z">
+<meta property="og:description" content="核心接口（对象）sqlSessionFactory对象  sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。
+sqlSession接口一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建
+Executor接口  对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行sql">
+<meta property="og:image" content="www.chenxun.wiki/images/20170301.png">
+<meta property="og:updated_time" content="2017-03-01T09:47:07.315Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dubbo源码研究之rpc模块">
-<meta name="twitter:description" content="dubbo源码研究之rpc模块  dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。    dubbo的rpc模块以Invocation和Result为中心，扩展接口为Protocol、Invoker和Exporter。  Protocol是服务域，它是Invoker暴露和引用的主功能入口，它负责Invoker的生命周期管理。  I">
-<meta name="twitter:image" content="www.chenxun.wiki/images/1.png">
+<meta name="twitter:title" content="mybatis源码分析（一）">
+<meta name="twitter:description" content="核心接口（对象）sqlSessionFactory对象  sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。
+sqlSession接口一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建
+Executor接口  对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行sql">
+<meta name="twitter:image" content="www.chenxun.wiki/images/20170301.png">
 
 
 
@@ -127,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="www.chenxun.wiki/2017/01/14/3/"/>
+  <link rel="canonical" href="www.chenxun.wiki/2017/01/18/mybatis-01/"/>
 
 
 
 
 
-  <title> dubbo源码研究之rpc模块 | 陈公子的博客 </title>
+  <title> mybatis源码分析（一） | 陈公子的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -309,7 +311,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/14/3/">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/18/mybatis-01/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="陈勋">
@@ -333,7 +335,7 @@
             
             
               
-                dubbo源码研究之rpc模块
+                mybatis源码分析（一）
               
             
           </h1>
@@ -348,8 +350,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-14T22:47:45+08:00">
-                2017-01-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-18T13:46:29+08:00">
+                2017-01-18
               </time>
             
 
@@ -371,8 +373,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
+                  <a href="/categories/mybatis/" itemprop="url" rel="index">
+                    <span itemprop="name">mybatis</span>
                   </a>
                 </span>
 
@@ -406,7 +408,21 @@
       
 
       
-        <h1 id="dubbo源码研究之rpc模块"><a href="#dubbo源码研究之rpc模块" class="headerlink" title="dubbo源码研究之rpc模块"></a>dubbo源码研究之rpc模块</h1><p>  dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。<br>  <img src="/images/1.png"><br>  dubbo的rpc模块以Invocation和Result为中心，扩展接口为Protocol、Invoker和Exporter。<br>  Protocol是服务域，它是Invoker暴露和引用的主功能入口，它负责Invoker的生命周期管理。<br>  Invoker是实体域，它是Dubbo的核心模型，其它模型都向它靠扰，或转换成它，它代表一个可执行体，可向它发起invoke调用，<br>       它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。<br>  invoker接口提供两个方法。<br>  Class<t> getInterface();  获取调用的接口<br>  Result invoke(Invocation invocation) throws RpcException; 执行调用<br>       说明rpc就两件事，第一，定位要调用的是哪个接口，第二发起调用返回结果。值得注意的是invoker需要Invocation提供的信息，Invocation 支持有本地invoker。invoker不参与Invocation的序列化。Invocation转成request对象通过网络传递并序列化和反序列化。<br>  <img src="/images/4.png"><br>  rpccontext是一个静态工具类，通过threadlocal来保存单次调用的上下文。<br>  Protocol负载invoker的暴露与引用。<br>  <img src="/images/5.png"><br>      一个refer的invoker就会存在一个export的invoker，如果引用的服务不存在，则需要设置<dubbo:consumer check="false"><br>       暴露服务顺序<br>  <img src="/images/2.jpg"><br>       引用服务时序<br>  <img src="/images/3.jpg"><br>  dubbo的rpc模块也遵守dubbo的整体设计原则采用Microkernel + Plugin模式，Microkernel只负责组装Plugin。<br>  invoker是核心模型，服务方把invoker对象暴露成Exporter对象，并把url描述写入注册中心，注册中心推送到消费方。消费方通过url转成invoker对象。</dubbo:consumer></t></p>
+        <h1 id="核心接口（对象）"><a href="#核心接口（对象）" class="headerlink" title="核心接口（对象）"></a>核心接口（对象）</h1><h2 id="sqlSessionFactory对象"><a href="#sqlSessionFactory对象" class="headerlink" title="sqlSessionFactory对象"></a>sqlSessionFactory对象</h2><p>  sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。</p>
+<h2 id="sqlSession接口"><a href="#sqlSession接口" class="headerlink" title="sqlSession接口"></a>sqlSession接口</h2><pre><code>一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建
+</code></pre><h2 id="Executor接口"><a href="#Executor接口" class="headerlink" title="Executor接口"></a>Executor接口</h2><p>  对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行sql操作</p>
+<h2 id="MapperProxy类"><a href="#MapperProxy类" class="headerlink" title="MapperProxy类"></a>MapperProxy类</h2><p>  代理实现mybatis的客户端mapper接口</p>
+<h2 id="MapperMethod类"><a href="#MapperMethod类" class="headerlink" title="MapperMethod类"></a>MapperMethod类</h2><p> 对应客户端代码的mapper接口里面的一个方法。该实例缓存了。</p>
+<h2 id="StatementHandler接口"><a href="#StatementHandler接口" class="headerlink" title="StatementHandler接口"></a>StatementHandler接口</h2><p>  jdbc Statement的装饰器</p>
+<h2 id="ResultSetHandler接口"><a href="#ResultSetHandler接口" class="headerlink" title="ResultSetHandler接口"></a>ResultSetHandler接口</h2><p>  jdbc resultSet的装饰器</p>
+<h2 id="mybaits执行orm操作细节"><a href="#mybaits执行orm操作细节" class="headerlink" title="mybaits执行orm操作细节"></a>mybaits执行orm操作细节</h2><p>  <img src="images/20170301.png"><br>  <strong> sqlsession的close 方法会关闭底层jdbc connection </strong></p>
+<h2 id="mybatis插件机制"><a href="#mybatis插件机制" class="headerlink" title="mybatis插件机制"></a>mybatis插件机制</h2><p>  mybatis插件是基于代理实现的，具体支持一下四个接口</p>
+<ul>
+<li>Executor</li>
+<li>ParameterHandler</li>
+<li>ResultSetHandler</li>
+<li>StatemetHandler</li>
+</ul>
 
       
     </div>
@@ -430,9 +446,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/dubbo/" rel="tag"># dubbo</a>
-          
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
           
         </div>
       
@@ -441,8 +455,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/21/12/" rel="next" title="solr中文分词">
-                <i class="fa fa-chevron-left"></i> solr中文分词
+              <a href="/2017/01/18/nio-01/" rel="next" title="Buffer详解">
+                <i class="fa fa-chevron-left"></i> Buffer详解
               </a>
             
           </div>
@@ -451,8 +465,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/15/1/" rel="prev" title="dubbo源码研究之extension模块">
-                dubbo源码研究之extension模块 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/21/thread-06/" rel="prev" title="java线程状态">
+                java线程状态 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +590,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dubbo源码研究之rpc模块"><span class="nav-text">dubbo源码研究之rpc模块</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#核心接口（对象）"><span class="nav-text">核心接口（对象）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlSessionFactory对象"><span class="nav-text">sqlSessionFactory对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlSession接口"><span class="nav-text">sqlSession接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Executor接口"><span class="nav-text">Executor接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapperProxy类"><span class="nav-text">MapperProxy类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapperMethod类"><span class="nav-text">MapperMethod类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StatementHandler接口"><span class="nav-text">StatementHandler接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResultSetHandler接口"><span class="nav-text">ResultSetHandler接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybaits执行orm操作细节"><span class="nav-text">mybaits执行orm操作细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis插件机制"><span class="nav-text">mybatis插件机制</span></a></li></ol></li></ol></div>
             
 
           </div>
