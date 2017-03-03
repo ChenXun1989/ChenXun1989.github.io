@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="陈公子,chenxun.wiki,chenxun,java" />
+  <meta name="keywords" content="ioc,framework," />
 
 
 
@@ -84,15 +84,28 @@
 
 
 
-<meta name="description" content="我以为文字可以宣泄过往，但终究写不出流年。我以为时间可以磨平菱角，但终究不曾被改变。繁华散尽，不如归去。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="陈公子的博客">
-<meta property="og:url" content="www.chenxun.wiki/tags/framework/index.html">
+<meta name="description" content="IOC容器介绍提供getBean接口，支持依赖注入 示例代码地址： https://github.com/ChenXun1989/ioc-framework 
+IOC容器主要模块
+ApplicationContext，IOC容器上下文，持有对象Map
+BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口
+CompentScan 收集相关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOC容器设计">
+<meta property="og:url" content="www.chenxun.wiki/2017/03/03/framework-01/index.html">
 <meta property="og:site_name" content="陈公子的博客">
-<meta property="og:description" content="我以为文字可以宣泄过往，但终究写不出流年。我以为时间可以磨平菱角，但终究不曾被改变。繁华散尽，不如归去。">
+<meta property="og:description" content="IOC容器介绍提供getBean接口，支持依赖注入 示例代码地址： https://github.com/ChenXun1989/ioc-framework 
+IOC容器主要模块
+ApplicationContext，IOC容器上下文，持有对象Map
+BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口
+CompentScan 收集相关">
+<meta property="og:updated_time" content="2017-03-03T07:36:57.590Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="陈公子的博客">
-<meta name="twitter:description" content="我以为文字可以宣泄过往，但终究写不出流年。我以为时间可以磨平菱角，但终究不曾被改变。繁华散尽，不如归去。">
+<meta name="twitter:title" content="IOC容器设计">
+<meta name="twitter:description" content="IOC容器介绍提供getBean接口，支持依赖注入 示例代码地址： https://github.com/ChenXun1989/ioc-framework 
+IOC容器主要模块
+ApplicationContext，IOC容器上下文，持有对象Map
+BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口
+CompentScan 收集相关">
 
 
 
@@ -120,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="www.chenxun.wiki/tags/framework/"/>
+  <link rel="canonical" href="www.chenxun.wiki/2017/03/03/framework-01/"/>
 
 
 
 
 
-  <title> 标签: framework | 陈公子的博客 </title>
+  <title> IOC容器设计 | 陈公子的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -157,7 +170,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -292,46 +305,185 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        framework
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/03/03/framework-01/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                IOC容器设计
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-03T13:46:29+08:00">
+                2017-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/framework/" itemprop="url" rel="index">
+                    <span itemprop="name">framework</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <h1 id="IOC容器介绍"><a href="#IOC容器介绍" class="headerlink" title="IOC容器介绍"></a>IOC容器介绍</h1><p>提供getBean接口，支持依赖注入<br><strong> 示例代码地址：<a href="https://github.com/ChenXun1989/ioc-framework" target="_blank" rel="external"> https://github.com/ChenXun1989/ioc-framework </a></strong></p>
+<h1 id="IOC容器主要模块"><a href="#IOC容器主要模块" class="headerlink" title="IOC容器主要模块"></a>IOC容器主要模块</h1><ul>
+<li>ApplicationContext，IOC容器上下文，持有对象Map</li>
+<li>BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口</li>
+<li>CompentScan 收集相关配置信息，主要分xml和注解扫描两种<h1 id="IOC容器启动过程"><a href="#IOC容器启动过程" class="headerlink" title="IOC容器启动过程"></a>IOC容器启动过程</h1></li>
+<li>ApplicationContext 创建<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ApplicationContext context=<span class="keyword">new</span> ApplicationContext(<span class="string">"com.chenxun.framework.example.entity"</span>);</div><div class="line">	Student s=(Student) context.getBean(<span class="string">"student"</span>);</div><div class="line">	s.test();</div></pre></td></tr></table></figure></li>
+<li>CompentScan 收集相关配置信息，解析出被ioc容器托管的class集合<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> List&lt;String &gt; list=<span class="keyword">new</span> ArrayList&lt;&gt;();	 </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scan</span><span class="params">(String packageName)</span></span>&#123;</div><div class="line">  String parent=	System.getProperty(<span class="string">"user.dir"</span>);</div><div class="line">  parent=parent+<span class="string">"/src/main/java"</span>;</div><div class="line">  System.out.println(parent);</div><div class="line">  String child=packageName.replaceAll(<span class="string">"\\."</span>, <span class="string">"/"</span>);</div><div class="line">	File f=<span class="keyword">new</span> File(parent ,child);</div><div class="line">	 <span class="keyword">for</span>(File c:f.listFiles())&#123;</div><div class="line">		<span class="keyword">if</span>(c.getName().endsWith(<span class="string">".java"</span>))&#123;</div><div class="line">			list.add(packageName+<span class="string">"."</span>+c.getName().substring(<span class="number">0</span>,c.getName().lastIndexOf(<span class="string">"."</span>)));</div><div class="line">		&#125;</div><div class="line">	 &#125;	</div><div class="line">&#125;;	</div><div class="line"><span class="keyword">public</span> List&lt;String &gt; getList()&#123;</div><div class="line">	<span class="keyword">return</span> list;</div><div class="line">&#125;</div></pre></td></tr></table></figure></li>
+<li>创建对应类的BeanFactory</li>
+<li>BeanFactory通过反射创建默认class默认实例对象</li>
+<li>把创建完的对象放入ApplicationContext持有的对象Map</li>
+<li>遍历beanFactory的Map，调用setProperties接口来完成依赖注入<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> ClassNotFoundException</span>&#123;</div><div class="line">	compentScan.scan(backPackage);</div><div class="line">	<span class="keyword">for</span>(String clasName:compentScan.getList())&#123;</div><div class="line">		Class cls=Class.forName(clasName);</div><div class="line">		Compent c=(Compent) cls.getAnnotation(Compent.class);</div><div class="line">		<span class="keyword">if</span>(c!=<span class="keyword">null</span>)&#123;</div><div class="line">			String key=c.value();			</div><div class="line">			BeanFactory bf=<span class="keyword">new</span> SimpleBeanFactory(cls);</div><div class="line">			beanFactorys.put(cls, bf);	</div><div class="line">			map.put(key, bf.getBean());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(Entry&lt;Class, BeanFactory&gt; entry :beanFactorys.entrySet())&#123;</div><div class="line">		entry.getValue().setProperties(map);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<strong> 先创建对象，再做依赖注入 </strong><br><strong> 容器里面是原生对象还是代理对象，取决于beanfatory返回的对象实例 </strong></li>
+</ul>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/03/03/framework-01/" itemprop="url">
-              
-                <span itemprop="name">IOC容器设计</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-03T13:46:29+08:00"
-              content="2017-03-03" >
-          03-03
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ioc/" rel="tag"># ioc</a>
+          
+            <a href="/tags/framework/" rel="tag"># framework</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/01/mybatis-01/" rel="next" title="mybatis源码分析（一）">
+                <i class="fa fa-chevron-left"></i> mybatis源码分析（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
           
           </div>
@@ -339,6 +491,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -358,8 +514,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/head.jpg"
@@ -415,6 +580,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IOC容器介绍"><span class="nav-text">IOC容器介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IOC容器主要模块"><span class="nav-text">IOC容器主要模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IOC容器启动过程"><span class="nav-text">IOC容器启动过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
@@ -519,6 +700,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
@@ -550,6 +735,10 @@
 
   
 
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
   
 
 
