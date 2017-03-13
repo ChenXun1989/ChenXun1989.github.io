@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="js,jquery,json," />
+  <meta name="keywords" content="ioc,framework," />
 
 
 
@@ -84,16 +84,18 @@
 
 
 
-<meta name="description" content="jQuery基于json对象自动给表单元素赋值  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768">
+<meta name="description" content="RPC通讯RPC（Remote Procedure Call Protocol）——远程过程调用协议，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。RPC协议假定某些传输协议的存在，如TCP或UDP，为通信程序之间携带信息数据。在OSI网络通信模型中，RPC跨越了传输层和应用层。RPC使得开发包括网络分布式多程序在内的应用程序更加容易。 代码地址：https://gi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jQuery基于json对象自动给表单元素赋值">
-<meta property="og:url" content="www.chenxun.wiki/2017/01/15/9/index.html">
+<meta property="og:title" content="RPC框架设计">
+<meta property="og:url" content="www.chenxun.wiki/2017/03/13/framework-03/index.html">
 <meta property="og:site_name" content="陈公子的博客">
-<meta property="og:description" content="jQuery基于json对象自动给表单元素赋值  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768">
-<meta property="og:updated_time" content="2017-01-15T14:23:29.935Z">
+<meta property="og:description" content="RPC通讯RPC（Remote Procedure Call Protocol）——远程过程调用协议，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。RPC协议假定某些传输协议的存在，如TCP或UDP，为通信程序之间携带信息数据。在OSI网络通信模型中，RPC跨越了传输层和应用层。RPC使得开发包括网络分布式多程序在内的应用程序更加容易。 代码地址：https://gi">
+<meta property="og:image" content="www.chenxun.wiki/images/20170313.png">
+<meta property="og:updated_time" content="2017-03-13T08:43:29.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jQuery基于json对象自动给表单元素赋值">
-<meta name="twitter:description" content="jQuery基于json对象自动给表单元素赋值  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768">
+<meta name="twitter:title" content="RPC框架设计">
+<meta name="twitter:description" content="RPC通讯RPC（Remote Procedure Call Protocol）——远程过程调用协议，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。RPC协议假定某些传输协议的存在，如TCP或UDP，为通信程序之间携带信息数据。在OSI网络通信模型中，RPC跨越了传输层和应用层。RPC使得开发包括网络分布式多程序在内的应用程序更加容易。 代码地址：https://gi">
+<meta name="twitter:image" content="www.chenxun.wiki/images/20170313.png">
 
 
 
@@ -121,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="www.chenxun.wiki/2017/01/15/9/"/>
+  <link rel="canonical" href="www.chenxun.wiki/2017/03/13/framework-03/"/>
 
 
 
 
 
-  <title> jQuery基于json对象自动给表单元素赋值 | 陈公子的博客 </title>
+  <title> RPC框架设计 | 陈公子的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -303,7 +305,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/03/13/framework-03/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="陈勋">
@@ -327,7 +329,7 @@
             
             
               
-                jQuery基于json对象自动给表单元素赋值
+                RPC框架设计
               
             
           </h1>
@@ -342,8 +344,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-13T13:46:29+08:00">
+                2017-03-13
               </time>
             
 
@@ -365,8 +367,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
+                  <a href="/categories/framework/" itemprop="url" rel="index">
+                    <span itemprop="name">framework</span>
                   </a>
                 </span>
 
@@ -383,8 +385,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/15/9/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/9/" itemprop="commentCount"></span>
+                <a href="/2017/03/13/framework-03/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/13/framework-03/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,7 +412,27 @@
       
 
       
-        <h1 id="jQuery基于json对象自动给表单元素赋值"><a href="#jQuery基于json对象自动给表单元素赋值" class="headerlink" title="jQuery基于json对象自动给表单元素赋值"></a>jQuery基于json对象自动给表单元素赋值</h1><p>  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">json2form:<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;  </div><div class="line">       <span class="keyword">var</span> nodeParent = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> value = <span class="literal">undefined</span>;  </div><div class="line">      <span class="keyword">var</span> $el = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> nodeName = <span class="string">""</span>;  </div><div class="line">       <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;  </div><div class="line">          value= obj[i] ;  </div><div class="line">          <span class="keyword">if</span>(value === <span class="literal">undefined</span> || value===<span class="literal">null</span>)&#123;  </div><div class="line">              <span class="keyword">continue</span>;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">if</span>(<span class="keyword">typeof</span> value == <span class="string">'object'</span>)&#123;  </div><div class="line">              nodeParent=obj.nodeParent;  </div><div class="line">              value.nodeParent=nodeParent?nodeParent+<span class="string">"."</span>+i : i;  </div><div class="line">              <span class="keyword">if</span>(value <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;  </div><div class="line">                  <span class="keyword">for</span>(<span class="keyword">var</span> mm=<span class="number">0</span>;mm&lt;value.length;mm++)&#123;  </div><div class="line">                      <span class="keyword">var</span> ms=value[mm];  </div><div class="line">                      <span class="keyword">if</span>(<span class="keyword">typeof</span> ms == <span class="string">'object'</span>)&#123;  </div><div class="line">                          nodeParent=ms.nodeParent;  </div><div class="line">                          ms.nodeParent=ms.nodeParent?ms.nodeParent+<span class="string">"."</span>+i+<span class="string">"["</span>+mm+<span class="string">"]"</span>:i+<span class="string">"["</span>+mm+<span class="string">"]"</span>;  </div><div class="line">                          <span class="built_in">arguments</span>.callee(ms);  </div><div class="line">                      &#125;  </div><div class="line"></div><div class="line">                  &#125;  </div><div class="line"></div><div class="line">                  $el=$(<span class="string">"[name='"</span>+i+<span class="string">"']"</span>);  </div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":checkbox"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">                  <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">              &#125;<span class="keyword">else</span>&#123;  <span class="comment">//递归  </span></div><div class="line">                  <span class="built_in">arguments</span>.callee(value);  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">else</span>&#123;  </div><div class="line">              nodeName=obj.nodeParent?obj.nodeParent+<span class="string">"."</span>+i : i ;  </div><div class="line"></div><div class="line">              $el=$(<span class="string">"[name='"</span>+nodeName+<span class="string">"']"</span>);  </div><div class="line">              <span class="keyword">if</span>($el.length &gt; <span class="number">0</span>)&#123;  </div><div class="line">              <span class="comment">// console.log("匹配数据名称："+nodeName+"值："+value);  </span></div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":text"</span>)||$el.attr(<span class="string">"type"</span>)==<span class="string">"hidden"</span>)&#123;  </div><div class="line">                      <span class="keyword">if</span>($el.data(<span class="string">"money"</span>) &amp;&amp; $el.data(<span class="string">"money"</span>) == <span class="string">"money"</span>)&#123;  </div><div class="line">                          value = outputdollars(value);  </div><div class="line">                      &#125;  </div><div class="line">                      $el.val(value);  </div><div class="line">                          </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                     $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                        <span class="keyword">if</span>($(<span class="keyword">this</span>).val()==value)&#123;  </div><div class="line">                            $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                        &#125;  </div><div class="line">                     &#125;)  </div><div class="line">                 &#125;  </div><div class="line">                 <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"select"</span>))&#123;  </div><div class="line">                    $el.find(<span class="string">"option"</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> $(<span class="keyword">this</span>).val() == obj[i];&#125;).prop(<span class="string">"selected"</span>,<span class="literal">true</span>);  </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"textarea"</span>))&#123;  </div><div class="line">                    $el.val(value)  </div><div class="line">                 &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">      &#125;      </div><div class="line">         </div><div class="line">   &#125; </div><div class="line"></div><div class="line"> </div></pre></td></tr></table></figure><br>  注意： 表单的name属于与json对象的属性名为一致，保持继承链。<br>  例如 input name=’a.b.c’   表示json对象里面的a属性里面的b属性的c属性。 </p>
+        <h1 id="RPC通讯"><a href="#RPC通讯" class="headerlink" title="RPC通讯"></a>RPC通讯</h1><p>RPC（Remote Procedure Call Protocol）——远程过程调用协议，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。<br>RPC协议假定某些传输协议的存在，如TCP或UDP，为通信程序之间携带信息数据。在OSI网络通信模型中，RPC跨越了传输层和应用层。RPC使得开发包括网络分布式多程序在内的应用程序更加容易。<br><strong> 代码地址：<a href="https://github.com/ChenXun1989/netty-rpc" target="_blank" rel="external">https://github.com/ChenXun1989/netty-rpc</a> </strong></p>
+<h1 id="透明化RPC"><a href="#透明化RPC" class="headerlink" title="透明化RPC"></a>透明化RPC</h1><p>一个RPC服务调用有以下几个步骤</p>
+<ol>
+<li>服务消费方（client）调用以本地调用方式调用服务</li>
+<li>client stub接收到调用后负责将方法、参数等组装成能够进行网络传输的消息体</li>
+<li>client stub找到服务地址，并将消息发送到服务端</li>
+<li>server stub收到消息后进行解码</li>
+<li>server stub根据解码结果调用本地的服务</li>
+<li>本地服务执行并将结果返回给server stub</li>
+<li>server stub将返回结果打包成消息并发送至消费方</li>
+<li>client stub接收到消息，并进行解码</li>
+<li>服务消费方得到最终结果<br><strong> 透明的RPC测试把2-8步骤全部封装起来，消费方只需要执行第一个步骤，并等待返回结果就行。</strong></li>
+</ol>
+<h1 id="透明化RPC具体调用过程"><a href="#透明化RPC具体调用过程" class="headerlink" title="透明化RPC具体调用过程"></a>透明化RPC具体调用过程</h1><p>图例<br><img src="/images/20170313.png"></p>
+<h1 id="注意要点"><a href="#注意要点" class="headerlink" title="注意要点"></a>注意要点</h1><ul>
+<li>动态代理（客户端） 主要实现有两种JDK动态代理和cglib</li>
+<li>reqeust对象  主要包含  服务方法签名和参数</li>
+<li>repsone对象  主要包含服务方法处理结果和异常</li>
+<li>序列化和反序列化  主要在 reqeust和respone对象，该demo采用protobuf实现</li>
+<li>socket通讯   该demo采用netty4实现。</li>
+</ul>
 
       
     </div>
@@ -434,11 +456,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/js/" rel="tag"># js</a>
+            <a href="/tags/ioc/" rel="tag"># ioc</a>
           
-            <a href="/tags/jquery/" rel="tag"># jquery</a>
-          
-            <a href="/tags/json/" rel="tag"># json</a>
+            <a href="/tags/framework/" rel="tag"># framework</a>
           
         </div>
       
@@ -447,8 +467,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/15/2/" rel="next" title="dubbo源码研究之dubbo-registry模块">
-                <i class="fa fa-chevron-left"></i> dubbo源码研究之dubbo-registry模块
+              <a href="/2017/03/03/framework-01/" rel="next" title="IOC容器设计">
+                <i class="fa fa-chevron-left"></i> IOC容器设计
               </a>
             
           </div>
@@ -456,10 +476,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/15/6/" rel="prev" title="dubbo源码研究之config模块">
-                dubbo源码研究之config模块 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -485,8 +501,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/01/15/9/"
-           data-title="jQuery基于json对象自动给表单元素赋值" data-url="www.chenxun.wiki/2017/01/15/9/">
+      <div class="ds-thread" data-thread-key="2017/03/13/framework-03/"
+           data-title="RPC框架设计" data-url="www.chenxun.wiki/2017/03/13/framework-03/">
       </div>
     
   </div>
@@ -586,7 +602,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jQuery基于json对象自动给表单元素赋值"><span class="nav-text">jQuery基于json对象自动给表单元素赋值</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RPC通讯"><span class="nav-text">RPC通讯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#透明化RPC"><span class="nav-text">透明化RPC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#透明化RPC具体调用过程"><span class="nav-text">透明化RPC具体调用过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注意要点"><span class="nav-text">注意要点</span></a></li></ol></div>
             
 
           </div>
