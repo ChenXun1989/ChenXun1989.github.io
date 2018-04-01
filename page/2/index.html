@@ -304,6 +304,171 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/16/thread-03/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/16/thread-03/" itemprop="url">
+                  volatile原理解析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-16T12:36:28+08:00">
+                2017-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java多线程/" itemprop="url" rel="index">
+                    <span itemprop="name">java多线程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/16/thread-03/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/thread-03/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="volatile原理解析"><a href="#volatile原理解析" class="headerlink" title="volatile原理解析"></a>volatile原理解析</h1><h2 id="volatile语义"><a href="#volatile语义" class="headerlink" title="volatile语义"></a>volatile语义</h2><p>   jsr133规范对volatile语义进行了增强，明确保证了可见性和有序性。<br>   <strong> volatile不保证原子性</strong><br>   java编程语言允许线程访问共享变量，为了确保共享变量能被准确和一致的更新，线程应该确保通过排他锁单独获得这个变量。<br>   Java语言提供了volatile，在某些情况下比锁更加方便。<br>       如果一个字段被声明成volatile，java线程内存模型确保所有线程看到这个变量的值是一致的。<br>   <strong> Volatile变量修饰符如果使用恰当的话，它比synchronized的使用和执行成本会更低，因为它不会引起线程上下文的切换和调度。 </strong></p>
+<h2 id="volatile的有序性"><a href="#volatile的有序性" class="headerlink" title="volatile的有序性"></a>volatile的有序性</h2><p>   jmm为了保证volatile的语义中的有序性，通过内存屏障来禁止指令重排序<br>   JMM基于保守策略的JMM内存屏障插入策略：</p>
+<ul>
+<li>在每个volatile写操作的前面插入一个StoreStore屏障</li>
+<li>在每个volatile写操作的后面插入一个SotreLoad屏障</li>
+<li>在每个volatile读操作的后面插入一个LoadLoad屏障</li>
+<li>在每个volatile读操作的后面插入一个LoadStore屏障<br><strong> x86处理器仅仅会对写-读操作做重排序,因此在x86中，JMM仅需在volatile后面插入一个StoreLoad屏障即可正确实现volatile写-读的内存语义 </strong>  <h2 id="volatile的可见性"><a href="#volatile的可见性" class="headerlink" title="volatile的可见性"></a>volatile的可见性</h2>  对于volatile修饰的变量，jvm虚拟机保证从主内存加载到线程工作内存的值是最新的。<br> 从内存语义的角度来看：</li>
+<li>volatile的写-读与锁的释放-获取有相同的内存效果</li>
+<li>volatile写和锁的释放有相同的内存语义</li>
+<li>volatile读与锁的获取有相同的内存语义<br>  当线程释放锁的时候，JMM会把线程对应的本地内存中的共享变量刷新到主内存中<br>  当线程获取锁时，JMM会把线程对应的本地内存置为无效，从而使得被监视器保护的临界区代码必须要从主内存中去读取共享变量。<h2 id="volatile的使用前提"><a href="#volatile的使用前提" class="headerlink" title="volatile的使用前提"></a>volatile的使用前提</h2><ul>
+<li>对变量的写入操作不依赖变量的当前值，或者你能确保只有单个线程更新变量的值。</li>
+<li>该变量没有包含在具有其他变量的不变式中。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/16/thread-02/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -426,6 +591,611 @@
 <h3 id="常量池Constant-Pool"><a href="#常量池Constant-Pool" class="headerlink" title="常量池Constant Pool:"></a>常量池Constant Pool:</h3><p> 常量池本身是方法区中的一个数据结构。常量池中存储了如字符串、final变量值、类名和方法名常量。常量池在编译期间就被确定，并保存在已编译的.class文件中。一般分为两类：字面量和应用量。字面量就是字符串、final变量等。类名和方法名属于引用量。引用量最常见的是在调用方法的时候，根据方法名找到方法的引用，并以此定为到函数体进行函数代码的执行。引用量包含：类和接口的权限定名、字段的名称和描述符，方法的名称和描述符。</p>
 <h3 id="本地方法栈Native-Method-Stack"><a href="#本地方法栈Native-Method-Stack" class="headerlink" title="本地方法栈Native Method Stack:"></a>本地方法栈Native Method Stack:</h3><p> 本地方法栈和Java栈所发挥的作用非常相似，区别不过是Java栈为JVM执行Java方法服务，而本地方法栈为JVM执行Native方法服务。</p>
 <h2 id="java内存模型-jmm"><a href="#java内存模型-jmm" class="headerlink" title="java内存模型 jmm"></a>java内存模型 jmm</h2><p> JMM规定了所有的变量都存储在主内存（Main Memory）中。每个线程还有自己的工作内存（Working Memory）,线程的工作内存中保存了该线程使用到的变量的主内存的副本拷贝，线程对变量的所有操作（读取、赋值等）都必须在工作内存中进行，而不能直接读写主内存中的变量（volatile变量仍然有工作内存的拷贝，但是由于它特殊的操作顺序性规定，所以看起来如同直接在主内存中读写访问一般）。不同的线程之间也无法直接访问对方工作内存中的变量，线程之间值的传递都需要通过主内存来完成。<br> <strong> 工作内存线程独享，主内存线程共享。 </strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/4/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/4/" itemprop="url">
+                  dubbo源码研究之container模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/15/4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="dubbo源码研究之container模块"><a href="#dubbo源码研究之container模块" class="headerlink" title="dubbo源码研究之container模块"></a>dubbo源码研究之container模块</h1><p>  dubbo-container模块是dubbo启动顺序中的第一个模块，<br>  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/** </span></div><div class="line"> * Container. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"spring"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * start. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * stop. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>       细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。<br>  Container 接口的主要实现<br>  <img src="/images/b.png"><br>       其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>       使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>  SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">  **  </div><div class="line"> * SpringContainer. (SPI, Singleton, ThreadSafe)  </div><div class="line"> *   </div><div class="line"> * <span class="meta">@author</span> william.liangf  </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringContainer</span> <span class="keyword">implements</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(SpringContainer.class);  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPRING_CONFIG = <span class="string">"dubbo.spring.config"</span>;  </div><div class="line">      </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_SPRING_CONFIG = <span class="string">"classpath*:META-INF/spring/*.xml"</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> ClassPathXmlApplicationContext context;  </div><div class="line">      </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassPathXmlApplicationContext <span class="title">getContext</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> context;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;  </div><div class="line">        String configPath = ConfigUtils.getProperty(SPRING_CONFIG);  </div><div class="line">        <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;  </div><div class="line">            configPath = DEFAULT_SPRING_CONFIG;  </div><div class="line">        &#125;  </div><div class="line">        context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));  </div><div class="line">        context.start();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span>) &#123;  </div><div class="line">                context.stop();  </div><div class="line">                context.close();  </div><div class="line">                context = <span class="keyword">null</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">            logger.error(e.getMessage(), e);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>       其他几个实现类似，重点讲下com.alibaba.dubbo.container.Main。这个是dubbo自带的main函数入口。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;  </div><div class="line">             String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());  </div><div class="line">             args = Constants.COMMA_SPLIT_PATTERN.split(config);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">final</span> List&lt;Container&gt; containers = <span class="keyword">new</span> ArrayList&lt;Container&gt;();  </div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i ++) &#123;  </div><div class="line">             containers.add(loader.getExtension(args[i]));  </div><div class="line">         &#125;  </div><div class="line">         logger.info(<span class="string">"Use container type("</span> + Arrays.toString(args) + <span class="string">") to run dubbo serivce."</span>);  </div><div class="line">           </div><div class="line">         <span class="keyword">if</span> (<span class="string">"true"</span>.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) &#123;  </div><div class="line">          Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;  </div><div class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                  <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">                      <span class="keyword">try</span> &#123;  </div><div class="line">                          container.stop();  </div><div class="line">                          logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" stopped!"</span>);  </div><div class="line">                      &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">                          logger.error(t.getMessage(), t);  </div><div class="line">                      &#125;  </div><div class="line">                      <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">                          running = <span class="keyword">false</span>;  </div><div class="line">                          Main.class.notify();  </div><div class="line">                      &#125;  </div><div class="line">                  &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">             container.start();  </div><div class="line">             logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" started!"</span>);  </div><div class="line">         &#125;  </div><div class="line">         System.out.println(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"[yyyy-MM-dd HH:mm:ss]"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" Dubbo service server started!"</span>);  </div><div class="line">     &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">         e.printStackTrace();  </div><div class="line">         logger.error(e.getMessage(), e);  </div><div class="line">         System.exit(<span class="number">1</span>);  </div><div class="line">     &#125;  </div><div class="line">     <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">         <span class="keyword">while</span> (running) &#123;  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 Main.class.wait();  </div><div class="line">             &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;  </div><div class="line"> &#125;   </div><div class="line"> </div></pre></td></tr></table></figure><br>  该方法通过钩子 Runtime.getRuntime().addShutdownHook来实现优雅停机，同时还支持通过启动参数来加载扩展点，<br> containers.add(loader.getExtension(args[i]))。但是没有类似spring boot 的CommandLineRunner 接口，<br>    在容器启动完毕之后执行一些初始化动作。建议使用dubbo的童鞋如没有特殊需求，可以使用该类作为程序启动类。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/9/" itemprop="url">
+                  jQuery基于json对象自动给表单元素赋值
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/15/9/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/9/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="jQuery基于json对象自动给表单元素赋值"><a href="#jQuery基于json对象自动给表单元素赋值" class="headerlink" title="jQuery基于json对象自动给表单元素赋值"></a>jQuery基于json对象自动给表单元素赋值</h1><p>  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">json2form:<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;  </div><div class="line">       <span class="keyword">var</span> nodeParent = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> value = <span class="literal">undefined</span>;  </div><div class="line">      <span class="keyword">var</span> $el = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> nodeName = <span class="string">""</span>;  </div><div class="line">       <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;  </div><div class="line">          value= obj[i] ;  </div><div class="line">          <span class="keyword">if</span>(value === <span class="literal">undefined</span> || value===<span class="literal">null</span>)&#123;  </div><div class="line">              <span class="keyword">continue</span>;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">if</span>(<span class="keyword">typeof</span> value == <span class="string">'object'</span>)&#123;  </div><div class="line">              nodeParent=obj.nodeParent;  </div><div class="line">              value.nodeParent=nodeParent?nodeParent+<span class="string">"."</span>+i : i;  </div><div class="line">              <span class="keyword">if</span>(value <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;  </div><div class="line">                  <span class="keyword">for</span>(<span class="keyword">var</span> mm=<span class="number">0</span>;mm&lt;value.length;mm++)&#123;  </div><div class="line">                      <span class="keyword">var</span> ms=value[mm];  </div><div class="line">                      <span class="keyword">if</span>(<span class="keyword">typeof</span> ms == <span class="string">'object'</span>)&#123;  </div><div class="line">                          nodeParent=ms.nodeParent;  </div><div class="line">                          ms.nodeParent=ms.nodeParent?ms.nodeParent+<span class="string">"."</span>+i+<span class="string">"["</span>+mm+<span class="string">"]"</span>:i+<span class="string">"["</span>+mm+<span class="string">"]"</span>;  </div><div class="line">                          <span class="built_in">arguments</span>.callee(ms);  </div><div class="line">                      &#125;  </div><div class="line"></div><div class="line">                  &#125;  </div><div class="line"></div><div class="line">                  $el=$(<span class="string">"[name='"</span>+i+<span class="string">"']"</span>);  </div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":checkbox"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">                  <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">              &#125;<span class="keyword">else</span>&#123;  <span class="comment">//递归  </span></div><div class="line">                  <span class="built_in">arguments</span>.callee(value);  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">else</span>&#123;  </div><div class="line">              nodeName=obj.nodeParent?obj.nodeParent+<span class="string">"."</span>+i : i ;  </div><div class="line"></div><div class="line">              $el=$(<span class="string">"[name='"</span>+nodeName+<span class="string">"']"</span>);  </div><div class="line">              <span class="keyword">if</span>($el.length &gt; <span class="number">0</span>)&#123;  </div><div class="line">              <span class="comment">// console.log("匹配数据名称："+nodeName+"值："+value);  </span></div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":text"</span>)||$el.attr(<span class="string">"type"</span>)==<span class="string">"hidden"</span>)&#123;  </div><div class="line">                      <span class="keyword">if</span>($el.data(<span class="string">"money"</span>) &amp;&amp; $el.data(<span class="string">"money"</span>) == <span class="string">"money"</span>)&#123;  </div><div class="line">                          value = outputdollars(value);  </div><div class="line">                      &#125;  </div><div class="line">                      $el.val(value);  </div><div class="line">                          </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                     $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                        <span class="keyword">if</span>($(<span class="keyword">this</span>).val()==value)&#123;  </div><div class="line">                            $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                        &#125;  </div><div class="line">                     &#125;)  </div><div class="line">                 &#125;  </div><div class="line">                 <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"select"</span>))&#123;  </div><div class="line">                    $el.find(<span class="string">"option"</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> $(<span class="keyword">this</span>).val() == obj[i];&#125;).prop(<span class="string">"selected"</span>,<span class="literal">true</span>);  </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"textarea"</span>))&#123;  </div><div class="line">                    $el.val(value)  </div><div class="line">                 &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">      &#125;      </div><div class="line">         </div><div class="line">   &#125; </div><div class="line"></div><div class="line"> </div></pre></td></tr></table></figure><br>  注意： 表单的name属于与json对象的属性名为一致，保持继承链。<br>  例如 input name=’a.b.c’   表示json对象里面的a属性里面的b属性的c属性。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/8/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/8/" itemprop="url">
+                  基于jquery把表单转成成json对象
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/15/8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/8/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="基于jquery把表单转成成json对象"><a href="#基于jquery把表单转成成json对象" class="headerlink" title="基于jquery把表单转成成json对象"></a>基于jquery把表单转成成json对象</h1><p>  最近前端框架修改，小伙伴希望能像以前写jsp一样使用 对象.属性作为表单元素的name值<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"test-form"</span>&gt;</span>   </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.c"</span> <span class="attr">value</span>=<span class="string">"abc"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.d"</span> <span class="attr">value</span>=<span class="string">"abd"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"x"</span> <span class="attr">value</span>=<span class="string">"x"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.f"</span> <span class="attr">value</span>=<span class="string">"af"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"0"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"y2"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].c"</span> <span class="attr">value</span>=<span class="string">"m0c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].d"</span> <span class="attr">value</span>=<span class="string">"m0d"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].c"</span> <span class="attr">value</span>=<span class="string">"m1c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].d"</span> <span class="attr">value</span>=<span class="string">"m1d"</span>&gt;</span>   </div><div class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"test-btn"</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span>  </div></pre></td></tr></table></figure><br>   我这种懒人第一反应肯定去找度娘，发现度娘居然没有，只好自己造了轮子。<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">form2Json</span>(<span class="params">params</span>)</span>&#123;  </div><div class="line"><span class="keyword">var</span> selector=params.form;  </div><div class="line"><span class="keyword">var</span> values= $(selector).serializeArray();  </div><div class="line"><span class="keyword">var</span> obj=&#123;&#125;;  </div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; values.length; ++index)      </div><div class="line">  &#123;      </div><div class="line">     <span class="keyword">var</span> temp=obj; <span class="comment">//上一级       </span></div><div class="line">     <span class="keyword">var</span> n=values[index].name;    </div><div class="line">     <span class="keyword">if</span>(n.indexOf(<span class="string">"."</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">         <span class="keyword">var</span> arr=n.split(<span class="string">"."</span>);    </div><div class="line">         <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;arr.length<span class="number">-1</span>;i++)&#123;       </div><div class="line">             <span class="keyword">if</span>(arr[i].indexOf(<span class="string">"["</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">                 <span class="keyword">var</span> a=arr[i].substring(<span class="number">0</span>,arr[i].indexOf(<span class="string">"["</span>));    </div><div class="line">                 temp[a]=temp[a]||[];    </div><div class="line">                 <span class="keyword">var</span> y=arr[i].substring(arr[i].indexOf(<span class="string">"["</span>)+<span class="number">1</span>,arr[i].indexOf(<span class="string">"]"</span>));    </div><div class="line">                 temp[a][y]=temp[a][y]||&#123;&#125;;    </div><div class="line">                 temp=temp[a][y];    </div><div class="line">             &#125;<span class="keyword">else</span>&#123;    </div><div class="line">                 temp[arr[i]]=temp[arr[i]] || &#123;&#125;;       </div><div class="line">                 temp=temp[arr[i]];    </div><div class="line">             &#125;    </div><div class="line">         &#125;  </div><div class="line">         temp[arr[arr.length<span class="number">-1</span>]]=values[index].value;         </div><div class="line">     &#125;<span class="keyword">else</span>&#123;    </div><div class="line">         <span class="keyword">if</span>(obj[n] !==<span class="literal">undefined</span> &amp;&amp; obj[n]!=<span class="literal">null</span>)&#123;    </div><div class="line">            <span class="keyword">if</span>( !$.isArray(obj[n]))&#123;    </div><div class="line">                <span class="keyword">var</span> v=obj[n];    </div><div class="line">                obj[n]=[];    </div><div class="line">                obj[n].push(v);    </div><div class="line">            &#125;  </div><div class="line">              </div><div class="line">            obj[n].push(values[index].value);    </div><div class="line">         &#125;<span class="keyword">else</span>&#123;     </div><div class="line">             obj[n]=values[index].value;    </div><div class="line">         &#125;    </div><div class="line">     &#125;       </div><div class="line">  &#125;       </div><div class="line"><span class="keyword">return</span> obj;  </div><div class="line">   </div></pre></td></tr></table></figure><br>   该轮子支持复杂对象，支持对象数组，支持简单属性<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">    $(<span class="string">"#test-btn"</span>).on(<span class="string">"click"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line"> <span class="keyword">var</span> json=form2Json(&#123;  </div><div class="line">  <span class="attr">form</span>:<span class="string">"#test-form"</span>  </div><div class="line"> &#125;);  </div><div class="line"><span class="built_in">console</span>.log(json);  </div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(json));  </div><div class="line">&#125;);  </div><div class="line">   </div></pre></td></tr></table></figure><br>     最终结果如下<br>     <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"a"</span>:&#123;<span class="string">"b"</span>:&#123;<span class="string">"c"</span>:<span class="string">"abc"</span>,<span class="string">"d"</span>:<span class="string">"abd"</span>&#125;,<span class="string">"f"</span>:<span class="string">"af"</span>&#125;,<span class="string">"x"</span>:<span class="string">"x"</span>,<span class="string">"y"</span>:[<span class="string">"0"</span>,<span class="string">"y2"</span>],<span class="string">"m"</span>:[&#123;<span class="string">"c"</span>:<span class="string">"m0c"</span>,<span class="string">"d"</span>:<span class="string">"m0d"</span>&#125;,&#123;<span class="string">"c"</span>:<span class="string">"m1c"</span>,<span class="string">"d"</span>:<span class="string">"m1d"</span>&#125;]&#125;  </div><div class="line">     </div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/5/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/15/5/" itemprop="url">
+                  dubbo源码研究之config-spring模块
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
+                2017-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dubbo/" itemprop="url" rel="index">
+                    <span itemprop="name">dubbo</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/15/5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/5/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="dubbo源码研究之config-spring模块"><a href="#dubbo源码研究之config-spring模块" class="headerlink" title="dubbo源码研究之config-spring模块"></a>dubbo源码研究之config-spring模块</h1><p>  dubbo-config-spring模块是dubbo-config的Extension。<br>  <img src="/images/c.png"><br>  Dubbo的扩展点加载从JDK标准的SPI(Service Provider Interface)扩展点发现机制加强而来。<br>  Dubbo改进了JDK标准的SPI的以下问题：<br>  JDK标准的SPI会一次性实例化扩展点所有实现，如果有扩展实现初始化很耗时，但如果没用上也加载，会很浪费资源。<br>    如果扩展点加载失败，连扩展点的名称都拿不到了。比如：JDK标准的ScriptEngine，通过getName();获取脚本类型的名称，<br>    但如果RubyScriptEngine因为所依赖的jruby.jar不存在，导致RubyScriptEngine类加载失败，这个失败原因被吃掉了，和ruby对应不起来，<br>    当用户执行ruby脚本时，会报不支持ruby，而不是真正失败的原因。<br>    增加了对扩展点IoC和AOP的支持，一个扩展点可以直接setter注入其它扩展点。<br>  dubbo的spi约定：在扩展类的jar包内，放置扩展点配置文件：META-INF/dubbo/接口全限定名，内容为：配置名=扩展实现类全限定名，多个实现类用换行符分隔。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SPI</span>  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ExtensionFactory</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * Get extension. </div><div class="line">     *  </div><div class="line">     * <span class="doctag">@param</span> type object type. </div><div class="line">     * <span class="doctag">@param</span> name object name. </div><div class="line">     * <span class="doctag">@return</span> object instance. </div><div class="line">     */  </div><div class="line">    &lt;T&gt; <span class="function">T <span class="title">getExtension</span><span class="params">(Class&lt;T&gt; type, String name)</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">   </div></pre></td></tr></table></figure><br>  dubbo的扩展点接口ExtensionFactory ，该接口有三个实现<br>  <img src="/images/d.png"><br>   dubbo的扩展实现的具体类是ExtensionLoader。<br>   ExtensionLoader加载扩展点时，会检查扩展点的属性（通过set方法判断），如该属性是扩展点类型，则会注入扩展点对象。<br>         因为注入时不能确定使用哪个扩展点（在使用时确定），所以注入的是一个自适应扩展（一个代理）。自适应扩展点调用时，选取一个真正的扩展点，并代理到其上完成调用。<br>   Dubbo是根据调用方法参数（上面有调用哪个扩展点的信息）来选取一个真正的扩展点。<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)  </div><div class="line"><span class="function"><span class="keyword">private</span> T <span class="title">createExtension</span><span class="params">(String name)</span> </span>&#123;  </div><div class="line">    Class&lt;?&gt; clazz = getExtensionClasses().get(name);  </div><div class="line">    <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;  </div><div class="line">        <span class="keyword">throw</span> findException(name);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        T instance = (T) EXTENSION_INSTANCES.get(clazz);  </div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;  </div><div class="line">            EXTENSION_INSTANCES.putIfAbsent(clazz, (T) clazz.newInstance());  </div><div class="line">            instance = (T) EXTENSION_INSTANCES.get(clazz);  </div><div class="line">        &#125;  </div><div class="line">        injectExtension(instance);  </div><div class="line">        Set&lt;Class&lt;?&gt;&gt; wrapperClasses = cachedWrapperClasses;  </div><div class="line">        <span class="keyword">if</span> (wrapperClasses != <span class="keyword">null</span> &amp;&amp; wrapperClasses.size() &gt; <span class="number">0</span>) &#123;  </div><div class="line">            <span class="keyword">for</span> (Class&lt;?&gt; wrapperClass : wrapperClasses) &#123;  </div><div class="line">                instance = injectExtension((T) wrapperClass.getConstructor(type).newInstance(instance));  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> instance;  </div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Extension instance(name: "</span> + name + <span class="string">", class: "</span> +  </div><div class="line">                type + <span class="string">")  could not be instantiated: "</span> + t.getMessage(), t);  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="function"><span class="keyword">private</span> T <span class="title">injectExtension</span><span class="params">(T instance)</span> </span>&#123;  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        <span class="keyword">if</span> (objectFactory != <span class="keyword">null</span>) &#123;  </div><div class="line">            <span class="keyword">for</span> (Method method : instance.getClass().getMethods()) &#123;  </div><div class="line">                <span class="keyword">if</span> (method.getName().startsWith(<span class="string">"set"</span>)  </div><div class="line">                        &amp;&amp; method.getParameterTypes().length == <span class="number">1</span>  </div><div class="line">                        &amp;&amp; Modifier.isPublic(method.getModifiers())) &#123;  </div><div class="line">                    Class&lt;?&gt; pt = method.getParameterTypes()[<span class="number">0</span>];  </div><div class="line">                    <span class="keyword">try</span> &#123;  </div><div class="line">                        String property = method.getName().length() &gt; <span class="number">3</span> ? method.getName().substring(<span class="number">3</span>, <span class="number">4</span>).toLowerCase() + method.getName().substring(<span class="number">4</span>) : <span class="string">""</span>;  </div><div class="line">                        Object object = objectFactory.getExtension(pt, property);  </div><div class="line">                        <span class="keyword">if</span> (object != <span class="keyword">null</span>) &#123;  </div><div class="line">                            method.invoke(instance, object);  </div><div class="line">                        &#125;  </div><div class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">                        logger.error(<span class="string">"fail to inject via method "</span> + method.getName()  </div><div class="line">                                + <span class="string">" of interface "</span> + type.getName() + <span class="string">": "</span> + e.getMessage(), e);  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">        logger.error(e.getMessage(), e);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> instance;  </div><div class="line">&#125; </div></pre></td></tr></table></figure><br>       可以看出ExtensionLoader持有某一类扩展点的所有扩展，并且扩展以class为key，一个扩展类只有一个实例。<br>       如果扩展点使用了Adaptive则会通过字节码生成一个自适应的扩展类。<br>       通过createAdaptiveExtensionClassCode方法返回class的code，然后通过Compiler接口返回class对象<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">   <span class="comment">/** </span></div><div class="line"> * Compiler. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"javassist"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Compiler</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * Compile java source code. </div><div class="line">     *  </div><div class="line">     * <span class="doctag">@param</span> code Java source code </div><div class="line">     * <span class="doctag">@param</span> classLoader TODO </div><div class="line">     * <span class="doctag">@return</span> Compiled class </div><div class="line">     */  </div><div class="line">    Class&lt;?&gt; compile(String code, ClassLoader classLoader);  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line"> </div></pre></td></tr></table></figure><br>  Compiler dubbo支持jdk和Javassist两种实现，特别注意一点，JdkCompiler的java版本通过硬编码指定版本为1.6。<br>  JdkCompiler首先通过JavaFileObject接口生成java文件，然后通过JavaCompiler接口编译成class文件，最后通过ClassLoader加载生成的class文件。</p>
+<p>  spring名称空间扩展<br>  dubbo通过扩展spring的名称空间来读取xml配置。<br>  dubbo.xsd是spring schma的扩展文件。作用是定义相关xml元素和名称空间。<br>  spring.handlers,spring.schemas是spring在解析xml的时候根据spi机制读取对象的NamespaceHandler和xsd文件位置。<br>       很多程序猿使用dubbo开发的时候，会发现ide工具报错，因为xml上面dubbo名称空间的链接打不开，其实这个报错可以无视的，<br>       因为spring解析的xml的时候这个网络地址其实是指向spi配置文件里面的一个java类。<br>  spring.handlers<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http\:<span class="comment">//code.alibabatech.com/schema/dubbo=com.alibaba.dubbo.config.spring.schema.DubboNamespaceHandler</span></div></pre></td></tr></table></figure><br>  DubboNamespaceHandler则注册了相关自定义元素的解析器<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">       </div><div class="line"><span class="comment">/** </span></div><div class="line"> * DubboNamespaceHandler </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> * <span class="doctag">@export</span> </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DubboNamespaceHandler</span> <span class="keyword">extends</span> <span class="title">NamespaceHandlerSupport</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> &#123;  </div><div class="line">        Version.checkDuplicate(DubboNamespaceHandler.class);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"application"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ApplicationConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"module"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ModuleConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"registry"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(RegistryConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"monitor"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(MonitorConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"provider"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ProviderConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"consumer"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ConsumerConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"protocol"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ProtocolConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"service"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ServiceBean.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"reference"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ReferenceBean.class, <span class="keyword">false</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"annotation"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(AnnotationBean.class, <span class="keyword">true</span>));  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure></p>
 
           
         
@@ -766,309 +1536,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/4/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/4/" itemprop="url">
-                  dubbo源码研究之container模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/15/4/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/4/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="dubbo源码研究之container模块"><a href="#dubbo源码研究之container模块" class="headerlink" title="dubbo源码研究之container模块"></a>dubbo源码研究之container模块</h1><p>  dubbo-container模块是dubbo启动顺序中的第一个模块，<br>  dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/** </span></div><div class="line"> * Container. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"spring"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * start. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;  </div><div class="line">      </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * stop. </div><div class="line">     */  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>  container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>       细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。<br>  Container 接口的主要实现<br>  <img src="/images/b.png"><br>       其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>       使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>  SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">  **  </div><div class="line"> * SpringContainer. (SPI, Singleton, ThreadSafe)  </div><div class="line"> *   </div><div class="line"> * <span class="meta">@author</span> william.liangf  </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringContainer</span> <span class="keyword">implements</span> <span class="title">Container</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(SpringContainer.class);  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPRING_CONFIG = <span class="string">"dubbo.spring.config"</span>;  </div><div class="line">      </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_SPRING_CONFIG = <span class="string">"classpath*:META-INF/spring/*.xml"</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> ClassPathXmlApplicationContext context;  </div><div class="line">      </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassPathXmlApplicationContext <span class="title">getContext</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> context;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;  </div><div class="line">        String configPath = ConfigUtils.getProperty(SPRING_CONFIG);  </div><div class="line">        <span class="keyword">if</span> (configPath == <span class="keyword">null</span> || configPath.length() == <span class="number">0</span>) &#123;  </div><div class="line">            configPath = DEFAULT_SPRING_CONFIG;  </div><div class="line">        &#125;  </div><div class="line">        context = <span class="keyword">new</span> ClassPathXmlApplicationContext(configPath.split(<span class="string">"[,\\s]+"</span>));  </div><div class="line">        context.start();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            <span class="keyword">if</span> (context != <span class="keyword">null</span>) &#123;  </div><div class="line">                context.stop();  </div><div class="line">                context.close();  </div><div class="line">                context = <span class="keyword">null</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">            logger.error(e.getMessage(), e);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure><br>       其他几个实现类似，重点讲下com.alibaba.dubbo.container.Main。这个是dubbo自带的main函数入口。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;  </div><div class="line">             String config = ConfigUtils.getProperty(CONTAINER_KEY, loader.getDefaultExtensionName());  </div><div class="line">             args = Constants.COMMA_SPLIT_PATTERN.split(config);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">final</span> List&lt;Container&gt; containers = <span class="keyword">new</span> ArrayList&lt;Container&gt;();  </div><div class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i ++) &#123;  </div><div class="line">             containers.add(loader.getExtension(args[i]));  </div><div class="line">         &#125;  </div><div class="line">         logger.info(<span class="string">"Use container type("</span> + Arrays.toString(args) + <span class="string">") to run dubbo serivce."</span>);  </div><div class="line">           </div><div class="line">         <span class="keyword">if</span> (<span class="string">"true"</span>.equals(System.getProperty(SHUTDOWN_HOOK_KEY))) &#123;  </div><div class="line">          Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;  </div><div class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">                  <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">                      <span class="keyword">try</span> &#123;  </div><div class="line">                          container.stop();  </div><div class="line">                          logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" stopped!"</span>);  </div><div class="line">                      &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">                          logger.error(t.getMessage(), t);  </div><div class="line">                      &#125;  </div><div class="line">                      <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">                          running = <span class="keyword">false</span>;  </div><div class="line">                          Main.class.notify();  </div><div class="line">                      &#125;  </div><div class="line">                  &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;);  </div><div class="line">         &#125;  </div><div class="line">           </div><div class="line">         <span class="keyword">for</span> (Container container : containers) &#123;  </div><div class="line">             container.start();  </div><div class="line">             logger.info(<span class="string">"Dubbo "</span> + container.getClass().getSimpleName() + <span class="string">" started!"</span>);  </div><div class="line">         &#125;  </div><div class="line">         System.out.println(<span class="keyword">new</span> SimpleDateFormat(<span class="string">"[yyyy-MM-dd HH:mm:ss]"</span>).format(<span class="keyword">new</span> Date()) + <span class="string">" Dubbo service server started!"</span>);  </div><div class="line">     &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">         e.printStackTrace();  </div><div class="line">         logger.error(e.getMessage(), e);  </div><div class="line">         System.exit(<span class="number">1</span>);  </div><div class="line">     &#125;  </div><div class="line">     <span class="keyword">synchronized</span> (Main.class) &#123;  </div><div class="line">         <span class="keyword">while</span> (running) &#123;  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 Main.class.wait();  </div><div class="line">             &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;  </div><div class="line"> &#125;   </div><div class="line"> </div></pre></td></tr></table></figure><br>  该方法通过钩子 Runtime.getRuntime().addShutdownHook来实现优雅停机，同时还支持通过启动参数来加载扩展点，<br> containers.add(loader.getExtension(args[i]))。但是没有类似spring boot 的CommandLineRunner 接口，<br>    在容器启动完毕之后执行一些初始化动作。建议使用dubbo的童鞋如没有特殊需求，可以使用该类作为程序启动类。 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/5/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/5/" itemprop="url">
-                  dubbo源码研究之config-spring模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/15/5/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/5/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="dubbo源码研究之config-spring模块"><a href="#dubbo源码研究之config-spring模块" class="headerlink" title="dubbo源码研究之config-spring模块"></a>dubbo源码研究之config-spring模块</h1><p>  dubbo-config-spring模块是dubbo-config的Extension。<br>  <img src="/images/c.png"><br>  Dubbo的扩展点加载从JDK标准的SPI(Service Provider Interface)扩展点发现机制加强而来。<br>  Dubbo改进了JDK标准的SPI的以下问题：<br>  JDK标准的SPI会一次性实例化扩展点所有实现，如果有扩展实现初始化很耗时，但如果没用上也加载，会很浪费资源。<br>    如果扩展点加载失败，连扩展点的名称都拿不到了。比如：JDK标准的ScriptEngine，通过getName();获取脚本类型的名称，<br>    但如果RubyScriptEngine因为所依赖的jruby.jar不存在，导致RubyScriptEngine类加载失败，这个失败原因被吃掉了，和ruby对应不起来，<br>    当用户执行ruby脚本时，会报不支持ruby，而不是真正失败的原因。<br>    增加了对扩展点IoC和AOP的支持，一个扩展点可以直接setter注入其它扩展点。<br>  dubbo的spi约定：在扩展类的jar包内，放置扩展点配置文件：META-INF/dubbo/接口全限定名，内容为：配置名=扩展实现类全限定名，多个实现类用换行符分隔。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SPI</span>  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ExtensionFactory</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * Get extension. </div><div class="line">     *  </div><div class="line">     * <span class="doctag">@param</span> type object type. </div><div class="line">     * <span class="doctag">@param</span> name object name. </div><div class="line">     * <span class="doctag">@return</span> object instance. </div><div class="line">     */  </div><div class="line">    &lt;T&gt; <span class="function">T <span class="title">getExtension</span><span class="params">(Class&lt;T&gt; type, String name)</span></span>;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">   </div></pre></td></tr></table></figure><br>  dubbo的扩展点接口ExtensionFactory ，该接口有三个实现<br>  <img src="/images/d.png"><br>   dubbo的扩展实现的具体类是ExtensionLoader。<br>   ExtensionLoader加载扩展点时，会检查扩展点的属性（通过set方法判断），如该属性是扩展点类型，则会注入扩展点对象。<br>         因为注入时不能确定使用哪个扩展点（在使用时确定），所以注入的是一个自适应扩展（一个代理）。自适应扩展点调用时，选取一个真正的扩展点，并代理到其上完成调用。<br>   Dubbo是根据调用方法参数（上面有调用哪个扩展点的信息）来选取一个真正的扩展点。<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)  </div><div class="line"><span class="function"><span class="keyword">private</span> T <span class="title">createExtension</span><span class="params">(String name)</span> </span>&#123;  </div><div class="line">    Class&lt;?&gt; clazz = getExtensionClasses().get(name);  </div><div class="line">    <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;  </div><div class="line">        <span class="keyword">throw</span> findException(name);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        T instance = (T) EXTENSION_INSTANCES.get(clazz);  </div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;  </div><div class="line">            EXTENSION_INSTANCES.putIfAbsent(clazz, (T) clazz.newInstance());  </div><div class="line">            instance = (T) EXTENSION_INSTANCES.get(clazz);  </div><div class="line">        &#125;  </div><div class="line">        injectExtension(instance);  </div><div class="line">        Set&lt;Class&lt;?&gt;&gt; wrapperClasses = cachedWrapperClasses;  </div><div class="line">        <span class="keyword">if</span> (wrapperClasses != <span class="keyword">null</span> &amp;&amp; wrapperClasses.size() &gt; <span class="number">0</span>) &#123;  </div><div class="line">            <span class="keyword">for</span> (Class&lt;?&gt; wrapperClass : wrapperClasses) &#123;  </div><div class="line">                instance = injectExtension((T) wrapperClass.getConstructor(type).newInstance(instance));  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">return</span> instance;  </div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;  </div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Extension instance(name: "</span> + name + <span class="string">", class: "</span> +  </div><div class="line">                type + <span class="string">")  could not be instantiated: "</span> + t.getMessage(), t);  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="function"><span class="keyword">private</span> T <span class="title">injectExtension</span><span class="params">(T instance)</span> </span>&#123;  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        <span class="keyword">if</span> (objectFactory != <span class="keyword">null</span>) &#123;  </div><div class="line">            <span class="keyword">for</span> (Method method : instance.getClass().getMethods()) &#123;  </div><div class="line">                <span class="keyword">if</span> (method.getName().startsWith(<span class="string">"set"</span>)  </div><div class="line">                        &amp;&amp; method.getParameterTypes().length == <span class="number">1</span>  </div><div class="line">                        &amp;&amp; Modifier.isPublic(method.getModifiers())) &#123;  </div><div class="line">                    Class&lt;?&gt; pt = method.getParameterTypes()[<span class="number">0</span>];  </div><div class="line">                    <span class="keyword">try</span> &#123;  </div><div class="line">                        String property = method.getName().length() &gt; <span class="number">3</span> ? method.getName().substring(<span class="number">3</span>, <span class="number">4</span>).toLowerCase() + method.getName().substring(<span class="number">4</span>) : <span class="string">""</span>;  </div><div class="line">                        Object object = objectFactory.getExtension(pt, property);  </div><div class="line">                        <span class="keyword">if</span> (object != <span class="keyword">null</span>) &#123;  </div><div class="line">                            method.invoke(instance, object);  </div><div class="line">                        &#125;  </div><div class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">                        logger.error(<span class="string">"fail to inject via method "</span> + method.getName()  </div><div class="line">                                + <span class="string">" of interface "</span> + type.getName() + <span class="string">": "</span> + e.getMessage(), e);  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">        logger.error(e.getMessage(), e);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> instance;  </div><div class="line">&#125; </div></pre></td></tr></table></figure><br>       可以看出ExtensionLoader持有某一类扩展点的所有扩展，并且扩展以class为key，一个扩展类只有一个实例。<br>       如果扩展点使用了Adaptive则会通过字节码生成一个自适应的扩展类。<br>       通过createAdaptiveExtensionClassCode方法返回class的code，然后通过Compiler接口返回class对象<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">   <span class="comment">/** </span></div><div class="line"> * Compiler. (SPI, Singleton, ThreadSafe) </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> */  </div><div class="line"><span class="meta">@SPI</span>(<span class="string">"javassist"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Compiler</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="comment">/** </span></div><div class="line">     * Compile java source code. </div><div class="line">     *  </div><div class="line">     * <span class="doctag">@param</span> code Java source code </div><div class="line">     * <span class="doctag">@param</span> classLoader TODO </div><div class="line">     * <span class="doctag">@return</span> Compiled class </div><div class="line">     */  </div><div class="line">    Class&lt;?&gt; compile(String code, ClassLoader classLoader);  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line"> </div></pre></td></tr></table></figure><br>  Compiler dubbo支持jdk和Javassist两种实现，特别注意一点，JdkCompiler的java版本通过硬编码指定版本为1.6。<br>  JdkCompiler首先通过JavaFileObject接口生成java文件，然后通过JavaCompiler接口编译成class文件，最后通过ClassLoader加载生成的class文件。</p>
-<p>  spring名称空间扩展<br>  dubbo通过扩展spring的名称空间来读取xml配置。<br>  dubbo.xsd是spring schma的扩展文件。作用是定义相关xml元素和名称空间。<br>  spring.handlers,spring.schemas是spring在解析xml的时候根据spi机制读取对象的NamespaceHandler和xsd文件位置。<br>       很多程序猿使用dubbo开发的时候，会发现ide工具报错，因为xml上面dubbo名称空间的链接打不开，其实这个报错可以无视的，<br>       因为spring解析的xml的时候这个网络地址其实是指向spi配置文件里面的一个java类。<br>  spring.handlers<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http\:<span class="comment">//code.alibabatech.com/schema/dubbo=com.alibaba.dubbo.config.spring.schema.DubboNamespaceHandler</span></div></pre></td></tr></table></figure><br>  DubboNamespaceHandler则注册了相关自定义元素的解析器<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">       </div><div class="line"><span class="comment">/** </span></div><div class="line"> * DubboNamespaceHandler </div><div class="line"> *  </div><div class="line"> * <span class="doctag">@author</span> william.liangf </div><div class="line"> * <span class="doctag">@export</span> </div><div class="line"> */  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DubboNamespaceHandler</span> <span class="keyword">extends</span> <span class="title">NamespaceHandlerSupport</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="keyword">static</span> &#123;  </div><div class="line">        Version.checkDuplicate(DubboNamespaceHandler.class);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"application"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ApplicationConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"module"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ModuleConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"registry"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(RegistryConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"monitor"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(MonitorConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"provider"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ProviderConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"consumer"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ConsumerConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"protocol"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ProtocolConfig.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"service"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ServiceBean.class, <span class="keyword">true</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"reference"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(ReferenceBean.class, <span class="keyword">false</span>));  </div><div class="line">        registerBeanDefinitionParser(<span class="string">"annotation"</span>, <span class="keyword">new</span> DubboBeanDefinitionParser(AnnotationBean.class, <span class="keyword">true</span>));  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">&#125;  </div><div class="line">  </div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/6/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1182,308 +1649,6 @@
         
           
             <h1 id="dubbo源码研究之config模块"><a href="#dubbo源码研究之config模块" class="headerlink" title="dubbo源码研究之config模块"></a>dubbo源码研究之config模块</h1><p>   dubbo模块说明<br>   dubbo-common 公共逻辑模块，包括Util类和通用模型。<br>   dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。<br>   dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。<br>   dubbo-cluster 集群模块，将多个服务提供方伪装为一个提供方，包括：负载均衡, 容错，路由等，集群的地址列表可以是静态配置的，也可以是由注册中心下发。<br>   dubbo-registry 注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。<br>   dubbo-monitor 监控模块，统计服务调用次数，调用时间的，调用链跟踪的服务。<br>   dubbo-config 配置模块，是Dubbo对外的API，用户通过Config使用Dubbo，隐藏Dubbo所有细节。<br>   dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat/JBoss等Web容器的特性，没必要用Web容器去加载服务。<br>  今天开始从dubbo入口，config模块开始研究。<br>   config模块和Service模块是API，其他为SPI实现。<br>   config模块uml类图<br>    <img src="/images/e.png"><br>    AbstractConfig类提供几个主要的方法       appendAnnotation，appendProperties，appendParameters，appendAttributes<br>  其他子类提供相关自身的属性。<br>    AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></div><div class="line">      logger.warn(t.getMessage(), t);  </div><div class="line">      <span class="keyword">return</span> <span class="keyword">super</span>.toString();  </div><div class="line">  &#125;  </div><div class="line">	</div></pre></td></tr></table></figure><br>     防御性容错在此处使用，提升代码健壮性。<br>    AnnotationBean是子类里面一个比较特殊的类。因为该类是处于com.alibaba.dubbo.config.spring包下面。<br>该类属于config模块的spring 扩展，支持通过注解来配置dubbo。<br>      AnnotationBean实现了DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, ApplicationContextAware这四个接口。<br>       DisposableBean：资源清理接口<br>       BeanFactoryPostProcessor，BeanPostProcessor：作用类似，都是在bean创建之后的扩展接口。<br>       ApplicationContextAware：获取spring上下文接口。<br>   通过该类可以看出，dubbo注解实际上是spring注解的扩展，也就是说使用dubbo注解的前提是使用spring作为dubbo的容器。<br>       @servcie暴露dubbo服务配置的代码<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"> 	<span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span>  </span></div><div class="line">        <span class="keyword">throws</span> BeansException &#123;  </div><div class="line">    <span class="keyword">if</span> (! isMatchPackage(bean)) &#123;  </div><div class="line">        <span class="keyword">return</span> bean;  </div><div class="line">    &#125;  </div><div class="line">    Class&lt;?&gt; clazz = bean.getClass();  </div><div class="line">    <span class="keyword">if</span>(isProxyBean(bean))&#123;  </div><div class="line">        clazz = AopUtils.getTargetClass(bean);  </div><div class="line">    &#125;  </div><div class="line">    Service service = clazz.getAnnotation(Service.class);  </div><div class="line">    <span class="keyword">if</span> (service != <span class="keyword">null</span>) &#123;  </div><div class="line">        ServiceBean&lt;Object&gt; serviceConfig = <span class="keyword">new</span> ServiceBean&lt;Object&gt;(service);  </div><div class="line">        <span class="keyword">if</span> (<span class="keyword">void</span>.class.equals(service.interfaceClass())  </div><div class="line">                &amp;&amp; <span class="string">""</span>.equals(service.interfaceName())) &#123;  </div><div class="line">            <span class="keyword">if</span> (clazz.getInterfaces().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setInterface(clazz.getInterfaces()[<span class="number">0</span>]);  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Failed to export remote service class "</span> + clazz.getName() + <span class="string">", cause: The @Service undefined interfaceClass or interfaceName, and the service class unimplemented any interfaces."</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="keyword">if</span> (applicationContext != <span class="keyword">null</span>) &#123;  </div><div class="line">            serviceConfig.setApplicationContext(applicationContext);  </div><div class="line">            <span class="keyword">if</span> (service.registry() != <span class="keyword">null</span> &amp;&amp; service.registry().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                List&lt;RegistryConfig&gt; registryConfigs = <span class="keyword">new</span> ArrayList&lt;RegistryConfig&gt;();  </div><div class="line">                <span class="keyword">for</span> (String registryId : service.registry()) &#123;  </div><div class="line">                    <span class="keyword">if</span> (registryId != <span class="keyword">null</span> &amp;&amp; registryId.length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                        registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">                serviceConfig.setRegistries(registryConfigs);  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.provider() != <span class="keyword">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(),ProviderConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.monitor() != <span class="keyword">null</span> &amp;&amp; service.monitor().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setMonitor((MonitorConfig)applicationContext.getBean(service.monitor(), MonitorConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.application() != <span class="keyword">null</span> &amp;&amp; service.application().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setApplication((ApplicationConfig)applicationContext.getBean(service.application(), ApplicationConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.<span class="keyword">module</span>() != <span class="keyword">null</span> &amp;&amp; service.<span class="keyword">module</span>().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setModule((ModuleConfig)applicationContext.getBean(service.<span class="keyword">module</span>(), ModuleConfig.class));  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.provider() != <span class="keyword">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(), ProviderConfig.class));  </div><div class="line">            &#125; <span class="keyword">else</span> &#123;  </div><div class="line">                  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (service.protocol() != <span class="keyword">null</span> &amp;&amp; service.protocol().length &gt; <span class="number">0</span>) &#123;  </div><div class="line">                List&lt;ProtocolConfig&gt; protocolConfigs = <span class="keyword">new</span> ArrayList&lt;ProtocolConfig&gt;();  </div><div class="line">                <span class="comment">// modified by lishen; fix dubbo's bug  </span></div><div class="line">                <span class="keyword">for</span> (String protocolId : service.protocol()) &#123;  </div><div class="line">                    <span class="keyword">if</span> (protocolId != <span class="keyword">null</span> &amp;&amp; protocolId.length() &gt; <span class="number">0</span>) &#123;  </div><div class="line">                        protocolConfigs.add((ProtocolConfig)applicationContext.getBean(protocolId, ProtocolConfig.class));  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">                serviceConfig.setProtocols(protocolConfigs);  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">try</span> &#123;  </div><div class="line">                serviceConfig.afterPropertiesSet();  </div><div class="line">            &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </div><div class="line">                <span class="keyword">throw</span> (RuntimeException) e;  </div><div class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(e.getMessage(), e);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        serviceConfig.setRef(bean);  </div><div class="line">        serviceConfigs.add(serviceConfig);  </div><div class="line">        serviceConfig.export();  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> bean;  </div><div class="line">&#125;</div><div class="line"> 	</div></pre></td></tr></table></figure><br>       主要是先获取类上面的@servcie注解，然后new 一个对应的ServiceBean，ServiceBean继承于ServiceConfig，同时实现了spring bean的相关接口  InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware。<br>   最后该serviceBean保存到线程安全的容器里面去。<br>       @service解析是在 postProcessAfterInitialization里面<br>       @Reference解析是在postProcessBeforeInitialization里面，两者的时机是不一样的。<br>       <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String key = reference.group() + <span class="string">"/"</span> + interfaceName + <span class="string">":"</span> + reference.version();  </div><div class="line">ReferenceBean&lt;?&gt; referenceConfig = referenceConfigs.get(key);  </div><div class="line">   	</div></pre></td></tr></table></figure><br>       从该代码可以看出，服务接口的唯一性，由group，interfaceName 和vesion一起决定。 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/8/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/8/" itemprop="url">
-                  基于jquery把表单转成成json对象
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/15/8/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/8/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="基于jquery把表单转成成json对象"><a href="#基于jquery把表单转成成json对象" class="headerlink" title="基于jquery把表单转成成json对象"></a>基于jquery把表单转成成json对象</h1><p>  最近前端框架修改，小伙伴希望能像以前写jsp一样使用 对象.属性作为表单元素的name值<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">"test-form"</span>&gt;</span>   </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.c"</span> <span class="attr">value</span>=<span class="string">"abc"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.b.d"</span> <span class="attr">value</span>=<span class="string">"abd"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"x"</span> <span class="attr">value</span>=<span class="string">"x"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"a.f"</span> <span class="attr">value</span>=<span class="string">"af"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"0"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"y"</span> <span class="attr">value</span>=<span class="string">"y2"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].c"</span> <span class="attr">value</span>=<span class="string">"m0c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[0].d"</span> <span class="attr">value</span>=<span class="string">"m0d"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].c"</span> <span class="attr">value</span>=<span class="string">"m1c"</span>&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"m[1].d"</span> <span class="attr">value</span>=<span class="string">"m1d"</span>&gt;</span>   </div><div class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">id</span>=<span class="string">"test-btn"</span>&gt;</span>  </div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span>  </div></pre></td></tr></table></figure><br>   我这种懒人第一反应肯定去找度娘，发现度娘居然没有，只好自己造了轮子。<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">form2Json</span>(<span class="params">params</span>)</span>&#123;  </div><div class="line"><span class="keyword">var</span> selector=params.form;  </div><div class="line"><span class="keyword">var</span> values= $(selector).serializeArray();  </div><div class="line"><span class="keyword">var</span> obj=&#123;&#125;;  </div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; values.length; ++index)      </div><div class="line">  &#123;      </div><div class="line">     <span class="keyword">var</span> temp=obj; <span class="comment">//上一级       </span></div><div class="line">     <span class="keyword">var</span> n=values[index].name;    </div><div class="line">     <span class="keyword">if</span>(n.indexOf(<span class="string">"."</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">         <span class="keyword">var</span> arr=n.split(<span class="string">"."</span>);    </div><div class="line">         <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;arr.length<span class="number">-1</span>;i++)&#123;       </div><div class="line">             <span class="keyword">if</span>(arr[i].indexOf(<span class="string">"["</span>)&gt;<span class="number">-1</span>)&#123;    </div><div class="line">                 <span class="keyword">var</span> a=arr[i].substring(<span class="number">0</span>,arr[i].indexOf(<span class="string">"["</span>));    </div><div class="line">                 temp[a]=temp[a]||[];    </div><div class="line">                 <span class="keyword">var</span> y=arr[i].substring(arr[i].indexOf(<span class="string">"["</span>)+<span class="number">1</span>,arr[i].indexOf(<span class="string">"]"</span>));    </div><div class="line">                 temp[a][y]=temp[a][y]||&#123;&#125;;    </div><div class="line">                 temp=temp[a][y];    </div><div class="line">             &#125;<span class="keyword">else</span>&#123;    </div><div class="line">                 temp[arr[i]]=temp[arr[i]] || &#123;&#125;;       </div><div class="line">                 temp=temp[arr[i]];    </div><div class="line">             &#125;    </div><div class="line">         &#125;  </div><div class="line">         temp[arr[arr.length<span class="number">-1</span>]]=values[index].value;         </div><div class="line">     &#125;<span class="keyword">else</span>&#123;    </div><div class="line">         <span class="keyword">if</span>(obj[n] !==<span class="literal">undefined</span> &amp;&amp; obj[n]!=<span class="literal">null</span>)&#123;    </div><div class="line">            <span class="keyword">if</span>( !$.isArray(obj[n]))&#123;    </div><div class="line">                <span class="keyword">var</span> v=obj[n];    </div><div class="line">                obj[n]=[];    </div><div class="line">                obj[n].push(v);    </div><div class="line">            &#125;  </div><div class="line">              </div><div class="line">            obj[n].push(values[index].value);    </div><div class="line">         &#125;<span class="keyword">else</span>&#123;     </div><div class="line">             obj[n]=values[index].value;    </div><div class="line">         &#125;    </div><div class="line">     &#125;       </div><div class="line">  &#125;       </div><div class="line"><span class="keyword">return</span> obj;  </div><div class="line">   </div></pre></td></tr></table></figure><br>   该轮子支持复杂对象，支持对象数组，支持简单属性<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">    $(<span class="string">"#test-btn"</span>).on(<span class="string">"click"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line"> <span class="keyword">var</span> json=form2Json(&#123;  </div><div class="line">  <span class="attr">form</span>:<span class="string">"#test-form"</span>  </div><div class="line"> &#125;);  </div><div class="line"><span class="built_in">console</span>.log(json);  </div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(json));  </div><div class="line">&#125;);  </div><div class="line">   </div></pre></td></tr></table></figure><br>     最终结果如下<br>     <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"a"</span>:&#123;<span class="string">"b"</span>:&#123;<span class="string">"c"</span>:<span class="string">"abc"</span>,<span class="string">"d"</span>:<span class="string">"abd"</span>&#125;,<span class="string">"f"</span>:<span class="string">"af"</span>&#125;,<span class="string">"x"</span>:<span class="string">"x"</span>,<span class="string">"y"</span>:[<span class="string">"0"</span>,<span class="string">"y2"</span>],<span class="string">"m"</span>:[&#123;<span class="string">"c"</span>:<span class="string">"m0c"</span>,<span class="string">"d"</span>:<span class="string">"m0d"</span>&#125;,&#123;<span class="string">"c"</span>:<span class="string">"m1c"</span>,<span class="string">"d"</span>:<span class="string">"m1d"</span>&#125;]&#125;  </div><div class="line">     </div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/9/" itemprop="url">
-                  jQuery基于json对象自动给表单元素赋值
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/15/9/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/9/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="jQuery基于json对象自动给表单元素赋值"><a href="#jQuery基于json对象自动给表单元素赋值" class="headerlink" title="jQuery基于json对象自动给表单元素赋值"></a>jQuery基于json对象自动给表单元素赋值</h1><p>  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">json2form:<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;  </div><div class="line">       <span class="keyword">var</span> nodeParent = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> value = <span class="literal">undefined</span>;  </div><div class="line">      <span class="keyword">var</span> $el = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> nodeName = <span class="string">""</span>;  </div><div class="line">       <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;  </div><div class="line">          value= obj[i] ;  </div><div class="line">          <span class="keyword">if</span>(value === <span class="literal">undefined</span> || value===<span class="literal">null</span>)&#123;  </div><div class="line">              <span class="keyword">continue</span>;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">if</span>(<span class="keyword">typeof</span> value == <span class="string">'object'</span>)&#123;  </div><div class="line">              nodeParent=obj.nodeParent;  </div><div class="line">              value.nodeParent=nodeParent?nodeParent+<span class="string">"."</span>+i : i;  </div><div class="line">              <span class="keyword">if</span>(value <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;  </div><div class="line">                  <span class="keyword">for</span>(<span class="keyword">var</span> mm=<span class="number">0</span>;mm&lt;value.length;mm++)&#123;  </div><div class="line">                      <span class="keyword">var</span> ms=value[mm];  </div><div class="line">                      <span class="keyword">if</span>(<span class="keyword">typeof</span> ms == <span class="string">'object'</span>)&#123;  </div><div class="line">                          nodeParent=ms.nodeParent;  </div><div class="line">                          ms.nodeParent=ms.nodeParent?ms.nodeParent+<span class="string">"."</span>+i+<span class="string">"["</span>+mm+<span class="string">"]"</span>:i+<span class="string">"["</span>+mm+<span class="string">"]"</span>;  </div><div class="line">                          <span class="built_in">arguments</span>.callee(ms);  </div><div class="line">                      &#125;  </div><div class="line"></div><div class="line">                  &#125;  </div><div class="line"></div><div class="line">                  $el=$(<span class="string">"[name='"</span>+i+<span class="string">"']"</span>);  </div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":checkbox"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">                  <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">              &#125;<span class="keyword">else</span>&#123;  <span class="comment">//递归  </span></div><div class="line">                  <span class="built_in">arguments</span>.callee(value);  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">else</span>&#123;  </div><div class="line">              nodeName=obj.nodeParent?obj.nodeParent+<span class="string">"."</span>+i : i ;  </div><div class="line"></div><div class="line">              $el=$(<span class="string">"[name='"</span>+nodeName+<span class="string">"']"</span>);  </div><div class="line">              <span class="keyword">if</span>($el.length &gt; <span class="number">0</span>)&#123;  </div><div class="line">              <span class="comment">// console.log("匹配数据名称："+nodeName+"值："+value);  </span></div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":text"</span>)||$el.attr(<span class="string">"type"</span>)==<span class="string">"hidden"</span>)&#123;  </div><div class="line">                      <span class="keyword">if</span>($el.data(<span class="string">"money"</span>) &amp;&amp; $el.data(<span class="string">"money"</span>) == <span class="string">"money"</span>)&#123;  </div><div class="line">                          value = outputdollars(value);  </div><div class="line">                      &#125;  </div><div class="line">                      $el.val(value);  </div><div class="line">                          </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                     $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                        <span class="keyword">if</span>($(<span class="keyword">this</span>).val()==value)&#123;  </div><div class="line">                            $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                        &#125;  </div><div class="line">                     &#125;)  </div><div class="line">                 &#125;  </div><div class="line">                 <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"select"</span>))&#123;  </div><div class="line">                    $el.find(<span class="string">"option"</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> $(<span class="keyword">this</span>).val() == obj[i];&#125;).prop(<span class="string">"selected"</span>,<span class="literal">true</span>);  </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"textarea"</span>))&#123;  </div><div class="line">                    $el.val(value)  </div><div class="line">                 &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">      &#125;      </div><div class="line">         </div><div class="line">   &#125; </div><div class="line"></div><div class="line"> </div></pre></td></tr></table></figure><br>  注意： 表单的name属于与json对象的属性名为一致，保持继承链。<br>  例如 input name=’a.b.c’   表示json对象里面的a属性里面的b属性的c属性。 </p>
 
           
         
@@ -1664,158 +1829,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/2/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/15/2/" itemprop="url">
-                  dubbo源码研究之dubbo-registry模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T00:35:33+08:00">
-                2017-01-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dubbo/" itemprop="url" rel="index">
-                    <span itemprop="name">dubbo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/15/2/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/2/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="dubbo源码研究之dubbo-registry模块"><a href="#dubbo源码研究之dubbo-registry模块" class="headerlink" title="dubbo源码研究之dubbo-registry模块"></a>dubbo源码研究之dubbo-registry模块</h1><p>  dubbo-registry注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。<br>  registry模块顶层接口为RegistryService和NotifyListener以及一个工厂接口RegistryFactory。<br>  RegistryService接口包含4个方法。<br>  void register(URL url); 注册服务<br>  void unregister(URL url); 取消注册<br>  void subscribe(URL url, NotifyListener listener); 订阅服务（推）<br>  void unsubscribe(URL url, NotifyListener listener);取消订阅<br>  List<url> lookup(URL url); 订阅服务（拉）</url></p>
-<p>  Registry模块使用经典的消费者生成者模式，dubbo消费者订阅服务，dubbo服务者注册服务。<br>  AbstractRegistry为RegistryService接口实现的一个抽象类，提供一些默认实现。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">AbstractRegistry</span><span class="params">(URL url)</span> </span>&#123;  </div><div class="line">    setUrl(url);  </div><div class="line">    <span class="comment">// 启动文件保存定时器  </span></div><div class="line">    syncSaveFile = url.getParameter(Constants.REGISTRY_FILESAVE_SYNC_KEY, <span class="keyword">false</span>);  </div><div class="line">    String filename = url.getParameter(Constants.FILE_KEY, System.getProperty(<span class="string">"user.home"</span>) + <span class="string">"/.dubbo/dubbo-registry-"</span> + url.getHost() + <span class="string">".cache"</span>);  </div><div class="line">    File file = <span class="keyword">null</span>;  </div><div class="line">    <span class="keyword">if</span> (ConfigUtils.isNotEmpty(filename)) &#123;  </div><div class="line">        file = <span class="keyword">new</span> File(filename);  </div><div class="line">        <span class="keyword">if</span>(! file.exists() &amp;&amp; file.getParentFile() != <span class="keyword">null</span> &amp;&amp; ! file.getParentFile().exists())&#123;  </div><div class="line">            <span class="keyword">if</span>(! file.getParentFile().mkdirs())&#123;  </div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Invalid registry store file "</span> + file + <span class="string">", cause: Failed to create directory "</span> + file.getParentFile() + <span class="string">"!"</span>);  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">this</span>.file = file;  </div><div class="line">    loadProperties();  </div><div class="line">    notify(url.getBackupUrls());  </div><div class="line">&#125;  </div><div class="line">   </div></pre></td></tr></table></figure><br>       可以看出AbstractRegistry类在构建的时候，会去本地磁盘文件读取文件，转成properties对象。<br>       文件默认路径是user.home/.dubbo/dubbo-registry-host.cache<br>       读取完之后会把这个url存到本地缓存文件里面去，但是该方法并非递增修改，而且是全部重写文件。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSaveProperties</span><span class="params">(<span class="keyword">long</span> version)</span> </span>&#123;  </div><div class="line">     <span class="keyword">if</span>(version &lt; lastCacheChanged.get())&#123;  </div><div class="line">         <span class="keyword">return</span>;  </div><div class="line">     &#125;  </div><div class="line">     <span class="keyword">if</span> (file == <span class="keyword">null</span>) &#123;  </div><div class="line">         <span class="keyword">return</span>;  </div><div class="line">     &#125;  </div><div class="line">     Properties newProperties = <span class="keyword">new</span> Properties();  </div><div class="line">     <span class="comment">// 保存之前先读取一遍，防止多个注册中心之间冲突  </span></div><div class="line">     InputStream in = <span class="keyword">null</span>;  </div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (file.exists()) &#123;  </div><div class="line">             in = <span class="keyword">new</span> FileInputStream(file);  </div><div class="line">             newProperties.load(in);  </div><div class="line">         &#125;  </div><div class="line">     &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">         logger.warn(<span class="string">"Failed to load registry store file, cause: "</span> + e.getMessage(), e);  </div><div class="line">     &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">         <span class="keyword">if</span> (in != <span class="keyword">null</span>) &#123;  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 in.close();  </div><div class="line">             &#125; <span class="keyword">catch</span> (IOException e) &#123;  </div><div class="line">                 logger.warn(e.getMessage(), e);  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;       </div><div class="line">  <span class="comment">// 保存  </span></div><div class="line">     <span class="keyword">try</span> &#123;  </div><div class="line">newProperties.putAll(properties);  </div><div class="line">         File lockfile = <span class="keyword">new</span> File(file.getAbsolutePath() + <span class="string">".lock"</span>);  </div><div class="line">         <span class="keyword">if</span> (!lockfile.exists()) &#123;  </div><div class="line">            lockfile.createNewFile();  </div><div class="line">         &#125;  </div><div class="line">         RandomAccessFile raf = <span class="keyword">new</span> RandomAccessFile(lockfile, <span class="string">"rw"</span>);  </div><div class="line">         <span class="keyword">try</span> &#123;  </div><div class="line">             FileChannel channel = raf.getChannel();  </div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 FileLock lock = channel.tryLock();  </div><div class="line">                <span class="keyword">if</span> (lock == <span class="keyword">null</span>) &#123;  </div><div class="line">                     <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Can not lock the registry cache file "</span> + file.getAbsolutePath() + <span class="string">", ignore and retry later, maybe multi java process use the file, please config: dubbo.registry.file=xxx.properties"</span>);  </div><div class="line">                 &#125;  </div><div class="line">                <span class="comment">// 保存  </span></div><div class="line">                 <span class="keyword">try</span> &#123;  </div><div class="line">                    <span class="keyword">if</span> (! file.exists()) &#123;  </div><div class="line">                         file.createNewFile();  </div><div class="line">                     &#125;  </div><div class="line">                     FileOutputStream outputFile = <span class="keyword">new</span> FileOutputStream(file);    </div><div class="line">                     <span class="keyword">try</span> &#123;  </div><div class="line">                         newProperties.store(outputFile, <span class="string">"Dubbo Registry Cache"</span>);  </div><div class="line">                     &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">                        outputFile.close();  </div><div class="line">                     &#125;  </div><div class="line">                 &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">                    lock.release();  </div><div class="line">                 &#125;  </div><div class="line">             &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">                 channel.close();  </div><div class="line">             &#125;  </div><div class="line">         &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">             raf.close();  </div><div class="line">         &#125;  </div><div class="line">     &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </div><div class="line">         <span class="keyword">if</span> (version &lt; lastCacheChanged.get()) &#123;  </div><div class="line">             <span class="keyword">return</span>;  </div><div class="line">         &#125; <span class="keyword">else</span> &#123;  </div><div class="line">             registryCacheExecutor.execute(<span class="keyword">new</span> SaveProperties(lastCacheChanged.incrementAndGet()));  </div><div class="line">         &#125;  </div><div class="line">         logger.warn(<span class="string">"Failed to save registry store file, cause: "</span> + e.getMessage(), e);  </div><div class="line">     &#125;  </div><div class="line"> &#125;   </div><div class="line">  </div></pre></td></tr></table></figure><br>  如果是两个不同的注册中心，不能使用一个缓存文件。<br>  值得注意一点的是，多个dubbo服务公用一个cache文件的时候，如果一起启动，可能会出现Failed to load registry store File 这类异常信息，<br>  这是因为当时该文件其他服务占用了。这种情况开发环境比较多，可以无视掉。因为会重复去注册的，下面会说明，<br>  但是尽量还是手动指定注册缓存文件比较好。尽量不使用同一个缓存文件。<br> <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">address</span>=<span class="string">"$&#123;zookeeper.address&#125;"</span> <span class="attr">file</span>=<span class="string">".cache/dubbo-registry-car.cache"</span> /&gt;</span></div></pre></td></tr></table></figure><br>   这样指定的话，缓存文件会在当前工程目录下。<br> RegistryService接口的所有方法参数都有URL对象，说明dubbo服务最终是转成URL来注册的。通过URL来表示服务的全部信息。<br> FailbackRegistry是AbstractRegistry类的子类，通过模式设计模式扩展，重写了AbstractRegistry类一些实现，并新增模板方法，交个子类去实现。<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">FailbackRegistry</span><span class="params">(URL url)</span> </span>&#123;  </div><div class="line">     <span class="keyword">super</span>(url);  </div><div class="line">     <span class="keyword">int</span> retryPeriod = url.getParameter(Constants.REGISTRY_RETRY_PERIOD_KEY, Constants.DEFAULT_REGISTRY_RETRY_PERIOD);  </div><div class="line">     <span class="keyword">this</span>.retryFuture = retryExecutor.scheduleWithFixedDelay(<span class="keyword">new</span> Runnable() &#123;  </div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </div><div class="line">             <span class="comment">// 检测并连接注册中心  </span></div><div class="line">             <span class="keyword">try</span> &#123;  </div><div class="line">                 retry();  </div><div class="line">             &#125; <span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></div><div class="line">                 logger.error(<span class="string">"Unexpected error occur at failed retry, cause: "</span> + t.getMessage(), t);  </div><div class="line">             &#125;  </div><div class="line">         &#125;  </div><div class="line">     &#125;, retryPeriod, retryPeriod, TimeUnit.MILLISECONDS);  </div><div class="line"> &#125;  </div><div class="line"> </div></pre></td></tr></table></figure><br>  FailbackRegistry构建的时候通过ScheduledExecutorService来延迟执行连接注册中心，默认延迟周期为5秒。<br>       其中retry()方法从set集合里面取出注册失败的url，然后不断去重新注册。如果注册中心当机了，但是只要注册中心重新启动之后，dubbo还是会去重新注册的。<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"> <span class="meta">@Override</span>  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(URL url)</span> </span>&#123;  </div><div class="line">    <span class="keyword">super</span>.register(url);  </div><div class="line">    failedRegistered.remove(url);  </div><div class="line">    failedUnregistered.remove(url);  </div><div class="line">    <span class="keyword">try</span> &#123;  </div><div class="line">        <span class="comment">// 向服务器端发送注册请求  </span></div><div class="line">        doRegister(url);  </div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </div><div class="line">        Throwable t = e;  </div><div class="line"> </div><div class="line">        <span class="comment">// 如果开启了启动时检测，则直接抛出异常  </span></div><div class="line">        <span class="keyword">boolean</span> check = getUrl().getParameter(Constants.CHECK_KEY, <span class="keyword">true</span>)  </div><div class="line">                &amp;&amp; url.getParameter(Constants.CHECK_KEY, <span class="keyword">true</span>)  </div><div class="line">                &amp;&amp; ! Constants.CONSUMER_PROTOCOL.equals(url.getProtocol());  </div><div class="line">        <span class="keyword">boolean</span> skipFailback = t <span class="keyword">instanceof</span> SkipFailbackWrapperException;  </div><div class="line">        <span class="keyword">if</span> (check || skipFailback) &#123;  </div><div class="line">            <span class="keyword">if</span>(skipFailback) &#123;  </div><div class="line">                t = t.getCause();  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Failed to register "</span> + url + <span class="string">" to registry "</span> + getUrl().getAddress() + <span class="string">", cause: "</span> + t.getMessage(), t);  </div><div class="line">        &#125; <span class="keyword">else</span> &#123;  </div><div class="line">            logger.error(<span class="string">"Failed to register "</span> + url + <span class="string">", waiting for retry, cause: "</span> + t.getMessage(), t);  </div><div class="line">        &#125;  </div><div class="line"> </div><div class="line">        <span class="comment">// 将失败的注册请求记录到失败列表，定时重试  </span></div><div class="line">        failedRegistered.add(url);  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line"> </div></pre></td></tr></table></figure><br>  register方法把具体的注册实现交给子类的doRegister实现。注册失败的都会记录到失败的set集合里面去，值得注意一个check 配置，当设置<dubbo:registry check="false">时，记录失败注册和订阅请求，后台定时重试。<br>  zookeeper注册中心是dubbo推荐使用的注册中心，本身zookeeper的基于是Paxos，一个分布式一致性算法。<br>  <img src="/images/a.png"><br>     流程：<br> 1.服务提供者启动时向/dubbo/com.foo.BarService/providers目录下写入URL<br> 2.服务消费者启动时订阅/dubbo/com.foo.BarService/providers目录下的URL向/dubbo/com.foo.BarService/consumers目录下写入自己的URL<br> 3.监控中心启动时订阅/dubbo/com.foo.BarService目录下的所有提供者和消费者URL</dubbo:registry></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1863,7 +1876,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1881,7 +1894,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

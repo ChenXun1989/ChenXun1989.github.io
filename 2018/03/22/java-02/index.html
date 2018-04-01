@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="js,jquery,json," />
+  <meta name="keywords" content="java,copyOnWriter,thread," />
 
 
 
@@ -84,17 +84,17 @@
 
 
 
-<meta name="description" content="jQuery基于json对象自动给表单元素赋值  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768">
-<meta name="keywords" content="js,jquery,json">
+<meta name="description" content="关于CopyOnWriter的一点心得">
+<meta name="keywords" content="java,copyOnWriter,thread">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jQuery基于json对象自动给表单元素赋值">
-<meta property="og:url" content="www.chenxun.wiki/2017/01/15/9/index.html">
+<meta property="og:title" content="详解CopyOnWriter">
+<meta property="og:url" content="www.chenxun.wiki/2018/03/22/java-02/index.html">
 <meta property="og:site_name" content="陈公子的博客">
-<meta property="og:description" content="jQuery基于json对象自动给表单元素赋值  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768">
-<meta property="og:updated_time" content="2017-01-15T14:23:30.000Z">
+<meta property="og:description" content="关于CopyOnWriter的一点心得">
+<meta property="og:updated_time" content="2018-04-01T05:43:13.875Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jQuery基于json对象自动给表单元素赋值">
-<meta name="twitter:description" content="jQuery基于json对象自动给表单元素赋值  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768">
+<meta name="twitter:title" content="详解CopyOnWriter">
+<meta name="twitter:description" content="关于CopyOnWriter的一点心得">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="www.chenxun.wiki/2017/01/15/9/"/>
+  <link rel="canonical" href="www.chenxun.wiki/2018/03/22/java-02/"/>
 
 
 
 
 
-  <title> jQuery基于json对象自动给表单元素赋值 | 陈公子的博客 </title>
+  <title> 详解CopyOnWriter | 陈公子的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -304,7 +304,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/15/9/">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2018/03/22/java-02/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="陈勋">
@@ -328,7 +328,7 @@
             
             
               
-                jQuery基于json对象自动给表单元素赋值
+                详解CopyOnWriter
               
             
           </h1>
@@ -343,8 +343,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-15T09:46:06+08:00">
-                2017-01-15
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-22T13:46:29+08:00">
+                2018-03-22
               </time>
             
 
@@ -366,8 +366,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
+                  <a href="/categories/java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">java基础</span>
                   </a>
                 </span>
 
@@ -384,8 +384,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/15/9/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/15/9/" itemprop="commentCount"></span>
+                <a href="/2018/03/22/java-02/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/22/java-02/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -399,6 +399,10 @@
           
 
           
+              <div class="post-description">
+                  关于CopyOnWriter的一点心得
+              </div>
+          
 
         </div>
       </header>
@@ -411,7 +415,34 @@
       
 
       
-        <h1 id="jQuery基于json对象自动给表单元素赋值"><a href="#jQuery基于json对象自动给表单元素赋值" class="headerlink" title="jQuery基于json对象自动给表单元素赋值"></a>jQuery基于json对象自动给表单元素赋值</h1><p>  为了提高前端小伙伴的开发效率，造了个基于json对象根据表单元素的name属性自动赋值的轮子<br>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">json2form:<span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;  </div><div class="line">       <span class="keyword">var</span> nodeParent = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> value = <span class="literal">undefined</span>;  </div><div class="line">      <span class="keyword">var</span> $el = <span class="literal">null</span>;  </div><div class="line">      <span class="keyword">var</span> nodeName = <span class="string">""</span>;  </div><div class="line">       <span class="keyword">for</span>(<span class="keyword">var</span> i <span class="keyword">in</span> obj)&#123;  </div><div class="line">          value= obj[i] ;  </div><div class="line">          <span class="keyword">if</span>(value === <span class="literal">undefined</span> || value===<span class="literal">null</span>)&#123;  </div><div class="line">              <span class="keyword">continue</span>;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">if</span>(<span class="keyword">typeof</span> value == <span class="string">'object'</span>)&#123;  </div><div class="line">              nodeParent=obj.nodeParent;  </div><div class="line">              value.nodeParent=nodeParent?nodeParent+<span class="string">"."</span>+i : i;  </div><div class="line">              <span class="keyword">if</span>(value <span class="keyword">instanceof</span> <span class="built_in">Array</span>)&#123;  </div><div class="line">                  <span class="keyword">for</span>(<span class="keyword">var</span> mm=<span class="number">0</span>;mm&lt;value.length;mm++)&#123;  </div><div class="line">                      <span class="keyword">var</span> ms=value[mm];  </div><div class="line">                      <span class="keyword">if</span>(<span class="keyword">typeof</span> ms == <span class="string">'object'</span>)&#123;  </div><div class="line">                          nodeParent=ms.nodeParent;  </div><div class="line">                          ms.nodeParent=ms.nodeParent?ms.nodeParent+<span class="string">"."</span>+i+<span class="string">"["</span>+mm+<span class="string">"]"</span>:i+<span class="string">"["</span>+mm+<span class="string">"]"</span>;  </div><div class="line">                          <span class="built_in">arguments</span>.callee(ms);  </div><div class="line">                      &#125;  </div><div class="line"></div><div class="line">                  &#125;  </div><div class="line"></div><div class="line">                  $el=$(<span class="string">"[name='"</span>+i+<span class="string">"']"</span>);  </div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":checkbox"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">                  <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                      $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                          <span class="keyword">if</span>($(<span class="keyword">this</span>).val() == value)&#123;  </div><div class="line">                              $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                          &#125;  </div><div class="line">                      &#125;)  </div><div class="line">                  &#125;  </div><div class="line">              &#125;<span class="keyword">else</span>&#123;  <span class="comment">//递归  </span></div><div class="line">                  <span class="built_in">arguments</span>.callee(value);  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">          <span class="keyword">else</span>&#123;  </div><div class="line">              nodeName=obj.nodeParent?obj.nodeParent+<span class="string">"."</span>+i : i ;  </div><div class="line"></div><div class="line">              $el=$(<span class="string">"[name='"</span>+nodeName+<span class="string">"']"</span>);  </div><div class="line">              <span class="keyword">if</span>($el.length &gt; <span class="number">0</span>)&#123;  </div><div class="line">              <span class="comment">// console.log("匹配数据名称："+nodeName+"值："+value);  </span></div><div class="line">                  <span class="keyword">if</span>($el.is(<span class="string">":text"</span>)||$el.attr(<span class="string">"type"</span>)==<span class="string">"hidden"</span>)&#123;  </div><div class="line">                      <span class="keyword">if</span>($el.data(<span class="string">"money"</span>) &amp;&amp; $el.data(<span class="string">"money"</span>) == <span class="string">"money"</span>)&#123;  </div><div class="line">                          value = outputdollars(value);  </div><div class="line">                      &#125;  </div><div class="line">                      $el.val(value);  </div><div class="line">                          </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">":radio"</span>))&#123;  </div><div class="line">                     $el.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">                        <span class="keyword">if</span>($(<span class="keyword">this</span>).val()==value)&#123;  </div><div class="line">                            $(<span class="keyword">this</span>).prop(<span class="string">"checked"</span>,<span class="literal">true</span>);  </div><div class="line">                        &#125;  </div><div class="line">                     &#125;)  </div><div class="line">                 &#125;  </div><div class="line">                 <span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"select"</span>))&#123;  </div><div class="line">                    $el.find(<span class="string">"option"</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> $(<span class="keyword">this</span>).val() == obj[i];&#125;).prop(<span class="string">"selected"</span>,<span class="literal">true</span>);  </div><div class="line">                 &#125;<span class="keyword">else</span> <span class="keyword">if</span>($el.is(<span class="string">"textarea"</span>))&#123;  </div><div class="line">                    $el.val(value)  </div><div class="line">                 &#125;  </div><div class="line">              &#125;  </div><div class="line">          &#125;  </div><div class="line">      &#125;      </div><div class="line">         </div><div class="line">   &#125; </div><div class="line"></div><div class="line"> </div></pre></td></tr></table></figure><br>  注意： 表单的name属于与json对象的属性名为一致，保持继承链。<br>  例如 input name=’a.b.c’   表示json对象里面的a属性里面的b属性的c属性。 </p>
+        <h1 id="详解CopyOnWriter"><a href="#详解CopyOnWriter" class="headerlink" title="详解CopyOnWriter"></a>详解CopyOnWriter</h1><h2 id="什么是CopyOnWriter"><a href="#什么是CopyOnWriter" class="headerlink" title="什么是CopyOnWriter"></a>什么是CopyOnWriter</h2><p>  <strong> 示例代码链接 <a href="https://github.com/ChenXun1989/study-example" target="_blank" rel="external">https://github.com/ChenXun1989/study-example</a> </strong><br>  copyOnWriter顾名思义就是写的时候复制，是一种常见的计算机程序设计领域的优化策略。<br>  核心思想是当多个调用者访问同一个资源的时候(如内存或磁盘上的数据存储),他们会共同获取相同的指针指向同一个的资源。<br>  当每个调用者修改资源的时候,系统才会真正复制一份专用副本给该调用者，而其他调用者所见到的最初的资源仍然保持不变.<br>  专用副本修改完毕之后，替代真正的资源。最终所有访问者看到一致的视图。</p>
+<h2 id="CopyOnWriterArrayList的实现细节"><a href="#CopyOnWriterArrayList的实现细节" class="headerlink" title="CopyOnWriterArrayList的实现细节"></a>CopyOnWriterArrayList的实现细节</h2><h3 id="CopyOnWriterArrayList-get-方法"><a href="#CopyOnWriterArrayList-get-方法" class="headerlink" title="CopyOnWriterArrayList.get()方法"></a>CopyOnWriterArrayList.get()方法</h3>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line"> <span class="comment">/**</span></div><div class="line">  * &#123;<span class="doctag">@inheritDoc</span>&#125;</div><div class="line">  *</div><div class="line">  * <span class="doctag">@throws</span> IndexOutOfBoundsException &#123;<span class="doctag">@inheritDoc</span>&#125;</div><div class="line">  */</div><div class="line"> <span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> get(getArray(), index);</div><div class="line"> &#125;</div><div class="line"> </div><div class="line"><span class="comment">/**</span></div><div class="line">  * Gets the array.  Non-private so as to also be accessible</div><div class="line">  * from CopyOnWriteArraySet class.</div><div class="line">  */</div><div class="line"> <span class="keyword">final</span> Object[] getArray() &#123;</div><div class="line">     <span class="keyword">return</span> array;</div><div class="line"> &#125;</div><div class="line"> </div><div class="line">  <span class="comment">/** The array, accessed only via getArray/setArray. */</span></div><div class="line">     <span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Object[] array;</div><div class="line">    </div><div class="line">  </div></pre></td></tr></table></figure>
+<pre><code>从源码上可以看出CopyOnWriterArrayList底层使用一个由volatile修饰的array数组来存值，
+而读一个volatile变量（相当于获取锁），JMM会把线程对应的本地内存置为无效，
+从而使得被监视器保护的临界区代码必须要从主内存中去读取共享变量。这样来保证读的变量是最新的。
+</code></pre><h3 id="CopyOnWriterArrayList-add-方法"><a href="#CopyOnWriterArrayList-add-方法" class="headerlink" title="CopyOnWriterArrayList.add()方法"></a>CopyOnWriterArrayList.add()方法</h3>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line"><span class="comment">/**</span></div><div class="line">   * Appends the specified element to the end of this list.</div><div class="line">   *</div><div class="line">   * <span class="doctag">@param</span> e element to be appended to this list</div><div class="line">   * <span class="doctag">@return</span> &#123;<span class="doctag">@code</span> true&#125; (as specified by &#123;<span class="doctag">@link</span> Collection#add&#125;)</div><div class="line">   */</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">      <span class="comment">//获取写锁</span></div><div class="line">      <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</div><div class="line">      lock.lock();</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          <span class="comment">// 获取真正的资源</span></div><div class="line">          Object[] elements = getArray();</div><div class="line">          <span class="keyword">int</span> len = elements.length;</div><div class="line">          <span class="comment">// 复制一份私有副本</span></div><div class="line">          Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</div><div class="line">          <span class="comment">// 修改私有副本</span></div><div class="line">          newElements[len] = e;</div><div class="line">          <span class="comment">// 私有副本修改完毕之后，替代真正的资源</span></div><div class="line">          setArray(newElements);</div><div class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">          lock.unlock();</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  <span class="comment">/**</span></div><div class="line">       * Sets the array.</div><div class="line">       */</div><div class="line">      <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setArray</span><span class="params">(Object[] a)</span> </span>&#123;</div><div class="line">          array = a;</div><div class="line">      &#125;</div><div class="line">  </div><div class="line">   </div></pre></td></tr></table></figure>
+<pre><code>从源码上可以看出CopyOnWriterArrayList里面add方法体现了CopyOnWriter的核心思想，具体步骤如下：
+1. 获取写锁
+2. 从原资源复制一份私有副本
+3. 修改私有副本
+4. 私有副本替换原资源
+5. 释放写锁
+</code></pre><h2 id="copyOnWriter的其他应用"><a href="#copyOnWriter的其他应用" class="headerlink" title="copyOnWriter的其他应用"></a>copyOnWriter的其他应用</h2><p>   CopyOnWriter是一种常见的计算机程序设计领域的优化策略，例如redis里面的持久化机制<br>   redis处理数据是通过单线程的，但是很多场景我们需要持久化数据，reids则依赖系统的fork()函数的copyOnWriter实现。<br>   redis官方文档：</p>
+<blockquote>
+<p>Whenever Redis needs to dump the dataset to disk, this is what happens:</p>
+</blockquote>
+<pre><code>Redis forks. We now have a child and a parent process.
+
+The child starts to write the dataset to a temporary RDB file.
+
+When the child is done writing the new RDB file, it replaces the old one.
+
+This method allows Redis to benefit from copy-on-write semantics.
+</code></pre><p>   liunx系统的fork函数实现方式使用copyOnWriter技术创建子进程。<br>   当父进程创建子进程时，内核只为子进程创建虚拟空间，父子两个进程使用的是相同的物理空间。只有父子进程发生更改时才会为子进程分配独立的物理空间。</p>
+<h2 id="copyOnWriter的优缺点"><a href="#copyOnWriter的优缺点" class="headerlink" title="copyOnWriter的优缺点"></a>copyOnWriter的优缺点</h2><ol>
+<li>copyOnWriter适用读多写少的场景</li>
+<li>数据复制过程带来了更多得io消耗</li>
+</ol>
 
       
     </div>
@@ -435,11 +466,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/js/" rel="tag"># js</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/jquery/" rel="tag"># jquery</a>
+            <a href="/tags/copyOnWriter/" rel="tag"># copyOnWriter</a>
           
-            <a href="/tags/json/" rel="tag"># json</a>
+            <a href="/tags/thread/" rel="tag"># thread</a>
           
         </div>
       
@@ -448,8 +479,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/15/8/" rel="next" title="基于jquery把表单转成成json对象">
-                <i class="fa fa-chevron-left"></i> 基于jquery把表单转成成json对象
+              <a href="/2017/04/30/nio-2/" rel="next" title="nio-2">
+                <i class="fa fa-chevron-left"></i> nio-2
               </a>
             
           </div>
@@ -458,8 +489,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/15/4/" rel="prev" title="dubbo源码研究之container模块">
-                dubbo源码研究之container模块 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/03/22/java-01/" rel="prev" title="class装载">
+                class装载 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -486,8 +517,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/01/15/9/"
-           data-title="jQuery基于json对象自动给表单元素赋值" data-url="www.chenxun.wiki/2017/01/15/9/">
+      <div class="ds-thread" data-thread-key="2018/03/22/java-02/"
+           data-title="详解CopyOnWriter" data-url="www.chenxun.wiki/2018/03/22/java-02/">
       </div>
     
   </div>
@@ -587,7 +618,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jQuery基于json对象自动给表单元素赋值"><span class="nav-text">jQuery基于json对象自动给表单元素赋值</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#详解CopyOnWriter"><span class="nav-text">详解CopyOnWriter</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是CopyOnWriter"><span class="nav-text">什么是CopyOnWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CopyOnWriterArrayList的实现细节"><span class="nav-text">CopyOnWriterArrayList的实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CopyOnWriterArrayList-get-方法"><span class="nav-text">CopyOnWriterArrayList.get()方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CopyOnWriterArrayList-add-方法"><span class="nav-text">CopyOnWriterArrayList.add()方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#copyOnWriter的其他应用"><span class="nav-text">copyOnWriter的其他应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#copyOnWriter的优缺点"><span class="nav-text">copyOnWriter的优缺点</span></a></li></ol></li></ol></div>
             
 
           </div>
