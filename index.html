@@ -304,6 +304,173 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2019/11/01/thread-07/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/11/01/thread-07/" itemprop="url">
+                  JSR-133规范详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-01T12:42:27+08:00">
+                2019-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java多线程/" itemprop="url" rel="index">
+                    <span itemprop="name">java多线程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/01/thread-07/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2019/11/01/thread-07/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p> JSR-133规范,JavaTM内存模型与线程规范.该规范语义不会去描述多线程程序该如何执行。<br> 而是描述多线程程序允许表现出的行为。</p>
+<h1 id="JVM内存模型和Java内存模型"><a href="#JVM内存模型和Java内存模型" class="headerlink" title="JVM内存模型和Java内存模型"></a>JVM内存模型和Java内存模型</h1><p> JMM来源于JSR-133,主要解决多线程对共享数据的读写一致性问题，<br> JVM内存模型则是指JVM的内存分区。两者本身没有关系。</p>
+<h1 id="内存模型名词定义"><a href="#内存模型名词定义" class="headerlink" title="内存模型名词定义"></a>内存模型名词定义</h1><h2 id="共享变量-堆内存（Shared-variables-Heap-memory）"><a href="#共享变量-堆内存（Shared-variables-Heap-memory）" class="headerlink" title="共享变量/堆内存（Shared variables/Heap memory）"></a>共享变量/堆内存（Shared variables/Heap memory）</h2><p> 能够在线程间共享的内存称作共享内存或堆内存。所有的实例字段，静态字段以及数组元素都存储在堆内存<br> 中。我们使用变量这个词来表示字段和数组元素。方法中的局部变量永远不会在线程间共享且不会被内存模型影响</p>
+<h2 id="线程间的动作（Inter-thread-Actions）"><a href="#线程间的动作（Inter-thread-Actions）" class="headerlink" title="线程间的动作（Inter-thread Actions）"></a>线程间的动作（Inter-thread Actions）</h2><p> 线程间的动作是由某一线程执行，能被另一线程探测或直接影响的动作（action）。线程间的动作包括共享变量的读写以及同<br> 步动作（synchronization action），如 lock 或 unlock 某个管程，读写某个 volatile 变量或启动一个线程。<br> 也包括与外部世界交互的动作。</p>
+<h2 id="线程内语义（Intra-thread-semantics）"><a href="#线程内语义（Intra-thread-semantics）" class="headerlink" title="线程内语义（Intra-thread semantics）"></a>线程内语义（Intra-thread semantics）</h2><p> 线程内语义是单线程程序的标准语义，基于某个线程内读动作能看到的值，可以完整的预测这个线程的行为。线程内语义决定着某个线程孤立的执行过程；当从堆中读取值时，值是<br>    由内存模型决定的。</p>
+<h2 id="同步动作（Synchronization-Actions）"><a href="#同步动作（Synchronization-Actions）" class="headerlink" title="同步动作（Synchronization Actions）"></a>同步动作（Synchronization Actions）</h2><p> 同步动作包括锁、解锁、读写 volatile 变量，用于启动线程的动作以及用于探测线程是否结束的动作。  </p>
+<h1 id="volatile详细解释"><a href="#volatile详细解释" class="headerlink" title="volatile详细解释"></a>volatile详细解释</h1><p>   jsr133强化了volatile语义，需要有acquire和release语义，对某个volatile字段的写操作happens-before每个后续对该volatile字段的读操作</p>
+<h2 id="jvm具体实现"><a href="#jvm具体实现" class="headerlink" title="jvm具体实现"></a>jvm具体实现</h2><p>   jvm通过内存屏障来保障volatile语义，硬件层面的内存屏障分两种store Barrier和load Barrier,jvm通过两种组合成四种即loadload,<br>   loadstore,storestore,storeload.</p>
+<ul>
+<li>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据</li>
+<li>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。<h2 id="cpu3级缓存介绍"><a href="#cpu3级缓存介绍" class="headerlink" title="cpu3级缓存介绍"></a>cpu3级缓存介绍</h2>CPU缓存的出现主要是为了解决CPU运算速度与内存读写速度不匹配的矛盾，因为CPU运算速度要比内存读写速度快得多。<br>导致CPU可能会花费很长时间等待数据到来或把数据写入内存。<br><img src="/images/jvm3.png"><br>每一级缓存中所存储的数据全部都是下一级缓存中的一部分，这三种缓存的技术难度和制造成本是相对递减的，所以其容量也相对递增。<br>当CPU要读取一个数据时，首先从一级缓存中查找，如果没有再从二级缓存中查找，如果还是没有再从三级缓存中或内存中查找。<h2 id="lock前缀详细解释"><a href="#lock前缀详细解释" class="headerlink" title="lock前缀详细解释"></a>lock前缀详细解释</h2>演示java代码<br><img src="/images/jvm1.png"><br>在新增jvm参数之后可以打印对应的汇编指令<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-server -Xcomp -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -XX:+LogCompilation -XX:+TraceClassLoading </div><div class="line">   </div></pre></td></tr></table></figure>
+<img src="/images/jvm2.png"><br>jvm并没有采用Barrier指令而是采用了lock addl $0x0,(%rsp)来实际上保障volatile语义。<br>lock是一个前缀指令，是和其他指令配合使用 addl $0x0,(%rsp)实际上就是+0，是一个无效指令，配合lock前缀锁定cpu总线（实际上是锁缓存），<br>lock后的写操作会回写已修改的数据，同时让其它CPU相关缓存行失效，从而重新从主存中加载最新的数据<br>相关资料<br><a href="https://software.intel.com/sites/default/files/managed/a4/60/325384-sdm-vol-3abcd.pdf" target="_blank" rel="external">https://software.intel.com/sites/default/files/managed/a4/60/325384-sdm-vol-3abcd.pdf</a> 2.85<h2 id="MESI协议介绍"><a href="#MESI协议介绍" class="headerlink" title="MESI协议介绍"></a>MESI协议介绍</h2>缓存是分段（cache line），每次加载的缓存是定长的，通常是64位。lock其实不是锁总线是是锁定缓存段.<br>cpu缓存一致性协议，把cpu缓存行的数据分成4个状态,用2个bit表示</li>
+<li>Modified 这行数据有效，这行数据修改了，和内存中数据不一致，数据只存在本cache中</li>
+<li>Exclusive 这行数据有效，数据和内存中一致，数据只存在本cache中</li>
+<li>Shared 这行数据有效，数据和内存中一致，数据存在很多cache中</li>
+<li>Invaid 这行数据无效<br>其中M和E解决独占问题（也就是锁的语义），lock前缀配合一个写操作，整个缓存行的状态会从s-&gt;e-&gt;m-&gt;i-&gt;s<h2 id="缓存伪共享和java8优化"><a href="#缓存伪共享和java8优化" class="headerlink" title="缓存伪共享和java8优化"></a>缓存伪共享和java8优化</h2>cpu每次load数据是基于缓存行加载的，如果两个变量公用一个缓存行（一般是相同低bit位地址），就会产生缓存伪共享的问题，只打算更新a变量的只，结果导致b变量也一起更新。<br>解决的思路是把a变量独占一行，例如独占64位。Java8中已经提供了官方的解决方案，<br>Java8中新增了一个注解@sun.misc.Contended。加上这个注解的类会自动补齐缓存行，需要注意的是此注解默认是无效的，需要在jvm启动时设置-XX:-RestrictContended才会生效。</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2018/06/28/java-03/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1741,159 +1908,6 @@ ByteBuffer提供两种方式来获取缓存区内存，间接或者直接。<br>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/01/17/thread-05/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/17/thread-05/" itemprop="url">
-                  并发容器和同步容器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-17T13:14:21+08:00">
-                2017-01-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java多线程/" itemprop="url" rel="index">
-                    <span itemprop="name">java多线程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/17/thread-05/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/17/thread-05/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="并发容器和同步容器"><a href="#并发容器和同步容器" class="headerlink" title="并发容器和同步容器"></a>并发容器和同步容器</h1><h2 id="同步容器"><a href="#同步容器" class="headerlink" title="同步容器"></a>同步容器</h2><p>  java的同步容器有Vector和Hashtable。<br>  vecotor和hashtbale通过synchronized来锁定对容器状态的访问，例如get方法<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">     <span class="keyword">if</span> (index &gt;= elementCount)</div><div class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line"></div><div class="line">     <span class="keyword">return</span> elementData(index);</div><div class="line"> &#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure><br>  同步容器类是线程安全的，但复合操作不一定是线程安全的，需要客户端额外加锁来保证线程安全。</p>
-<h2 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h2><p>  同步容器将所有对容器状态的访问都串行化，以实现线程安全。这种性能比较低，<br> java5.0 引入了并发容器,在java.util.concurrent包下面</p>
-<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><p> ConcurrentHashMap采用了分段锁的设计，只有在同一个分段内才存在竞态关系，不同的分段锁之间没有锁竞争。<br> <strong> ConcurrentHashMap是弱一致性的，get，clear都是弱一致性的  </strong></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1941,7 +1955,7 @@ ByteBuffer提供两种方式来获取缓存区内存，间接或者直接。<br>
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2019,7 +2033,7 @@ ByteBuffer提供两种方式来获取缓存区内存，间接或者直接。<br>
         <div class="copyright" >
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
