@@ -429,6 +429,15 @@
   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span>  <span class="title">test2</span><span class="params">()</span></span>&#123;  </div><div class="line">  ServiceLoader&lt;SPITest&gt; loaders= ServiceLoader.load(SPITest.class);</div><div class="line">  loaders.forEach(i-&gt;&#123;</div><div class="line">        i.test();</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure>
 <p>   准确的说spi没有破坏双亲委托，只是绕过了双亲委托获取class，委托机制上层（例如bootstrapClassloader）通过Thread.currentThread().getContextClassLoader()来获取<br>   委托机制里面下层（例如AppClassLoader）加载的类。具体code如下：<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">ServiceLoader&lt;S&gt; <span class="title">load</span><span class="params">(Class&lt;S&gt; service)</span> </span>&#123;</div><div class="line">       ClassLoader cl = Thread.currentThread().getContextClassLoader();</div><div class="line">       <span class="keyword">return</span> ServiceLoader.load(service, cl);</div><div class="line">   &#125;</div><div class="line">   </div></pre></td></tr></table></figure><br>   这样做是为了解决一些 上层类依赖下层类的情况，比如jdbc，jdbc相关的类文件在rt.jar中，但是driver对应的实现类是放在我们应用的jar的lib里面，<br>   这样 extClassLoader 就加载不到，但是通过spi机制，rt.jar包中的jdbc相关类就能获取由AppClassLoader 加载的jdbc具体的driver了。<br>   上面讲到 双亲委托机制是通过loaderclass这个方法来实现的，如果我们自定义的classloader覆盖改方法（或者覆盖findClass），就能强行破坏，例如osgi.<br>   在jvm里面每个class的唯一标识符由 classloader全名+class全名构成，因此假设两个独立的classloader，加载一样的class，jvm也会认为是两个独立的class，<br>   tomcat就是此机制来实现webapp目录下不同的web应用的隔离</p>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
       
     </div>
 
@@ -467,8 +476,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/30/nio-2/" rel="next" title="nio-2">
-                <i class="fa fa-chevron-left"></i> nio-2
+              <a href="/2018/03/22/java-02/" rel="next" title="详解CopyOnWriter">
+                <i class="fa fa-chevron-left"></i> 详解CopyOnWriter
               </a>
             
           </div>
@@ -477,8 +486,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/22/java-02/" rel="prev" title="详解CopyOnWriter">
-                详解CopyOnWriter <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/28/java-03/" rel="prev" title="jvm里面的access_flag">
+                jvm里面的access_flag <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

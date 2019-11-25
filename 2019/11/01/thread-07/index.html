@@ -437,6 +437,15 @@
 <li>Invaid 这行数据无效<br>其中M和E解决独占问题（也就是锁的语义），lock前缀配合一个写操作，整个缓存行的状态会从s-&gt;e-&gt;m-&gt;i-&gt;s<h2 id="缓存伪共享和java8优化"><a href="#缓存伪共享和java8优化" class="headerlink" title="缓存伪共享和java8优化"></a>缓存伪共享和java8优化</h2>cpu每次load数据是基于缓存行加载的，如果两个变量公用一个缓存行（一般是相同低bit位地址），就会产生缓存伪共享的问题，只打算更新a变量的只，结果导致b变量也一起更新。<br>解决的思路是把a变量独占一行，例如独占64位。Java8中已经提供了官方的解决方案，<br>Java8中新增了一个注解@sun.misc.Contended。加上这个注解的类会自动补齐缓存行，需要注意的是此注解默认是无效的，需要在jvm启动时设置-XX:-RestrictContended才会生效。</li>
 </ul>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
       
     </div>
 

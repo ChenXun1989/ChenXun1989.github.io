@@ -769,6 +769,180 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2018/03/22/java-01/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="陈勋">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/head.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="陈公子的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/03/22/java-01/" itemprop="url">
+                  class装载
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-22T13:46:29+08:00">
+                2018-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/22/java-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/22/java-01/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="class装载"><a href="#class装载" class="headerlink" title="class装载"></a>class装载</h1><h2 id="大话class装载"><a href="#大话class装载" class="headerlink" title="大话class装载"></a>大话class装载</h2><p>  <strong> 示例代码链接 <a href="https://github.com/ChenXun1989/study-example" target="_blank" rel="external">https://github.com/ChenXun1989/study-example</a> </strong><br>  演示demo<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassLoader</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">    ClassLoader myClassLoader = <span class="keyword">new</span> ClassLoader() &#123;&#125;;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      Class cls = myClassLoader.loadClass(TestClassLoader.class.getName());</div><div class="line"></div><div class="line">      System.out.println(myClassLoader.getParent());</div><div class="line">      System.out.println(cls.getClassLoader());</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">      e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125; </div><div class="line">  </div></pre></td></tr></table></figure><br>  输出结果：<br>  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">sun.misc.Launcher$AppClassLoader@18b4aac2</div><div class="line">sun.misc.Launcher$AppClassLoader@18b4aac2   </div><div class="line">  </div></pre></td></tr></table></figure><br>  从结果上我们可以得出以下两个结论</p>
+<ol>
+<li>自定义的classloader的parent默认为AppClassLoader</li>
+<li>当classloader加载某个class的时候会委托给parent（父加载器）加载</li>
+</ol>
+<h2 id="双亲委托细节"><a href="#双亲委托细节" class="headerlink" title="双亲委托细节"></a>双亲委托细节</h2><p>  双亲委派模型的工作过程是：如果一个类加载器收到了类加载的请求，他首先不会自己去尝试加载这个类，<br>  而是把这个请求委派父类加载器去完成。每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，<br>  只有当父加载器反馈自己无法完成这个请求（他的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去加载。</p>
+<p>  双亲委托是如何实现的呢？秘密就在loadClass 这个方法<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">        <span class="comment">// First, check if the class has already been loaded</span></div><div class="line">        Class&lt;?&gt; c = findLoadedClass(name);</div><div class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    c = findBootstrapClassOrNull(name);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                <span class="comment">// from the non-null parent class loader</span></div><div class="line">            &#125;</div><div class="line">      </div><div class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></div><div class="line">                <span class="comment">// to find the class.</span></div><div class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</div><div class="line">                c = findClass(name);</div><div class="line">      </div><div class="line">                <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (resolve) &#123;</div><div class="line">            resolveClass(c);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> c;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure></p>
+<p>  从code上得出结论如果没有知道class,会先通过父加载起去加载，一直递归上去，如果没有父加载器直接通过bootstrap加载器加载<br>  大致流程如下： 用户自定义的classlaoder –   AppClassLoader —ExtClassLoader – bootStrapClassLoader<br>   <img src="/images/20180302201.png"></p>
+<p>  这么做有什么好处？</p>
+<blockquote>
+<p>如果没有使用双亲委派模型，由各个类加载器自行加载的话，如果用户自己编写了一个称为java.lang.Object的类，<br>  并放在程序的ClassPath中，那系统将会出现多个不同的Object类， Java类型体系中最基础的行为就无法保证。应用程序也将会变得一片混乱。</p>
+</blockquote>
+<h2 id="如何破坏双亲委托"><a href="#如何破坏双亲委托" class="headerlink" title="如何破坏双亲委托"></a>如何破坏双亲委托</h2><p>  双亲委托并不是一个强制约束，只是一种大家都遵守规范，但有些场景会破坏双亲委托（例如SPI）</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span>  <span class="title">test2</span><span class="params">()</span></span>&#123;  </div><div class="line">  ServiceLoader&lt;SPITest&gt; loaders= ServiceLoader.load(SPITest.class);</div><div class="line">  loaders.forEach(i-&gt;&#123;</div><div class="line">        i.test();</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure>
+<p>   准确的说spi没有破坏双亲委托，只是绕过了双亲委托获取class，委托机制上层（例如bootstrapClassloader）通过Thread.currentThread().getContextClassLoader()来获取<br>   委托机制里面下层（例如AppClassLoader）加载的类。具体code如下：<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">ServiceLoader&lt;S&gt; <span class="title">load</span><span class="params">(Class&lt;S&gt; service)</span> </span>&#123;</div><div class="line">       ClassLoader cl = Thread.currentThread().getContextClassLoader();</div><div class="line">       <span class="keyword">return</span> ServiceLoader.load(service, cl);</div><div class="line">   &#125;</div><div class="line">   </div></pre></td></tr></table></figure><br>   这样做是为了解决一些 上层类依赖下层类的情况，比如jdbc，jdbc相关的类文件在rt.jar中，但是driver对应的实现类是放在我们应用的jar的lib里面，<br>   这样 extClassLoader 就加载不到，但是通过spi机制，rt.jar包中的jdbc相关类就能获取由AppClassLoader 加载的jdbc具体的driver了。<br>   上面讲到 双亲委托机制是通过loaderclass这个方法来实现的，如果我们自定义的classloader覆盖改方法（或者覆盖findClass），就能强行破坏，例如osgi.<br>   在jvm里面每个class的唯一标识符由 classloader全名+class全名构成，因此假设两个独立的classloader，加载一样的class，jvm也会认为是两个独立的class，<br>   tomcat就是此机制来实现webapp目录下不同的web应用的隔离</p>
+
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2018/03/22/java-02/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -924,171 +1098,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2018/03/22/java-01/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="陈勋">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/head.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈公子的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈公子的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/03/22/java-01/" itemprop="url">
-                  class装载
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-22T13:46:29+08:00">
-                2018-03-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">java基础</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/03/22/java-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/03/22/java-01/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="class装载"><a href="#class装载" class="headerlink" title="class装载"></a>class装载</h1><h2 id="大话class装载"><a href="#大话class装载" class="headerlink" title="大话class装载"></a>大话class装载</h2><p>  <strong> 示例代码链接 <a href="https://github.com/ChenXun1989/study-example" target="_blank" rel="external">https://github.com/ChenXun1989/study-example</a> </strong><br>  演示demo<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassLoader</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">    ClassLoader myClassLoader = <span class="keyword">new</span> ClassLoader() &#123;&#125;;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      Class cls = myClassLoader.loadClass(TestClassLoader.class.getName());</div><div class="line"></div><div class="line">      System.out.println(myClassLoader.getParent());</div><div class="line">      System.out.println(cls.getClassLoader());</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">      e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125; </div><div class="line">  </div></pre></td></tr></table></figure><br>  输出结果：<br>  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">sun.misc.Launcher$AppClassLoader@18b4aac2</div><div class="line">sun.misc.Launcher$AppClassLoader@18b4aac2   </div><div class="line">  </div></pre></td></tr></table></figure><br>  从结果上我们可以得出以下两个结论</p>
-<ol>
-<li>自定义的classloader的parent默认为AppClassLoader</li>
-<li>当classloader加载某个class的时候会委托给parent（父加载器）加载</li>
-</ol>
-<h2 id="双亲委托细节"><a href="#双亲委托细节" class="headerlink" title="双亲委托细节"></a>双亲委托细节</h2><p>  双亲委派模型的工作过程是：如果一个类加载器收到了类加载的请求，他首先不会自己去尝试加载这个类，<br>  而是把这个请求委派父类加载器去完成。每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，<br>  只有当父加载器反馈自己无法完成这个请求（他的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去加载。</p>
-<p>  双亲委托是如何实现的呢？秘密就在loadClass 这个方法<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">        <span class="comment">// First, check if the class has already been loaded</span></div><div class="line">        Class&lt;?&gt; c = findLoadedClass(name);</div><div class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    c = findBootstrapClassOrNull(name);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                <span class="comment">// from the non-null parent class loader</span></div><div class="line">            &#125;</div><div class="line">      </div><div class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></div><div class="line">                <span class="comment">// to find the class.</span></div><div class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</div><div class="line">                c = findClass(name);</div><div class="line">      </div><div class="line">                <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (resolve) &#123;</div><div class="line">            resolveClass(c);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> c;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure></p>
-<p>  从code上得出结论如果没有知道class,会先通过父加载起去加载，一直递归上去，如果没有父加载器直接通过bootstrap加载器加载<br>  大致流程如下： 用户自定义的classlaoder –   AppClassLoader —ExtClassLoader – bootStrapClassLoader<br>   <img src="/images/20180302201.png"></p>
-<p>  这么做有什么好处？</p>
-<blockquote>
-<p>如果没有使用双亲委派模型，由各个类加载器自行加载的话，如果用户自己编写了一个称为java.lang.Object的类，<br>  并放在程序的ClassPath中，那系统将会出现多个不同的Object类， Java类型体系中最基础的行为就无法保证。应用程序也将会变得一片混乱。</p>
-</blockquote>
-<h2 id="如何破坏双亲委托"><a href="#如何破坏双亲委托" class="headerlink" title="如何破坏双亲委托"></a>如何破坏双亲委托</h2><p>  双亲委托并不是一个强制约束，只是一种大家都遵守规范，但有些场景会破坏双亲委托（例如SPI）</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span>  <span class="title">test2</span><span class="params">()</span></span>&#123;  </div><div class="line">  ServiceLoader&lt;SPITest&gt; loaders= ServiceLoader.load(SPITest.class);</div><div class="line">  loaders.forEach(i-&gt;&#123;</div><div class="line">        i.test();</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line">  </div><div class="line">  </div></pre></td></tr></table></figure>
-<p>   准确的说spi没有破坏双亲委托，只是绕过了双亲委托获取class，委托机制上层（例如bootstrapClassloader）通过Thread.currentThread().getContextClassLoader()来获取<br>   委托机制里面下层（例如AppClassLoader）加载的类。具体code如下：<br>   <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;S&gt; <span class="function">ServiceLoader&lt;S&gt; <span class="title">load</span><span class="params">(Class&lt;S&gt; service)</span> </span>&#123;</div><div class="line">       ClassLoader cl = Thread.currentThread().getContextClassLoader();</div><div class="line">       <span class="keyword">return</span> ServiceLoader.load(service, cl);</div><div class="line">   &#125;</div><div class="line">   </div></pre></td></tr></table></figure><br>   这样做是为了解决一些 上层类依赖下层类的情况，比如jdbc，jdbc相关的类文件在rt.jar中，但是driver对应的实现类是放在我们应用的jar的lib里面，<br>   这样 extClassLoader 就加载不到，但是通过spi机制，rt.jar包中的jdbc相关类就能获取由AppClassLoader 加载的jdbc具体的driver了。<br>   上面讲到 双亲委托机制是通过loaderclass这个方法来实现的，如果我们自定义的classloader覆盖改方法（或者覆盖findClass），就能强行破坏，例如osgi.<br>   在jvm里面每个class的唯一标识符由 classloader全名+class全名构成，因此假设两个独立的classloader，加载一样的class，jvm也会认为是两个独立的class，<br>   tomcat就是此机制来实现webapp目录下不同的web应用的隔离</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="www.chenxun.wiki/2017/04/30/nio-2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1182,6 +1191,15 @@
             <p>#selector</p>
 <p><em>注意, 一个 Channel 仅仅可以被注册到一个 Selector 一次, 如果将 Channel 注册到 Selector 多次, 那么其实就是相当于更新 SelectionKey 的 interest set.</em></p>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
           
         
       
@@ -1353,6 +1371,15 @@
 <li>socket通讯   该demo采用netty4实现。</li>
 </ul>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
           
         
       
@@ -1516,6 +1543,15 @@
 <strong> 先创建对象，再做依赖注入 </strong><br><strong> 容器里面是原生对象还是代理对象，取决于beanfatory返回的对象实例 </strong></li>
 </ul>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
           
         
       
@@ -1681,6 +1717,15 @@
 <li>StatemetHandler</li>
 </ul>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
           
         
       
@@ -1856,6 +1901,15 @@ thread类的初始话代码<figure class="highlight java"><table><tr><td class="
 <li>通知所有等待在对象的线程<br><strong> 条件变量用volatile修饰来保证可见性  </strong><h2 id="终止"><a href="#终止" class="headerlink" title="终止"></a>终止</h2> 线程对应的run方法运行完毕，则线程终止。不推荐使用stop来终止线程。可以通过状态变量来终止线程。</li>
 </ul>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
           
         
       

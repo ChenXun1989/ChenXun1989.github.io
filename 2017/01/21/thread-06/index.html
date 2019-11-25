@@ -437,6 +437,15 @@ thread类的初始话代码<figure class="highlight java"><table><tr><td class="
 <li>通知所有等待在对象的线程<br><strong> 条件变量用volatile修饰来保证可见性  </strong><h2 id="终止"><a href="#终止" class="headerlink" title="终止"></a>终止</h2> 线程对应的run方法运行完毕，则线程终止。不推荐使用stop来终止线程。可以通过状态变量来终止线程。</li>
 </ul>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
       
     </div>
 

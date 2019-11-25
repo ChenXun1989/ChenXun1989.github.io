@@ -419,6 +419,15 @@
       
         <h1 id="dubbo源码研究之rpc模块"><a href="#dubbo源码研究之rpc模块" class="headerlink" title="dubbo源码研究之rpc模块"></a>dubbo源码研究之rpc模块</h1><p>  dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。<br>  <img src="/images/1.png"><br>  dubbo的rpc模块以Invocation和Result为中心，扩展接口为Protocol、Invoker和Exporter。<br>  Protocol是服务域，它是Invoker暴露和引用的主功能入口，它负责Invoker的生命周期管理。<br>  Invoker是实体域，它是Dubbo的核心模型，其它模型都向它靠扰，或转换成它，它代表一个可执行体，可向它发起invoke调用，<br>       它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。<br>  invoker接口提供两个方法。<br>  Class<t> getInterface();  获取调用的接口<br>  Result invoke(Invocation invocation) throws RpcException; 执行调用<br>       说明rpc就两件事，第一，定位要调用的是哪个接口，第二发起调用返回结果。值得注意的是invoker需要Invocation提供的信息，Invocation 支持有本地invoker。invoker不参与Invocation的序列化。Invocation转成request对象通过网络传递并序列化和反序列化。<br>  <img src="/images/4.png"><br>  rpccontext是一个静态工具类，通过threadlocal来保存单次调用的上下文。<br>  Protocol负载invoker的暴露与引用。<br>  <img src="/images/5.png"><br>      一个refer的invoker就会存在一个export的invoker，如果引用的服务不存在，则需要设置<dubbo:consumer check="false"><br>       暴露服务顺序<br>  <img src="/images/2.jpg"><br>       引用服务时序<br>  <img src="/images/3.jpg"><br>  dubbo的rpc模块也遵守dubbo的整体设计原则采用Microkernel + Plugin模式，Microkernel只负责组装Plugin。<br>  invoker是核心模型，服务方把invoker对象暴露成Exporter对象，并把url描述写入注册中心，注册中心推送到消费方。消费方通过url转成invoker对象。</dubbo:consumer></t></p>
 
+<div id="gitalk-container"></div>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+		<script>
+		var gitalkConfig = {"clientID":"c46a78547450ee2bcb45","clientSecret":"364360f9da1dcd1086df07db55cee84b8641da2d","repo":"ChenXun1989.github.io","owner":"ChenXun1989","admin":["ChenXun1989"],"distractionFreeMode":false};
+	    gitalkConfig.id = md5(location.pathname);
+		var gitalk = new Gitalk(gitalkConfig);
+	    gitalk.render("gitalk-container");
+	    </script>
       
     </div>
 
@@ -467,8 +476,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/15/10/" rel="prev" title="jqueyr插件helloworld版本">
-                jqueyr插件helloworld版本 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/15/4/" rel="prev" title="dubbo源码研究之container模块">
+                dubbo源码研究之container模块 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
