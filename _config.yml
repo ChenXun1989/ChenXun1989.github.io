@@ -4,10 +4,10 @@
 
 # Site
 title: 陈公子的博客
-subtitle: ''
+subtitle: '文字可以宣泄过往，但终究写不出流年'
 description: ''
 keywords:
-author: Chen Xun
+author: 陈公子
 language: en
 timezone: ''
 
@@ -116,3 +116,7 @@ live2d:
     height: 300
   mobile:
     show: true
+
+search:
+  path: search.xml
+  field: post
