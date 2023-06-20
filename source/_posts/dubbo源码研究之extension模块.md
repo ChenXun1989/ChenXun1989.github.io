@@ -2,8 +2,9 @@
 title: dubbo源码研究之extension模块
 date: 2023-06-19 17:20:53
 tags:
+- dubbo
 ---
-#dubbo源码研究之extension模块
+# dubbo源码研究之extension模块
 
 dubbo的扩展采用spi机制实现，
 spi（Service Provider Interface）是指一些提供给你继承、扩展，完成自定义功能的类、接口或者方法。

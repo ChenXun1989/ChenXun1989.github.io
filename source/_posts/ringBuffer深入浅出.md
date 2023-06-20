@@ -2,19 +2,20 @@
 title: ringBuffer深入浅出
 date: 2023-06-20 15:55:40
 tags:
+ - java
 ---
-#ringBuffer深入浅出
+# ringBuffer深入浅出
 
 ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，采用环形复用(缓存区写满之后，从首地址重新写入)，使用较小的实际物理内存实现了线性缓存。例如著名的Disruptor高性能的主要原因就是使用了ringBuffer。
 
-##ringBuffer特性
+## ringBuffer特性
 - 存在读写2个序号
 - 读/写序号一直累加
 - 读/写序号取模buffer长度等于当前当前读写指针位置
 - buffer里面的数据不需要删除，覆盖即可
 - ringBuffer采用数组实现，对cpu高速缓存友好（cache line会加载相邻元素，数组元素天生相邻），访问速度比链表快。
 
-##RingBuffer代码
+## RingBuffer代码
 
 {% codeblock  lang:java   %}
 
@@ -103,7 +104,7 @@ ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，�
 
 {% endcodeblock %}
 
-##测试代码
+## 测试代码
 {% codeblock  lang:java   %}
 
     package wiki.chenxun.study.buffer;
@@ -159,7 +160,7 @@ ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，�
 
 {% endcodeblock %}
 
-##buffer下标计算优化
+## buffer下标计算优化
 如果buffer的size是2的n次方，那么取模运算可以替换成位运算.代码参考如下
 {% codeblock  lang:java   %}
 
@@ -188,14 +189,14 @@ ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，�
 
 {% endcodeblock %}
 
-##缓存伪共享优化
+## 缓存伪共享优化
 cpu加载数据是基于缓存行（具体原理不展开了），java8支持通过@sun.misc.Contended来解决这个问题，
 非java8版本可以参考Disruptor的做法 https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/RingBuffer.java
 
-##读写序号java溢出问题
+## 读写序号java溢出问题
 暂时没有想到好方案，目前大致思路是，设置一个阀值算法，满足阀值则重置大小，类似java集合扩容一样，但这个会导致读写锁住。
 
-##RingBuffer应用场景
+## RingBuffer应用场景
 
 - 依赖一个优惠券的查询接口，假设该接口提供分页查询能力。单次最多返回100张优惠优惠券，单次rt是20ms
 - 优惠券的扩展信息是另一个接口，该接口性能提供批量查询能力，单次做多支持30张优惠券，单词rt是30ms

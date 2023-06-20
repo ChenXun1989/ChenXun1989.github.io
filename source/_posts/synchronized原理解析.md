@@ -2,11 +2,12 @@
 title: synchronized原理解析
 date: 2023-06-20 14:30:26
 tags:
+- java
 ---
 
-#synchronized原理解析
+# synchronized原理解析
 
-##synchronized的三种方式
+## synchronized的三种方式
 对于普通同步方法,锁的是当前实例对象
 {% codeblock  lang:java   %}
 
@@ -36,7 +37,7 @@ tags:
 
 {% endcodeblock %}
 
-##synchronized锁升级
+## synchronized锁升级
 
 jdk1.6之后，synchronized锁有四种状态，无锁，偏向锁，轻量级锁，重量级。
 

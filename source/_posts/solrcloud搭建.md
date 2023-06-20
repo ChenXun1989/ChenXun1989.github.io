@@ -2,6 +2,7 @@
 title: solrcloud搭建
 date: 2023-06-19 15:38:32
 tags:
+- solr
 ---
 # solrcloud搭建
 群里小伙伴需要一个solrcloud的解决案例。正好好久没碰过solr了。决定写个demo，顺便重新熟悉下solr。

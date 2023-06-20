@@ -2,8 +2,9 @@
 title: dubbo源码研究之container模块
 date: 2023-06-20 12:25:41
 tags:
+- dubbo
 ---
-#dubbo源码研究之container模块
+# dubbo源码研究之container模块
 dubbo-container模块是dubbo启动顺序中的第一个模块，
 dubbo-container模块是容器模块，通过dubbo-container模块读取dobbo-config模块的相关配置。
 

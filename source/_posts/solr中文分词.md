@@ -2,8 +2,9 @@
 title: solr中文分词
 date: 2023-06-19 15:29:14
 tags:
+- solr
 ---
-#solr中文分词
+# solr中文分词
 
 solr中文分词。
 solr5.0 自带一个中文分词包，lucene-analyzers-smartcn-5.0.0.jar。

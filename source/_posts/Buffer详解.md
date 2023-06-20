@@ -2,8 +2,9 @@
 title: Buffer详解
 date: 2023-06-20 14:38:07
 tags:
+ - java源码
 ---
-#Buffer详解
+# Buffer详解
 
 java中的nio由channel,buffer,Selector组成核心API。
 Buffer是一个继承于object的抽象类,主要有下面几种。

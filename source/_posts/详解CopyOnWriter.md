@@ -2,8 +2,9 @@
 title: 详解CopyOnWriter
 date: 2023-06-20 15:12:34
 tags:
+- java
 ---
-#详解CopyOnWriter
+# 详解CopyOnWriter
 
 **示例代码链接 https://github.com/ChenXun1989/study-example**
 copyOnWriter顾名思义就是写的时候复制，是一种常见的计算机程序设计领域的优化策略。
@@ -11,7 +12,7 @@ copyOnWriter顾名思义就是写的时候复制，是一种常见的计算机�
 当每个调用者修改资源的时候,系统才会真正复制一份专用副本给该调用者，而其他调用者所见到的最初的资源仍然保持不变.
 专用副本修改完毕之后，替代真正的资源。最终所有访问者看到一致的视图。
 
-##CopyOnWriterArrayList的实现细节
+## CopyOnWriterArrayList的实现细节
 
 CopyOnWriterArrayList.get()方法
 
@@ -89,7 +90,7 @@ CopyOnWriterArrayList.add()方法
 4. 私有副本替换原资源
 5. 释放写锁
 
-##copyOnWriter的其他应用
+## copyOnWriter的其他应用
 
 CopyOnWriter是一种常见的计算机程序设计领域的优化策略，例如redis里面的持久化机制
 redis处理数据是通过单线程的，但是很多场景我们需要持久化数据，reids则依赖系统的fork()函数的copyOnWriter实现。
@@ -103,7 +104,7 @@ redis官方文档：
 liunx系统的fork函数实现方式使用copyOnWriter技术创建子进程。
 当父进程创建子进程时，内核只为子进程创建虚拟空间，父子两个进程使用的是相同的物理空间。只有父子进程发生更改时才会为子进程分配独立的物理空间。
 
-##copyOnWriter的优缺点
+## copyOnWriter的优缺点
 1. copyOnWriter适用读多写少的场景
 2. 数据复制过程带来了更多得io消耗
 

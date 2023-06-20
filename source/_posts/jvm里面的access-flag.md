@@ -2,11 +2,13 @@
 title: jvm里面的access_flag
 date: 2023-06-20 15:30:09
 tags:
+- java
+- jvm
 ---
 
-#jvm里面的access_flag
+# jvm里面的access_flag
 
-##access_flag
+## access_flag
 最近在看jvm相关知识，发现class字节码文件里面大量使用access_flag做标志位，其中做法非常nice。
 例如class字段描述，java里面字段修饰符有以下几个
 
@@ -25,7 +27,7 @@ tags:
 
 这段代码在class文件里面字段a的访问修饰符怎么描述的呢，答案是 1A（实际是2进制值，方便阅读转成16进制）
 
-#fields的access_flag规范
+# fields的access_flag规范
 | 标志名称 | 标志值（16进制） | 含义|
 | ---    | ---    | --- |
 |ACC_PUBLIC	|0x0001	|字段是否为public|
@@ -40,7 +42,7 @@ tags:
 
 看完规范发现，1A这个值完全不在规范里面，那jvm怎么知道1A就是private static final 呢？
 
-##access_flag的秘密
+## access_flag的秘密
 我们把相关标志16进制转成二进制看下
 
 |16进制	|二进制 |
@@ -56,7 +58,7 @@ a(标志值)|b（标志值）=c （class文件上的值）
 jvm怎么处理的呢？
 c & a != 0,则表示该字段有a修饰符
 
-##业务应用
+## 业务应用
 access_flag的秘密其实非常简单，了解之后怎么应用到业务场景呢
 - 有限的值
 - 不同值组合关系是要么全是并且，要么全是或者

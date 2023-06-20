@@ -2,8 +2,9 @@
 title: dubbo源码研究之dubbo-registry模块
 date: 2023-06-19 17:46:19
 tags:
+- dubbo
 ---
-#dubbo源码研究之dubbo-registry模块
+# dubbo源码研究之dubbo-registry模块
 dubbo-registry注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。
 registry模块顶层接口为RegistryService和NotifyListener以及一个工厂接口RegistryFactory。
 RegistryService接口包含4个方法。

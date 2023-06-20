@@ -103,3 +103,16 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+# live2d宠物
+live2d:
+  enable: true
+  scriptFrom: local
+  model:
+    use: live2d-widget-model-wanko  //使用的样式
+  display:
+    position: right
+    width: 180
+    height: 300
+  mobile:
+    show: true

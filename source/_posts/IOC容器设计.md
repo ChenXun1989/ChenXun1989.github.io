@@ -2,16 +2,17 @@
 title: IOC容器设计
 date: 2023-06-20 15:04:16
 tags:
+- 架构设计
 ---
-#IOC容器设计
+# IOC容器设计
 提供getBean接口，支持依赖注入
 **示例代码地址： https://github.com/ChenXun1989/ioc-framework**
-##IOC容器主要模块
+## IOC容器主要模块
 - ApplicationContext，IOC容器上下文，持有对象Map
 - BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口
 - CompentScan 收集相关配置信息，主要分xml和注解扫描两种
 
-##IOC容器启动过程
+## IOC容器启动过程
 ApplicationContext 创建
 {% codeblock  lang:java   %}
 

@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/deployment-diagram
+
+package api
+
+package service
+
+package infra
+
+api --> service
+
+service --> infra
+
+@enduml
