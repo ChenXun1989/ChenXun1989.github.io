@@ -5,41 +5,41 @@
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/ChenXun1989.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/ChenXun1989.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/ChenXun1989.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/ChenXun1989.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/ChenXun1989.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun1989.github.io","root":"/ChenXun1989.github.io/","images":"/ChenXun1989.github.io/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/ChenXun1989.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.chenxun.wiki","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="dubbo源码研究之dubbo-registry模块dubbo-registry注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。registry模块顶层接口为RegistryService和NotifyListener以及一个工厂接口RegistryFactory。RegistryService接口包含4个方法。  void register(URL url); 注册服务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="dubbo源码研究之dubbo-registry模块">
-<meta property="og:url" content="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:url" content="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/index.html">
 <meta property="og:site_name" content="陈公子的博客">
 <meta property="og:description" content="dubbo源码研究之dubbo-registry模块dubbo-registry注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。registry模块顶层接口为RegistryService和NotifyListener以及一个工厂接口RegistryFactory。RegistryService接口包含4个方法。  void register(URL url); 注册服务">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png">
+<meta property="og:image" content="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png">
 <meta property="article:published_time" content="2023-06-19T17:46:19.000Z">
-<meta property="article:modified_time" content="2023-06-21T04:01:27.551Z">
+<meta property="article:modified_time" content="2023-06-21T04:07:28.508Z">
 <meta property="article:author" content="陈公子">
 <meta property="article:tag" content="dubbo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png">
+<meta name="twitter:image" content="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png">
 
 
-<link rel="canonical" href="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/">
+<link rel="canonical" href="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/","path":"2023/06/19/dubbo源码研究之dubbo-registry模块/","title":"dubbo源码研究之dubbo-registry模块"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/","path":"2023/06/19/dubbo源码研究之dubbo-registry模块/","title":"dubbo源码研究之dubbo-registry模块"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>dubbo源码研究之dubbo-registry模块 | 陈公子的博客</title>
@@ -53,7 +53,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/ChenXun1989.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
@@ -70,7 +70,7 @@
 
   <div class="site-meta">
 
-    <a href="/ChenXun1989.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">陈公子的博客</p>
       <i class="logo-line"></i>
@@ -120,13 +120,13 @@
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/ChenXun1989.github.io/archives/">
+        <a href="/archives/">
           <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/ChenXun1989.github.io/tags/">
+          <a href="/tags/">
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
@@ -154,10 +154,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/ChenXun1989.github.io/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="陈公子">
     </span>
 
@@ -190,7 +190,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-21 04:01:27" itemprop="dateModified" datetime="2023-06-21T04:01:27+00:00">2023-06-21</time>
+      <time title="Modified: 2023-06-21 04:07:28" itemprop="dateModified" datetime="2023-06-21T04:07:28+00:00">2023-06-21</time>
     </span>
 
   
@@ -226,7 +226,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">register</span><span class="params">(URL url)</span> &#123;  </span><br><span class="line"><span class="built_in">super</span>.register(url);  </span><br><span class="line">failedRegistered.remove(url);  </span><br><span class="line">failedUnregistered.remove(url);  </span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line"><span class="comment">// 向服务器端发送注册请求  </span></span><br><span class="line">doRegister(url);  </span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line"><span class="type">Throwable</span> <span class="variable">t</span> <span class="operator">=</span> e;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果开启了启动时检测，则直接抛出异常  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">check</span> <span class="operator">=</span> getUrl().getParameter(Constants.CHECK_KEY, <span class="literal">true</span>)  </span><br><span class="line">            &amp;&amp; url.getParameter(Constants.CHECK_KEY, <span class="literal">true</span>)  </span><br><span class="line">            &amp;&amp; ! Constants.CONSUMER_PROTOCOL.equals(url.getProtocol());  </span><br><span class="line">    <span class="type">boolean</span> <span class="variable">skipFailback</span> <span class="operator">=</span> t <span class="keyword">instanceof</span> SkipFailbackWrapperException;  </span><br><span class="line">    <span class="keyword">if</span> (check || skipFailback) &#123;  </span><br><span class="line">        <span class="keyword">if</span>(skipFailback) &#123;  </span><br><span class="line">            t = t.getCause();  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Failed to register &quot;</span> + url + <span class="string">&quot; to registry &quot;</span> + getUrl().getAddress() + <span class="string">&quot;, cause: &quot;</span> + t.getMessage(), t);  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        logger.error(<span class="string">&quot;Failed to register &quot;</span> + url + <span class="string">&quot;, waiting for retry, cause: &quot;</span> + t.getMessage(), t);  </span><br><span class="line">    &#125;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 将失败的注册请求记录到失败列表，定时重试  </span></span><br><span class="line">    failedRegistered.add(url);  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>register方法把具体的注册实现交给子类的doRegister实现。注册失败的都会记录到失败的set集合里面去，值得注意一个check 配置，当设置时，记录失败注册和订阅请求，后台定时重试。<br>zookeeper注册中心是dubbo推荐使用的注册中心，本身zookeeper的基于是Paxos，一个分布式一致性算法。</p>
-<img src="/ChenXun1989.github.io/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
 
 <p>流程：</p>
 <ol>
@@ -243,19 +243,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/ChenXun1989.github.io/tags/dubbo/" rel="tag"># dubbo</a>
+              <a href="/tags/dubbo/" rel="tag"># dubbo</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/ChenXun1989.github.io/2023/06/19/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" rel="prev" title="java多线程基础">
+                <a href="/2023/06/19/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" rel="prev" title="java多线程基础">
                   <i class="fa fa-chevron-left"></i> java多线程基础
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/" rel="next" title="dubbo源码研究之rpc模块">
+                <a href="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/" rel="next" title="dubbo源码研究之rpc模块">
                   dubbo源码研究之rpc模块 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
@@ -309,7 +309,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/ChenXun1989.github.io/js/comments.js"></script><script src="/ChenXun1989.github.io/js/utils.js"></script><script src="/ChenXun1989.github.io/js/motion.js"></script><script src="/ChenXun1989.github.io/js/schemes/muse.js"></script><script src="/ChenXun1989.github.io/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
