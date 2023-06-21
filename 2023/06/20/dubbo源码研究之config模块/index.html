@@ -5,41 +5,41 @@
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/ChenXun1989.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/ChenXun1989.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/ChenXun1989.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/ChenXun1989.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/project/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/project/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/project/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/project/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/ChenXun1989.github.io/css/main.css">
+<link rel="stylesheet" href="/project/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun1989.github.io","root":"/ChenXun1989.github.io/","images":"/ChenXun1989.github.io/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/ChenXun1989.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun1989.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/project/js/config.js"></script>
 
     <meta name="description" content="dubbo源码研究之config模块dubbo模块说明  dubbo-common 公共逻辑模块，包括Util类和通用模型 dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。 dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理 dubbo-cluster 集群模块，将多个服务提供方伪装为一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="dubbo源码研究之config模块">
-<meta property="og:url" content="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:url" content="https://chenxun1989.github.io/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/index.html">
 <meta property="og:site_name" content="陈公子的博客">
 <meta property="og:description" content="dubbo源码研究之config模块dubbo模块说明  dubbo-common 公共逻辑模块，包括Util类和通用模型 dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。 dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理 dubbo-cluster 集群模块，将多个服务提供方伪装为一">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png">
+<meta property="og:image" content="https://chenxun1989.github.io/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png">
 <meta property="article:published_time" content="2023-06-20T13:51:48.000Z">
-<meta property="article:modified_time" content="2023-06-21T03:52:15.300Z">
+<meta property="article:modified_time" content="2023-06-21T03:54:33.958Z">
 <meta property="article:author" content="陈公子">
 <meta property="article:tag" content="dubbo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png">
+<meta name="twitter:image" content="https://chenxun1989.github.io/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png">
 
 
-<link rel="canonical" href="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/">
+<link rel="canonical" href="https://chenxun1989.github.io/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/","path":"2023/06/20/dubbo源码研究之config模块/","title":"dubbo源码研究之config模块"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun1989.github.io/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/","path":"2023/06/20/dubbo源码研究之config模块/","title":"dubbo源码研究之config模块"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>dubbo源码研究之config模块 | 陈公子的博客</title>
@@ -53,7 +53,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/ChenXun1989.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/project/css/noscript.css">
   </noscript>
 </head>
 
@@ -70,7 +70,7 @@
 
   <div class="site-meta">
 
-    <a href="/ChenXun1989.github.io/" class="brand" rel="start">
+    <a href="/project/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">陈公子的博客</p>
       <i class="logo-line"></i>
@@ -120,13 +120,13 @@
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/ChenXun1989.github.io/archives/">
+        <a href="/project/archives/">
           <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/ChenXun1989.github.io/tags/">
+          <a href="/project/tags/">
         <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
@@ -154,10 +154,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://chenxun1989.github.io/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://chenxun1989.github.io/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/ChenXun1989.github.io/images/avatar.gif">
+      <meta itemprop="image" content="/project/images/avatar.gif">
       <meta itemprop="name" content="陈公子">
     </span>
 
@@ -190,7 +190,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-21 03:52:15" itemprop="dateModified" datetime="2023-06-21T03:52:15+00:00">2023-06-21</time>
+      <time title="Modified: 2023-06-21 03:54:33" itemprop="dateModified" datetime="2023-06-21T03:54:33+00:00">2023-06-21</time>
     </span>
 
   
@@ -214,7 +214,7 @@
 <li>dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat&#x2F;JBoss等Web容器的特性，没必要用Web容器去加载服务。</li>
 </ul>
 <p>今天开始从dubbo入口，config模块开始研究。<br>config模块和Service模块是API，其他为SPI实现。<br>config模块uml类图</p>
-<img src="/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
 
 <p>AbstractConfig类提供几个主要的方法 appendAnnotation，appendProperties，appendParameters，appendAttributes<br>其他子类提供相关自身的属性。<br>AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></span><br><span class="line">logger.warn(t.getMessage(), t);  </span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.toString();  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -235,19 +235,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/ChenXun1989.github.io/tags/dubbo/" rel="tag"># dubbo</a>
+              <a href="/project/tags/dubbo/" rel="tag"># dubbo</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/ChenXun1989.github.io/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/" rel="prev" title="浅谈分布式项目日志监控">
+                <a href="/project/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/" rel="prev" title="浅谈分布式项目日志监控">
                   <i class="fa fa-chevron-left"></i> 浅谈分布式项目日志监控
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/ChenXun1989.github.io/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig-spring%E6%A8%A1%E5%9D%97/" rel="next" title="dubbo源码研究之config-spring模块">
+                <a href="/project/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig-spring%E6%A8%A1%E5%9D%97/" rel="next" title="dubbo源码研究之config-spring模块">
                   dubbo源码研究之config-spring模块 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
@@ -301,7 +301,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/ChenXun1989.github.io/js/comments.js"></script><script src="/ChenXun1989.github.io/js/utils.js"></script><script src="/ChenXun1989.github.io/js/motion.js"></script><script src="/ChenXun1989.github.io/js/schemes/muse.js"></script><script src="/ChenXun1989.github.io/js/next-boot.js"></script>
+<script src="/project/js/comments.js"></script><script src="/project/js/utils.js"></script><script src="/project/js/motion.js"></script><script src="/project/js/schemes/muse.js"></script><script src="/project/js/next-boot.js"></script>
 
   
 
