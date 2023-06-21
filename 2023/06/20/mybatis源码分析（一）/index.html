@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun.wiki","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="mybatis源码分析（一）sqlSessionFactory对象sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。 sqlSession接口一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建 Executor接口对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis源码分析（一）">
+<meta property="og:url" content="https://chenxun.wiki/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="mybatis源码分析（一）sqlSessionFactory对象sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。 sqlSession接口一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建 Executor接口对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chenxun.wiki/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/1.png">
+<meta property="article:published_time" content="2023-06-20T14:59:40.000Z">
+<meta property="article:modified_time" content="2023-06-21T02:59:40.352Z">
+<meta property="article:author" content="陈公子">
+<meta property="article:tag" content="mybatis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chenxun.wiki/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/1.png">
+
+
+<link rel="canonical" href="https://chenxun.wiki/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun.wiki/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/","path":"2023/06/20/mybatis源码分析（一）/","title":"mybatis源码分析（一）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>mybatis源码分析（一） | 陈公子的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">陈公子的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">文字可以宣泄过往，但终究写不出流年</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">mybatis源码分析（一）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlSessionFactory%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.</span> <span class="nav-text">sqlSessionFactory对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlSession%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.2.</span> <span class="nav-text">sqlSession接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Executor%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.</span> <span class="nav-text">Executor接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapperProxy%E7%B1%BB"><span class="nav-number">1.4.</span> <span class="nav-text">MapperProxy类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapperMethod%E7%B1%BB"><span class="nav-number">1.5.</span> <span class="nav-text">MapperMethod类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StatementHandler%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.6.</span> <span class="nav-text">StatementHandler接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResultSetHandler%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.7.</span> <span class="nav-text">ResultSetHandler接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybaits%E6%89%A7%E8%A1%8Corm%E6%93%8D%E4%BD%9C%E7%BB%86%E8%8A%82"><span class="nav-number">1.8.</span> <span class="nav-text">mybaits执行orm操作细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">1.9.</span> <span class="nav-text">mybatis插件机制</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">陈公子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://chenxun.wiki/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="mybatis源码分析（一） | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mybatis源码分析（一）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-20 14:59:40" itemprop="dateCreated datePublished" datetime="2023-06-20T14:59:40+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-21 02:59:40" itemprop="dateModified" datetime="2023-06-21T02:59:40+00:00">2023-06-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="mybatis源码分析（一）"><a href="#mybatis源码分析（一）" class="headerlink" title="mybatis源码分析（一）"></a>mybatis源码分析（一）</h1><h2 id="sqlSessionFactory对象"><a href="#sqlSessionFactory对象" class="headerlink" title="sqlSessionFactory对象"></a>sqlSessionFactory对象</h2><p>sqlSessionFactory 是mybatis 核心配置类，管理mybatis全局配置。</p>
+<h2 id="sqlSession接口"><a href="#sqlSession接口" class="headerlink" title="sqlSession接口"></a>sqlSession接口</h2><p>一个或者多个sql操作的执行单元。实现一个完整的sql操作。依赖sqlSessionFactory创建</p>
+<h2 id="Executor接口"><a href="#Executor接口" class="headerlink" title="Executor接口"></a>Executor接口</h2><p>对应jdbc底层一个完整的sql操作。sqlSession 实际通过Executor执行sql操作</p>
+<h2 id="MapperProxy类"><a href="#MapperProxy类" class="headerlink" title="MapperProxy类"></a>MapperProxy类</h2><p>代理实现mybatis的客户端mapper接口</p>
+<h2 id="MapperMethod类"><a href="#MapperMethod类" class="headerlink" title="MapperMethod类"></a>MapperMethod类</h2><p>对应客户端代码的mapper接口里面的一个方法。该实例缓存了。</p>
+<h2 id="StatementHandler接口"><a href="#StatementHandler接口" class="headerlink" title="StatementHandler接口"></a>StatementHandler接口</h2><p>jdbc Statement的装饰器</p>
+<h2 id="ResultSetHandler接口"><a href="#ResultSetHandler接口" class="headerlink" title="ResultSetHandler接口"></a>ResultSetHandler接口</h2><p>jdbc resultSet的装饰器</p>
+<h2 id="mybaits执行orm操作细节"><a href="#mybaits执行orm操作细节" class="headerlink" title="mybaits执行orm操作细节"></a>mybaits执行orm操作细节</h2><img src="/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/1.png" class="" title="image">
+<p><strong>sqlsession的close 方法会关闭底层jdbc connection</strong></p>
+<h2 id="mybatis插件机制"><a href="#mybatis插件机制" class="headerlink" title="mybatis插件机制"></a>mybatis插件机制</h2><p>mybatis插件是基于代理实现的，具体支持一下四个接口</p>
+<ul>
+<li>Executor</li>
+<li>ParameterHandler</li>
+<li>ResultSetHandler</li>
+<li>StatemetHandler</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/20/java%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/" rel="prev" title="java线程状态">
+                  <i class="fa fa-chevron-left"></i> java线程状态
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/20/IOC%E5%AE%B9%E5%99%A8%E8%AE%BE%E8%AE%A1/" rel="next" title="IOC容器设计">
+                  IOC容器设计 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈公子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

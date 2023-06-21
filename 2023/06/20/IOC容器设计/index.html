@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun.wiki","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="IOC容器设计提供getBean接口，支持依赖注入示例代码地址： https:&#x2F;&#x2F;github.com&#x2F;ChenXun1989&#x2F;ioc-framework IOC容器主要模块 ApplicationContext，IOC容器上下文，持有对象Map BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口 CompentScan 收集相关配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOC容器设计">
+<meta property="og:url" content="https://chenxun.wiki/2023/06/20/IOC%E5%AE%B9%E5%99%A8%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="IOC容器设计提供getBean接口，支持依赖注入示例代码地址： https:&#x2F;&#x2F;github.com&#x2F;ChenXun1989&#x2F;ioc-framework IOC容器主要模块 ApplicationContext，IOC容器上下文，持有对象Map BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口 CompentScan 收集相关配置">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-20T15:04:16.000Z">
+<meta property="article:modified_time" content="2023-06-21T02:59:40.336Z">
+<meta property="article:author" content="陈公子">
+<meta property="article:tag" content="架构设计">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://chenxun.wiki/2023/06/20/IOC%E5%AE%B9%E5%99%A8%E8%AE%BE%E8%AE%A1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun.wiki/2023/06/20/IOC%E5%AE%B9%E5%99%A8%E8%AE%BE%E8%AE%A1/","path":"2023/06/20/IOC容器设计/","title":"IOC容器设计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>IOC容器设计 | 陈公子的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">陈公子的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">文字可以宣泄过往，但终究写不出流年</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IOC%E5%AE%B9%E5%99%A8%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">IOC容器设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC%E5%AE%B9%E5%99%A8%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%9D%97"><span class="nav-number">1.1.</span> <span class="nav-text">IOC容器主要模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC%E5%AE%B9%E5%99%A8%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">IOC容器启动过程</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">陈公子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://chenxun.wiki/2023/06/20/IOC%E5%AE%B9%E5%99%A8%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="IOC容器设计 | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IOC容器设计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-20 15:04:16" itemprop="dateCreated datePublished" datetime="2023-06-20T15:04:16+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-21 02:59:40" itemprop="dateModified" datetime="2023-06-21T02:59:40+00:00">2023-06-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="IOC容器设计"><a href="#IOC容器设计" class="headerlink" title="IOC容器设计"></a>IOC容器设计</h1><p>提供getBean接口，支持依赖注入<br><strong>示例代码地址： <a target="_blank" rel="noopener" href="https://github.com/ChenXun1989/ioc-framework">https://github.com/ChenXun1989/ioc-framework</a></strong></p>
+<h2 id="IOC容器主要模块"><a href="#IOC容器主要模块" class="headerlink" title="IOC容器主要模块"></a>IOC容器主要模块</h2><ul>
+<li>ApplicationContext，IOC容器上下文，持有对象Map</li>
+<li>BeanFactory 每一个类型（class） 对应一BeanFactory，提供获取类实现的接口，属性注入接口</li>
+<li>CompentScan 收集相关配置信息，主要分xml和注解扫描两种</li>
+</ul>
+<h2 id="IOC容器启动过程"><a href="#IOC容器启动过程" class="headerlink" title="IOC容器启动过程"></a>IOC容器启动过程</h2><p>ApplicationContext 创建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ApplicationContext context=<span class="keyword">new</span> <span class="title class_">ApplicationContext</span>(<span class="string">&quot;com.chenxun.framework.example.entity&quot;</span>);</span><br><span class="line">Student s=(Student) context.getBean(<span class="string">&quot;student&quot;</span>);</span><br><span class="line">s.test();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>CompentScan 收集相关配置信息，解析出被ioc容器托管的class集合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> List&lt;String &gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();	 </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">scan</span><span class="params">(String packageName)</span>&#123;</span><br><span class="line">String parent=	System.getProperty(<span class="string">&quot;user.dir&quot;</span>);</span><br><span class="line">parent=parent+<span class="string">&quot;/src/main/java&quot;</span>;</span><br><span class="line">System.out.println(parent);</span><br><span class="line">String child=packageName.replaceAll(<span class="string">&quot;\\.&quot;</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">File f=<span class="keyword">new</span> <span class="title class_">File</span>(parent ,child);</span><br><span class="line"><span class="keyword">for</span>(File c:f.listFiles())&#123;</span><br><span class="line"><span class="keyword">if</span>(c.getName().endsWith(<span class="string">&quot;.java&quot;</span>))&#123;</span><br><span class="line">list.add(packageName+<span class="string">&quot;.&quot;</span>+c.getName().substring(<span class="number">0</span>,c.getName().lastIndexOf(<span class="string">&quot;.&quot;</span>)));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">public</span> List&lt;String &gt; getList()&#123;</span><br><span class="line"><span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建对应类的BeanFactory</li>
+<li>BeanFactory通过反射创建默认class默认实例对象</li>
+<li>把创建完的对象放入ApplicationContext持有的对象Map</li>
+<li>遍历beanFactory的Map，调用setProperties接口来完成依赖注入</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> <span class="keyword">throws</span> ClassNotFoundException&#123;</span><br><span class="line">compentScan.scan(backPackage);</span><br><span class="line"><span class="keyword">for</span>(String clasName:compentScan.getList())&#123;</span><br><span class="line">Class cls=Class.forName(clasName);</span><br><span class="line">Compent c=(Compent) cls.getAnnotation(Compent.class);</span><br><span class="line"><span class="keyword">if</span>(c!=<span class="literal">null</span>)&#123;</span><br><span class="line">String key=c.value();			</span><br><span class="line">BeanFactory bf=<span class="keyword">new</span> <span class="title class_">SimpleBeanFactory</span>(cls);</span><br><span class="line">beanFactorys.put(cls, bf);</span><br><span class="line">map.put(key, bf.getBean());</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(Entry&lt;Class, BeanFactory&gt; entry :beanFactorys.entrySet())&#123;</span><br><span class="line">entry.getValue().setProperties(map);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>先创建对象，再做依赖注入 </li>
+<li>容器里面是原生对象还是代理对象，取决于beanfatory返回的对象实例</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" rel="tag"># 架构设计</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="mybatis源码分析（一）">
+                  <i class="fa fa-chevron-left"></i> mybatis源码分析（一）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/20/RPC%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1/" rel="next" title="RPC框架设计">
+                  RPC框架设计 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈公子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

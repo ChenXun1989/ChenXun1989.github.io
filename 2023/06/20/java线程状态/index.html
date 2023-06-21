@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun.wiki","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="java线程状态java线程有以下几个状态  new 初始状态 runnable 运行状态（包括就绪和运行） blocked 阻塞状态 waiting 等待状态,需要其他线程特定动作唤醒（通知或者中断） time-waiting 超时等待状态，可以在指定时间内返回。 terminated 终止状态  创建java构造线程有两种办法,Thread类和Runnable接口,Thread的类本身实现了R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java线程状态">
+<meta property="og:url" content="https://chenxun.wiki/2023/06/20/java%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="java线程状态java线程有以下几个状态  new 初始状态 runnable 运行状态（包括就绪和运行） blocked 阻塞状态 waiting 等待状态,需要其他线程特定动作唤醒（通知或者中断） time-waiting 超时等待状态，可以在指定时间内返回。 terminated 终止状态  创建java构造线程有两种办法,Thread类和Runnable接口,Thread的类本身实现了R">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-20T14:46:26.000Z">
+<meta property="article:modified_time" content="2023-06-21T02:59:40.352Z">
+<meta property="article:author" content="陈公子">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://chenxun.wiki/2023/06/20/java%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun.wiki/2023/06/20/java%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/","path":"2023/06/20/java线程状态/","title":"java线程状态"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>java线程状态 | 陈公子的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">陈公子的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">文字可以宣泄过往，但终究写不出流年</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="nav-number">1.</span> <span class="nav-text">java线程状态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-number">1.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">1.2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E"><span class="nav-number">1.3.</span> <span class="nav-text">阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%89%E5%BE%85-x2F-%E5%94%A4%E9%86%92"><span class="nav-number">1.4.</span> <span class="nav-text">等待&#x2F;唤醒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88%E6%AD%A2"><span class="nav-number">1.5.</span> <span class="nav-text">终止</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">陈公子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://chenxun.wiki/2023/06/20/java%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="java线程状态 | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java线程状态
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-20 14:46:26" itemprop="dateCreated datePublished" datetime="2023-06-20T14:46:26+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-21 02:59:40" itemprop="dateModified" datetime="2023-06-21T02:59:40+00:00">2023-06-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="java线程状态"><a href="#java线程状态" class="headerlink" title="java线程状态"></a>java线程状态</h1><p>java线程有以下几个状态</p>
+<ul>
+<li>new 初始状态</li>
+<li>runnable 运行状态（包括就绪和运行）</li>
+<li>blocked 阻塞状态</li>
+<li>waiting 等待状态,需要其他线程特定动作唤醒（通知或者中断）</li>
+<li>time-waiting 超时等待状态，可以在指定时间内返回。</li>
+<li>terminated 终止状态</li>
+</ul>
+<h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>java构造线程有两种办法,Thread类和Runnable接口,Thread的类本身实现了Runnable接口。<br>常见的作法,是通过thread类的public Thread(Runnable target)构造函数来创建线程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line">   &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>thread类的初始话代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(ThreadGroup g, Runnable target, String name,</span></span><br><span class="line"><span class="params"><span class="type">long</span> stackSize, AccessControlContext acc)</span> &#123;</span><br><span class="line"><span class="keyword">if</span> (name == <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;name cannot be null&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">this</span>.name = name;</span><br><span class="line"><span class="type">Thread</span> <span class="variable">parent</span> <span class="operator">=</span> currentThread();</span><br><span class="line"><span class="type">SecurityManager</span> <span class="variable">security</span> <span class="operator">=</span> System.getSecurityManager();</span><br><span class="line"><span class="keyword">if</span> (g == <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="keyword">if</span> (security != <span class="literal">null</span>) &#123;</span><br><span class="line">g = security.getThreadGroup();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (g == <span class="literal">null</span>) &#123;</span><br><span class="line">        g = parent.getThreadGroup();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">   </span><br><span class="line">g.checkAccess();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> (security != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (isCCLOverridden(getClass())) &#123;</span><br><span class="line">        security.checkPermission(SUBCLASS_IMPLEMENTATION_PERMISSION);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">g.addUnstarted();</span><br><span class="line"><span class="built_in">this</span>.group = g;</span><br><span class="line"><span class="built_in">this</span>.daemon = parent.isDaemon();</span><br><span class="line"><span class="built_in">this</span>.priority = parent.getPriority();</span><br><span class="line"><span class="keyword">if</span> (security == <span class="literal">null</span> || isCCLOverridden(parent.getClass()))</span><br><span class="line">    <span class="built_in">this</span>.contextClassLoader = parent.getContextClassLoader();</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">this</span>.contextClassLoader = parent.contextClassLoader;</span><br><span class="line"><span class="built_in">this</span>.inheritedAccessControlContext =</span><br><span class="line">        acc != <span class="literal">null</span> ? acc : AccessController.getContext();</span><br><span class="line"><span class="built_in">this</span>.target = target;</span><br><span class="line">setPriority(priority);</span><br><span class="line"><span class="keyword">if</span> (parent.inheritableThreadLocals != <span class="literal">null</span>)</span><br><span class="line">    <span class="built_in">this</span>.inheritableThreadLocals =</span><br><span class="line">        ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);</span><br><span class="line"><span class="built_in">this</span>.stackSize = stackSize;</span><br><span class="line">   </span><br><span class="line">tid = nextThreadID();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从这段代码可以看出以下几点<br>当前线程为创建线程的父线程<br>child线程继承parent的Daemon、优先级、和加载资源的contextClassLoader和一个可以继承的ThreadLocal。<br><strong>Daemon线程（后台线程）的finally块代码不会执行</strong></p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>Thread类的start方法起来运行线程。底层通过调用navate方法来运行线程。<br><strong>start（）方法来启动线程，真正实现了多线程运行，这时无需等待run方法体代码执行完毕而直接继续执行下面的代码</strong><br><strong>run（）方法当作普通方法的方式调用，程序还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码</strong></p>
+<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>线程执行到monitorenter保护的代码快时，会去获取monitorenter对应的对象锁，如未获取，则该线程进入同步队列，状态为阻塞。<br><strong>任意对象都拥有自己的monitor，包括class对象。</strong></p>
+<h2 id="等待-x2F-唤醒"><a href="#等待-x2F-唤醒" class="headerlink" title="等待&#x2F;唤醒"></a>等待&#x2F;唤醒</h2><p>线程等待的方法主要有下面几种</p>
+<ul>
+<li>object.wait() &#x2F; object.wait(long)</li>
+<li>object.join() &#x2F; object.join(long)</li>
+<li>lockSupport.park() &#x2F; lockSupport.park(long)</li>
+</ul>
+<p>当线程调用某个对象的wati方法，进入等待。当另一个线程调用该对象的notify()&#x2F;notifyall()方法，之前等待的线程唤醒。<br>线程唤醒的方法注意下面几种</p>
+<ul>
+<li>object.notify()&#x2F;notifyAll()</li>
+<li>lockSupport.unpark(Thread)</li>
+</ul>
+<p><strong>调用对象wait或者notify方法的前题是获取当前对象的内置锁。</strong></p>
+<p>通过wait&#x2F;notify设计的经典作法<br>等待方：</p>
+<ul>
+<li>获取对象锁</li>
+<li>条件检查</li>
+<li>为假则等待</li>
+<li>为真则执行后面的逻辑<br>唤醒方：</li>
+<li>获取对象锁</li>
+<li>改变条件</li>
+<li>通知所有等待在对象的线程</li>
+</ul>
+<p><strong>条件变量用volatile修饰来保证可见性</strong></p>
+<h2 id="终止"><a href="#终止" class="headerlink" title="终止"></a>终止</h2><p>线程对应的run方法运行完毕，则线程终止。不推荐使用stop来终止线程。可以通过状态变量来终止线程。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/20/Buffer%E8%AF%A6%E8%A7%A3/" rel="prev" title="Buffer详解">
+                  <i class="fa fa-chevron-left"></i> Buffer详解
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/20/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89/" rel="next" title="mybatis源码分析（一）">
+                  mybatis源码分析（一） <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈公子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

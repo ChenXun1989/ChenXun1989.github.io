@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun.wiki","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="ringBuffer深入浅出ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，采用环形复用(缓存区写满之后，从首地址重新写入)，使用较小的实际物理内存实现了线性缓存。例如著名的Disruptor高性能的主要原因就是使用了ringBuffer。 ringBuffer特性 存在读写2个序号 读&#x2F;写序号一直累加 读&#x2F;写序号取模buffer长度等于当前当前读写指针位置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ringBuffer深入浅出">
+<meta property="og:url" content="https://chenxun.wiki/2023/06/20/ringBuffer%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="ringBuffer深入浅出ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，采用环形复用(缓存区写满之后，从首地址重新写入)，使用较小的实际物理内存实现了线性缓存。例如著名的Disruptor高性能的主要原因就是使用了ringBuffer。 ringBuffer特性 存在读写2个序号 读&#x2F;写序号一直累加 读&#x2F;写序号取模buffer长度等于当前当前读写指针位置">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-20T15:55:40.000Z">
+<meta property="article:modified_time" content="2023-06-21T02:59:40.352Z">
+<meta property="article:author" content="陈公子">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://chenxun.wiki/2023/06/20/ringBuffer%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun.wiki/2023/06/20/ringBuffer%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/","path":"2023/06/20/ringBuffer深入浅出/","title":"ringBuffer深入浅出"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ringBuffer深入浅出 | 陈公子的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">陈公子的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">文字可以宣泄过往，但终究写不出流年</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ringBuffer%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA"><span class="nav-number">1.</span> <span class="nav-text">ringBuffer深入浅出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ringBuffer%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">ringBuffer特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RingBuffer%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">RingBuffer代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">测试代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buffer%E4%B8%8B%E6%A0%87%E8%AE%A1%E7%AE%97%E4%BC%98%E5%8C%96"><span class="nav-number">1.4.</span> <span class="nav-text">buffer下标计算优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%BC%AA%E5%85%B1%E4%BA%AB%E4%BC%98%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">缓存伪共享优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E5%BA%8F%E5%8F%B7java%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-number">1.6.</span> <span class="nav-text">读写序号java溢出问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RingBuffer%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.7.</span> <span class="nav-text">RingBuffer应用场景</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">陈公子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://chenxun.wiki/2023/06/20/ringBuffer%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ringBuffer深入浅出 | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ringBuffer深入浅出
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-20 15:55:40" itemprop="dateCreated datePublished" datetime="2023-06-20T15:55:40+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-21 02:59:40" itemprop="dateModified" datetime="2023-06-21T02:59:40+00:00">2023-06-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="ringBuffer深入浅出"><a href="#ringBuffer深入浅出" class="headerlink" title="ringBuffer深入浅出"></a>ringBuffer深入浅出</h1><p>ringBuffer顾名思义就是环形缓冲区，常用来做高速缓冲队列，采用环形复用(缓存区写满之后，从首地址重新写入)，使用较小的实际物理内存实现了线性缓存。例如著名的Disruptor高性能的主要原因就是使用了ringBuffer。</p>
+<h2 id="ringBuffer特性"><a href="#ringBuffer特性" class="headerlink" title="ringBuffer特性"></a>ringBuffer特性</h2><ul>
+<li>存在读写2个序号</li>
+<li>读&#x2F;写序号一直累加</li>
+<li>读&#x2F;写序号取模buffer长度等于当前当前读写指针位置</li>
+<li>buffer里面的数据不需要删除，覆盖即可</li>
+<li>ringBuffer采用数组实现，对cpu高速缓存友好（cache line会加载相邻元素，数组元素天生相邻），访问速度比链表快。</li>
+</ul>
+<h2 id="RingBuffer代码"><a href="#RingBuffer代码" class="headerlink" title="RingBuffer代码"></a>RingBuffer代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> wiki.chenxun.study.buffer;</span><br><span class="line"><span class="keyword">import</span> sun.misc.Unsafe;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.security.AccessController;</span><br><span class="line"><span class="keyword">import</span> java.security.PrivilegedExceptionAction;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> chenxun</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2019-11-19</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RingBuffer</span>&lt;T&gt; &#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Unsafe unsafe;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> T[] buffer;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="type">int</span> <span class="variable">readIndex</span> <span class="operator">=</span>-<span class="number">1</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="type">int</span> <span class="variable">writerIndex</span> <span class="operator">=</span>-<span class="number">1</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">long</span> readIndexOffset;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">long</span> writerIndexOffset;</span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">unsafe = AccessController.doPrivileged((PrivilegedExceptionAction&lt;Unsafe&gt;) () -&gt; &#123;</span><br><span class="line"><span class="type">Field</span> <span class="variable">theUnsafe</span> <span class="operator">=</span> Unsafe.class.getDeclaredField(<span class="string">&quot;theUnsafe&quot;</span>);</span><br><span class="line">theUnsafe.setAccessible(<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">return</span> (Unsafe) theUnsafe.get(<span class="literal">null</span>);</span><br><span class="line">&#125;);</span><br><span class="line">readIndexOffset = unsafe.objectFieldOffset</span><br><span class="line">(RingBuffer.class.getDeclaredField(<span class="string">&quot;readIndex&quot;</span>));</span><br><span class="line">writerIndexOffset = unsafe.objectFieldOffset</span><br><span class="line">(RingBuffer.class.getDeclaredField(<span class="string">&quot;writerIndex&quot;</span>));</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;all&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">RingBuffer</span><span class="params">(<span class="type">int</span> bufferSize)</span> &#123;</span><br><span class="line">buffer = (T[])<span class="keyword">new</span> <span class="title class_">Object</span>[bufferSize];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 队列添加元素，如果队列满了，则等待到队列空余</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> t</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@throws</span> InterruptedException</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(T t)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="comment">//判断是否可写 总长度-（写位置-读位置）</span></span><br><span class="line">    <span class="keyword">if</span>(buffer.length-(writerIndex-readIndex)&gt;<span class="number">0</span>)&#123;</span><br><span class="line">    <span class="type">int</span> nextWriterIndex=writerIndex+<span class="number">1</span>;</span><br><span class="line">    <span class="type">boolean</span> result=unsafe.compareAndSwapInt(<span class="built_in">this</span>,writerIndexOffset,writerIndex,nextWriterIndex);</span><br><span class="line">    <span class="keyword">if</span>(result)&#123;</span><br><span class="line">    <span class="comment">//计算实际位置</span></span><br><span class="line">    <span class="type">int</span> bufferIndex=writerIndex%buffer.length;</span><br><span class="line">    buffer[bufferIndex]=t;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 休眠1ms</span></span><br><span class="line">    TimeUnit.MILLISECONDS.sleep(<span class="number">1L</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 队列取出元素，如果没有可读元素，则等待到有可读元素</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">  * <span class="doctag">@throws</span> InterruptedException</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> T <span class="title function_">pop</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="comment">// 判断是否可读</span></span><br><span class="line">    <span class="keyword">if</span>(writerIndex-readIndex&gt;<span class="number">0</span>)&#123;</span><br><span class="line">    <span class="type">int</span> nextReadIndex=readIndex+<span class="number">1</span>;</span><br><span class="line">    <span class="type">boolean</span> result=unsafe.compareAndSwapInt(<span class="built_in">this</span>,readIndexOffset,readIndex,nextReadIndex);</span><br><span class="line">    <span class="keyword">if</span>(result)&#123;</span><br><span class="line">    <span class="comment">//计算实际位置</span></span><br><span class="line">    <span class="type">int</span> bufferIndex=readIndex%buffer.length;</span><br><span class="line">    <span class="keyword">return</span> buffer[bufferIndex];</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 休眠1ms</span></span><br><span class="line">    TimeUnit.MILLISECONDS.sleep(<span class="number">1L</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> wiki.chenxun.study.buffer;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@author</span> chenxun</span></span><br><span class="line"><span class="comment">* <span class="doctag">@date</span> 2019-11-19</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RingBufferTest</span> &#123;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">RingBuffer&lt;String&gt; ringBuffer=<span class="keyword">new</span> <span class="title class_">RingBuffer</span>&lt;&gt;(<span class="number">20</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> a=<span class="number">1</span>;a&lt;<span class="number">4</span>;a++)&#123;</span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> b=a;</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;&#123;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">ringBuffer.push(String.valueOf(b*<span class="number">10</span>+i));</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">Random r=<span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">TimeUnit.MILLISECONDS.sleep(r.nextInt(<span class="number">5</span>));</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;).start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> a=<span class="number">0</span>;a&lt;<span class="number">2</span>;a++)&#123;</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;&#123;</span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">String s= <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">s = ringBuffer.pop();</span><br><span class="line">System.out.println(s);</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;).start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">System.in.read();</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="buffer下标计算优化"><a href="#buffer下标计算优化" class="headerlink" title="buffer下标计算优化"></a>buffer下标计算优化</h2><p>如果buffer的size是2的n次方，那么取模运算可以替换成位运算.代码参考如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> wiki.chenxun.study.buffer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@author</span> chenxun</span></span><br><span class="line"><span class="comment">* <span class="doctag">@date</span> 2019-11-19</span></span><br><span class="line"><span class="comment">* <span class="doctag">@since</span></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NumberUtils</span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">moduloOperationOn2</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> &#123;</span><br><span class="line"><span class="keyword">return</span> a &amp; b - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"><span class="type">int</span> a=<span class="number">100</span>%<span class="number">8</span>;</span><br><span class="line"><span class="type">int</span> b=moduloOperationOn2(<span class="number">100</span>,<span class="number">8</span>);</span><br><span class="line">System.out.println(a==b);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="缓存伪共享优化"><a href="#缓存伪共享优化" class="headerlink" title="缓存伪共享优化"></a>缓存伪共享优化</h2><p>cpu加载数据是基于缓存行（具体原理不展开了），java8支持通过@sun.misc.Contended来解决这个问题，<br>非java8版本可以参考Disruptor的做法 <a target="_blank" rel="noopener" href="https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/RingBuffer.java">https://github.com/LMAX-Exchange/disruptor/blob/master/src/main/java/com/lmax/disruptor/RingBuffer.java</a></p>
+<h2 id="读写序号java溢出问题"><a href="#读写序号java溢出问题" class="headerlink" title="读写序号java溢出问题"></a>读写序号java溢出问题</h2><p>暂时没有想到好方案，目前大致思路是，设置一个阀值算法，满足阀值则重置大小，类似java集合扩容一样，但这个会导致读写锁住。</p>
+<h2 id="RingBuffer应用场景"><a href="#RingBuffer应用场景" class="headerlink" title="RingBuffer应用场景"></a>RingBuffer应用场景</h2><ul>
+<li>依赖一个优惠券的查询接口，假设该接口提供分页查询能力。单次最多返回100张优惠优惠券，单次rt是20ms</li>
+<li>优惠券的扩展信息是另一个接口，该接口性能提供批量查询能力，单次做多支持30张优惠券，单词rt是30ms</li>
+<li>假设某个用户有500张优惠券</li>
+</ul>
+<p>如果是串行调用，则整体时间是 (500&#x2F;100)20+(500&#x2F;30)30.采用ringBuffer解耦两个接口依赖，则优化后的rt时间，<br>理论上可以缩减至30ms左右（排除cpu切换上下文损耗等）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/20/JSR-133%E8%A7%84%E8%8C%83%E8%AF%A6%E8%A7%A3/" rel="prev" title="JSR-133规范详解">
+                  <i class="fa fa-chevron-left"></i> JSR-133规范详解
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/20/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%90%BD%E5%9C%B0%E5%AE%9E%E6%88%98-%E9%A2%86%E5%9F%9F%E5%88%92%E5%88%86%E5%92%8C%E5%BB%BA%E6%A8%A1/" rel="next" title="领域驱动与微服务落地实战-领域划分和建模">
+                  领域驱动与微服务落地实战-领域划分和建模 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈公子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

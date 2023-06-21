@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"chenxun.wiki","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="浅谈分布式项目日志监控目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。分布式情况下，每个日志分散到各自服务所在机器，日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈分布式项目日志监控">
+<meta property="og:url" content="https://chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/index.html">
+<meta property="og:site_name" content="陈公子的博客">
+<meta property="og:description" content="浅谈分布式项目日志监控目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。分布式情况下，每个日志分散到各自服务所在机器，日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/1.png">
+<meta property="article:published_time" content="2023-06-20T13:48:20.000Z">
+<meta property="article:modified_time" content="2023-06-21T02:59:40.356Z">
+<meta property="article:author" content="陈公子">
+<meta property="article:tag" content="架构设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/1.png">
+
+
+<link rel="canonical" href="https://chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/","path":"2023/06/20/浅谈分布式项目日志监控/","title":"浅谈分布式项目日志监控"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>浅谈分布式项目日志监控 | 陈公子的博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">陈公子的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">文字可以宣泄过往，但终究写不出流年</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7"><span class="nav-number">1.</span> <span class="nav-text">浅谈分布式项目日志监控</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">陈公子</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="浅谈分布式项目日志监控 | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅谈分布式项目日志监控
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-20 13:48:20" itemprop="dateCreated datePublished" datetime="2023-06-20T13:48:20+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-21 02:59:40" itemprop="dateModified" datetime="2023-06-21T02:59:40+00:00">2023-06-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="浅谈分布式项目日志监控"><a href="#浅谈分布式项目日志监控" class="headerlink" title="浅谈分布式项目日志监控"></a>浅谈分布式项目日志监控</h1><p>目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。<br>这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。<br>但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。<br>分布式情况下，每个日志分散到各自服务所在机器，<br>日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小还好，数量一大，我想不管是运维人员还是开发人员都会头疼。<br>目前处理这个需求最为火热的中间套件，自然首选是ELK，ELK是java技术栈的。<br>也符合目前公司需求。ELK的安装就不讲述了，感兴趣的可以查看官网或者自行百度，资料还是挺多的。<br>确定了日志收集和分析的中间件，剩下一个就是日志埋点和怎么把日志串起来了。<br>以前单个应用的时代，系统级别的日志可以通过aop解决。在分布式情况下对每一个独立服务而言，自身的日志系统还是通过aop解决，唯一需要的就是怎么把分散到各自不同应用的日志串起来。<br>这个有个高大上的说法叫做业务链监控。<br>目前国内开源的产品有大众点评的cat，是整套业务链监控解决方案。<br>对于我公司目前来说太重了，我这边日志已经有elk，就没必要在额外引入cat。那如何自己实现呢。<br>既然是链路，那自然有入口有出口。我们需要做的就是在入口出生成一个全局唯一的traceId，然后把这个traceId按照业务链路传递到各个服务中去。<br>traceId就是一根线，把各个服务的日志串起来。注意一点，服务的时间要同步，因为是根据来时间排序的。<br>traceId的生成，简单方案可以采用uuid，其次推荐使用twiiter的snowflake算法。<br>traceId的传递，需要根据rpc框架来实现了。dubbo框架采用dubbo的fiter来实现，参考代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 调用过程拦截  </span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">invoke</span><span class="params">(Invoker&lt;?&gt; invoker, Invocation invocation)</span> <span class="keyword">throws</span> RpcException &#123;  </span><br><span class="line"><span class="comment">//异步获取serviceId，没获取到不进行采样  </span></span><br><span class="line"><span class="type">String</span> <span class="variable">serviceId</span> <span class="operator">=</span> tracer.getServiceId(RpcContext.getContext().getUrl().getServiceInterface());  </span><br><span class="line"><span class="keyword">if</span> (serviceId == <span class="literal">null</span>) &#123;  </span><br><span class="line">Tracer.startTraceWork();  </span><br><span class="line"><span class="keyword">return</span> invoker.invoke(invocation);  </span><br><span class="line">&#125;        </span><br><span class="line"><span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();  </span><br><span class="line"><span class="type">RpcContext</span> <span class="variable">context</span> <span class="operator">=</span> RpcContext.getContext();  </span><br><span class="line"><span class="type">boolean</span> <span class="variable">isConsumerSide</span> <span class="operator">=</span> context.isConsumerSide();  </span><br><span class="line"><span class="type">Span</span> <span class="variable">span</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line"><span class="type">Endpoint</span> <span class="variable">endpoint</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">endpoint = tracer.newEndPoint();  </span><br><span class="line">endpoint.setServiceName(serviceId);  </span><br><span class="line">endpoint.setIp(context.getLocalAddressString());  </span><br><span class="line">endpoint.setPort(context.getLocalPort());  </span><br><span class="line"><span class="keyword">if</span> (context.isConsumerSide()) &#123; <span class="comment">//是否是消费者  </span></span><br><span class="line"><span class="type">Span</span> <span class="variable">span1</span> <span class="operator">=</span> tracer.getParentSpan();  </span><br><span class="line"><span class="keyword">if</span> (span1 == <span class="literal">null</span>) &#123; <span class="comment">//为rootSpan  </span></span><br><span class="line">span = tracer.newSpan(context.getMethodName(), endpoint, serviceId);<span class="comment">//生成root Span  </span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">span = tracer.genSpan(span1.getTraceId(), span1.getId(), tracer.genSpanId(), context.getMethodName(), span1.isSample(), <span class="literal">null</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (context.isProviderSide()) &#123;  </span><br><span class="line">Long traceId, parentId, spanId;  </span><br><span class="line">traceId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.TID));  </span><br><span class="line">parentId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.PID));  </span><br><span class="line">spanId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.SID));  </span><br><span class="line"><span class="type">boolean</span> <span class="variable">isSample</span> <span class="operator">=</span> (traceId != <span class="literal">null</span>);  </span><br><span class="line">span = tracer.genSpan(traceId, parentId, spanId, context.getMethodName(), isSample, serviceId);  </span><br><span class="line">&#125;  </span><br><span class="line">invokerBefore(invocation, span, endpoint, start);<span class="comment">//记录annotation  </span></span><br><span class="line"><span class="type">RpcInvocation</span> <span class="variable">invocation1</span> <span class="operator">=</span> (RpcInvocation) invocation;  </span><br><span class="line">setAttachment(span, invocation1);<span class="comment">//设置需要向下游传递的参数  </span></span><br><span class="line"><span class="type">Result</span> <span class="variable">result</span> <span class="operator">=</span> invoker.invoke(invocation);  </span><br><span class="line"><span class="keyword">if</span> (result.getException() != <span class="literal">null</span>)&#123;  </span><br><span class="line">catchException(result.getException(), endpoint);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">return</span> result;  </span><br><span class="line">&#125;<span class="keyword">catch</span> (RpcException e) &#123;  </span><br><span class="line"><span class="keyword">if</span> (e.getCause() != <span class="literal">null</span> &amp;&amp; e.getCause() <span class="keyword">instanceof</span> TimeoutException)&#123;  </span><br><span class="line">catchTimeoutException(e, endpoint);  </span><br><span class="line">&#125;<span class="keyword">else</span> &#123;  </span><br><span class="line">catchException(e, endpoint);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">throw</span> e;  </span><br><span class="line">&#125;<span class="keyword">finally</span> &#123;  </span><br><span class="line"><span class="keyword">if</span> (span != <span class="literal">null</span>) &#123;  </span><br><span class="line"><span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();  </span><br><span class="line">invokerAfter(invocation, endpoint, span, end, isConsumerSide);<span class="comment">//调用后记录annotation  </span></span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>dubbo通过invocation.setAttachmen来在消费者和调用者之间传递traceId。<br>如果是http接口调用实现的rpc建议采用在request的head里面传递traceId。<br>在本地服务里面通过threadlocal变量来传递traceId。<br>如果想打印sql语句，通过orm框架的拦截器机制实现，以下是mybatis的参考代码</p>
+<figure class="highlight xml"><figcaption><span>schema.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Intercepts(&#123; @Signature(type = Executor.class, method = &quot;update&quot;, args = &#123; MappedStatement.class, Object.class &#125;),  </span><br><span class="line">@Signature(type = Executor.class, method = &quot;query&quot;, args = &#123; MappedStatement.class, Object.class,  </span><br><span class="line">RowBounds.class, ResultHandler.class &#125;) &#125;)  </span><br><span class="line">public class MidaiLogMybatisPlugn implements Interceptor &#123;  </span><br><span class="line">@Override  </span><br><span class="line">public Object intercept(Invocation invocation) throws Throwable &#123;    </span><br><span class="line">Object result = null;  </span><br><span class="line">//从当前线程获取trace  </span><br><span class="line">MidaiLogTrace trace = MidaiLogTraceService.getMidaiLogTrace();  </span><br><span class="line">if(trace !=null)&#123;  </span><br><span class="line">Object[] arguments = invocation.getArgs();  </span><br><span class="line">MidaiLogTraceService.traceSqlLog(trace.getTraceId(), getSqlStatement(arguments));  </span><br><span class="line">&#125;  </span><br><span class="line">try &#123;  </span><br><span class="line">result = invocation.proceed();        </span><br><span class="line">&#125; catch (Exception e) &#123;  </span><br><span class="line">throw e;  </span><br><span class="line">&#125;  </span><br><span class="line">return result;  </span><br><span class="line">&#125;    </span><br><span class="line">@Override  </span><br><span class="line">public Object plugin(Object target) &#123;  </span><br><span class="line">return Plugin.wrap(target, this); // mybatis提供的包装工具类  </span><br><span class="line">&#125;    </span><br><span class="line">@Override  </span><br><span class="line">public void setProperties(Properties properties) &#123;  </span><br><span class="line">&#125;   </span><br><span class="line">private String getSqlStatement(Object[] arguments) &#123;  </span><br><span class="line">MappedStatement mappedStatement = (MappedStatement) arguments[0];  </span><br><span class="line">Object parameter = null;  </span><br><span class="line">if (arguments.length &gt; 1) &#123;  </span><br><span class="line">parameter = arguments[1];  </span><br><span class="line">&#125;  </span><br><span class="line">String sqlId = mappedStatement.getId();  </span><br><span class="line">BoundSql boundSql = mappedStatement.getBoundSql(parameter);  </span><br><span class="line">Configuration configuration = mappedStatement.getConfiguration();  </span><br><span class="line">String sql = showSql(configuration, boundSql);  </span><br><span class="line">StringBuilder str = new StringBuilder(100);  </span><br><span class="line">str.append(sqlId);  </span><br><span class="line">str.append(&quot;:&quot;);  </span><br><span class="line">str.append(sql);  </span><br><span class="line">str.append(&quot;:&quot;);  </span><br><span class="line">return str.toString();  </span><br><span class="line">&#125;    </span><br><span class="line">public String showSql(Configuration configuration, BoundSql boundSql) &#123;  </span><br><span class="line">Object parameterObject = boundSql.getParameterObject();  </span><br><span class="line">List<span class="tag">&lt;<span class="name">ParameterMapping</span>&gt;</span> parameterMappings = boundSql.getParameterMappings();  </span><br><span class="line">String sql = boundSql.getSql().replaceAll(&quot;[\\s]+&quot;, &quot; &quot;);  </span><br><span class="line">if (parameterMappings.size() &gt; 0 &amp;&amp; parameterObject != null) &#123;  </span><br><span class="line">TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();  </span><br><span class="line">if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) &#123;  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(parameterObject));    </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">MetaObject metaObject = configuration.newMetaObject(parameterObject);  </span><br><span class="line">for (ParameterMapping parameterMapping : parameterMappings) &#123;  </span><br><span class="line">String propertyName = parameterMapping.getProperty();  </span><br><span class="line">if (metaObject.hasGetter(propertyName)) &#123;  </span><br><span class="line">Object obj = metaObject.getValue(propertyName);  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(obj));  </span><br><span class="line">&#125; else if (boundSql.hasAdditionalParameter(propertyName)) &#123;  </span><br><span class="line">Object obj = boundSql.getAdditionalParameter(propertyName);  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(obj));  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">return sql;  </span><br><span class="line">&#125;   </span><br><span class="line">private static String getParameterValue(Object obj) &#123;  </span><br><span class="line">String value = null;  </span><br><span class="line">if (obj instanceof String) &#123;  </span><br><span class="line">value = &quot;‘&quot; + obj.toString() + &quot;‘&quot;;  </span><br><span class="line">&#125; else if (obj instanceof Date) &#123;  </span><br><span class="line">DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);  </span><br><span class="line">value = &quot;‘&quot; + formatter.format(new Date()) + &quot;‘&quot;;  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">if (obj != null) &#123;  </span><br><span class="line">value = obj.toString();  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">value = &quot;&quot;;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">        &#125;  </span><br><span class="line">        return value;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当系统并发达到一定数量级，log4j日志打印本身会成为瓶颈，这个时候需要mq来解耦了，<br>不在打印日志，而是发送mq消息，由mq消费端处理。因为目前公司项目并发数量还不足以导致该问题，因此尚未采用。<br>elk收集日志之后，通过kibana可以提供搜索。</p>
+<img src="/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/1.png" class="" title="image">
+
+<p>剩下最后的工作量就是提供一个web界面来更好的分析和展示数据。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" rel="tag"># 架构设计</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/20/%E5%9F%BA%E4%BA%8Ejquery%E6%8A%8A%E8%A1%A8%E5%8D%95%E8%BD%AC%E6%88%90%E6%88%90json%E5%AF%B9%E8%B1%A1/" rel="prev" title="基于jquery把表单转成成json对象">
+                  <i class="fa fa-chevron-left"></i> 基于jquery把表单转成成json对象
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/" rel="next" title="dubbo源码研究之config模块">
+                  dubbo源码研究之config模块 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈公子</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
