@@ -35,9 +35,10 @@ jobs:
           npm install hexo-theme-next --save -g
           npm install
       - name: Build
-#        run: npm run build
-         run: |
-           hexo clean && hexo generate && hexo deploy
+        run: |
+          hexo clean
+          hexo generate
+          hexo deploy
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
