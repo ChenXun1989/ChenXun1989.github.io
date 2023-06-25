@@ -84,7 +84,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">8</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">29</span></a></li><li class="menu-item menu-item-schedule"><a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>Commonweal 404</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">31</span></a></li><li class="menu-item menu-item-schedule"><a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>Commonweal 404</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -147,13 +147,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -170,6 +170,178 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">dubbo源码研究之config模块</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2023-06-20 05:51:48 / Modified: 13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T05:51:48+00:00">2023-06-20</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="dubbo源码研究之config模块"><a href="#dubbo源码研究之config模块" class="headerlink" title="dubbo源码研究之config模块"></a>dubbo源码研究之config模块</h1><p>dubbo模块说明</p>
+<ul>
+<li>dubbo-common 公共逻辑模块，包括Util类和通用模型</li>
+<li>dubbo-remoting 远程通讯模块，相当于Dubbo协议的实现，如果RPC用RMI协议则不需要使用此包。</li>
+<li>dubbo-rpc 远程调用模块，抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理</li>
+<li>dubbo-cluster 集群模块，将多个服务提供方伪装为一个提供方，包括：负载均衡, 容错，路由等，集群的地址列表可以是静态配置的，也可以是由注册中心下发。</li>
+<li>dubbo-registry 注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。</li>
+<li>dubbo-monitor 监控模块，统计服务调用次数，调用时间的，调用链跟踪的服务。</li>
+<li>dubbo-config 配置模块，是Dubbo对外的API，用户通过Config使用Dubbo，隐藏Dubbo所有细节。</li>
+<li>dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat&#x2F;JBoss等Web容器的特性，没必要用Web容器去加载服务。</li>
+</ul>
+<p>今天开始从dubbo入口，config模块开始研究。<br>config模块和Service模块是API，其他为SPI实现。<br>config模块uml类图</p>
+<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+
+<p>AbstractConfig类提供几个主要的方法 appendAnnotation，appendProperties，appendParameters，appendAttributes<br>其他子类提供相关自身的属性。<br>AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></span><br><span class="line">logger.warn(t.getMessage(), t);  </span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.toString();  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>防御性容错在此处使用，提升代码健壮性。<br>AnnotationBean是子类里面一个比较特殊的类。因为该类是处于com.alibaba.dubbo.config.spring包下面。<br>该类属于config模块的spring 扩展，支持通过注解来配置dubbo。<br>AnnotationBean实现了DisposableBean, BeanFactoryPostProcessor, BeanPostProcessor, ApplicationContextAware这四个接口。<br>DisposableBean：资源清理接口<br>BeanFactoryPostProcessor，BeanPostProcessor：作用类似，都是在bean创建之后的扩展接口。<br>ApplicationContextAware：获取spring上下文接口。<br>通过该类可以看出，dubbo注解实际上是spring注解的扩展，也就是说使用dubbo注解的前提是使用spring作为dubbo的容器。<br>@servcie暴露dubbo服务配置的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span>  </span><br><span class="line"><span class="keyword">throws</span> BeansException &#123;  </span><br><span class="line"><span class="keyword">if</span> (! isMatchPackage(bean)) &#123;  </span><br><span class="line"><span class="keyword">return</span> bean;  </span><br><span class="line">&#125;  </span><br><span class="line">Class&lt;?&gt; clazz = bean.getClass();  </span><br><span class="line"><span class="keyword">if</span>(isProxyBean(bean))&#123;  </span><br><span class="line">clazz = AopUtils.getTargetClass(bean);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="type">Service</span> <span class="variable">service</span> <span class="operator">=</span> clazz.getAnnotation(Service.class);  </span><br><span class="line"><span class="keyword">if</span> (service != <span class="literal">null</span>) &#123;  </span><br><span class="line">ServiceBean&lt;Object&gt; serviceConfig = <span class="keyword">new</span> <span class="title class_">ServiceBean</span>&lt;Object&gt;(service);  </span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">void</span>.class.equals(service.interfaceClass())  </span><br><span class="line">&amp;&amp; <span class="string">&quot;&quot;</span>.equals(service.interfaceName())) &#123;  </span><br><span class="line"><span class="keyword">if</span> (clazz.getInterfaces().length &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">serviceConfig.setInterface(clazz.getInterfaces()[<span class="number">0</span>]);  </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Failed to export remote service class &quot;</span> + clazz.getName() + <span class="string">&quot;, cause: The @Service undefined interfaceClass or interfaceName, and the service class unimplemented any interfaces.&quot;</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (applicationContext != <span class="literal">null</span>) &#123;  </span><br><span class="line">serviceConfig.setApplicationContext(applicationContext);  </span><br><span class="line"><span class="keyword">if</span> (service.registry() != <span class="literal">null</span> &amp;&amp; service.registry().length &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">List&lt;RegistryConfig&gt; registryConfigs = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;RegistryConfig&gt;();  </span><br><span class="line"><span class="keyword">for</span> (String registryId : service.registry()) &#123;  </span><br><span class="line"><span class="keyword">if</span> (registryId != <span class="literal">null</span> &amp;&amp; registryId.length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">registryConfigs.add((RegistryConfig)applicationContext.getBean(registryId, RegistryConfig.class));  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">serviceConfig.setRegistries(registryConfigs);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (service.provider() != <span class="literal">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(),ProviderConfig.class));  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (service.monitor() != <span class="literal">null</span> &amp;&amp; service.monitor().length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">serviceConfig.setMonitor((MonitorConfig)applicationContext.getBean(service.monitor(), MonitorConfig.class));  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (service.application() != <span class="literal">null</span> &amp;&amp; service.application().length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">serviceConfig.setApplication((ApplicationConfig)applicationContext.getBean(service.application(), ApplicationConfig.class));  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (service.<span class="keyword">module</span>() != <span class="literal">null</span> &amp;&amp; service.<span class="keyword">module</span>().length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">serviceConfig.setModule((ModuleConfig)applicationContext.getBean(service.<span class="keyword">module</span>(), ModuleConfig.class));  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span> (service.provider() != <span class="literal">null</span> &amp;&amp; service.provider().length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">serviceConfig.setProvider((ProviderConfig)applicationContext.getBean(service.provider(), ProviderConfig.class));  </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">if</span> (service.protocol() != <span class="literal">null</span> &amp;&amp; service.protocol().length &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">            List&lt;ProtocolConfig&gt; protocolConfigs = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;ProtocolConfig&gt;();  </span><br><span class="line">            <span class="comment">// modified by lishen; fix dubbo&#x27;s bug  </span></span><br><span class="line">            <span class="keyword">for</span> (String protocolId : service.protocol()) &#123;  </span><br><span class="line">                <span class="keyword">if</span> (protocolId != <span class="literal">null</span> &amp;&amp; protocolId.length() &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">                    protocolConfigs.add((ProtocolConfig)applicationContext.getBean(protocolId, ProtocolConfig.class));  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">            serviceConfig.setProtocols(protocolConfigs);  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">            serviceConfig.afterPropertiesSet();  </span><br><span class="line">        &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;  </span><br><span class="line">            <span class="keyword">throw</span> (RuntimeException) e;  </span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(e.getMessage(), e);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    serviceConfig.setRef(bean);  </span><br><span class="line">    serviceConfigs.add(serviceConfig);  </span><br><span class="line">    serviceConfig.export();  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">return</span> bean;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>主要是先获取类上面的@servcie注解，然后new 一个对应的ServiceBean，ServiceBean继承于ServiceConfig，同时实现了spring bean的相关接口 InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware。<br>最后该serviceBean保存到线程安全的容器里面去。<br>@service解析是在 postProcessAfterInitialization里面<br>@Reference解析是在postProcessBeforeInitialization里面，两者的时机是不一样的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> reference.group() + <span class="string">&quot;/&quot;</span> + interfaceName + <span class="string">&quot;:&quot;</span> + reference.version();  </span><br><span class="line">ReferenceBean&lt;?&gt; referenceConfig = referenceConfigs.get(key);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从该代码可以看出，服务接口的唯一性，由group，interfaceName 和version一起决定。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="陈公子">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 陈公子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/" class="post-title-link" itemprop="url">浅谈分布式项目日志监控</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2023-06-20 05:48:20 / Modified: 13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T05:48:20+00:00">2023-06-20</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="浅谈分布式项目日志监控"><a href="#浅谈分布式项目日志监控" class="headerlink" title="浅谈分布式项目日志监控"></a>浅谈分布式项目日志监控</h1><p>目前公司项目采用dubbo服务化升级之后，原先大而全的几个主要应用，拆散重构成多个分布式服务。<br>这个公司业务架构和系统架构实现一次升级，并发和业务开发效率得到提升。<br>但是事情是两面的，引入dubbo服务化之后，导致业务链路过长，日志分散。不能在使用原来的日志处理方式了。<br>分布式情况下，每个日志分散到各自服务所在机器，<br>日志的收集和分析使用原来古老的模式，肯定是过时了，集群和服务规模小还好，数量一大，我想不管是运维人员还是开发人员都会头疼。<br>目前处理这个需求最为火热的中间套件，自然首选是ELK，ELK是java技术栈的。<br>也符合目前公司需求。ELK的安装就不讲述了，感兴趣的可以查看官网或者自行百度，资料还是挺多的。<br>确定了日志收集和分析的中间件，剩下一个就是日志埋点和怎么把日志串起来了。<br>以前单个应用的时代，系统级别的日志可以通过aop解决。在分布式情况下对每一个独立服务而言，自身的日志系统还是通过aop解决，唯一需要的就是怎么把分散到各自不同应用的日志串起来。<br>这个有个高大上的说法叫做业务链监控。<br>目前国内开源的产品有大众点评的cat，是整套业务链监控解决方案。<br>对于我公司目前来说太重了，我这边日志已经有elk，就没必要在额外引入cat。那如何自己实现呢。<br>既然是链路，那自然有入口有出口。我们需要做的就是在入口出生成一个全局唯一的traceId，然后把这个traceId按照业务链路传递到各个服务中去。<br>traceId就是一根线，把各个服务的日志串起来。注意一点，服务的时间要同步，因为是根据来时间排序的。<br>traceId的生成，简单方案可以采用uuid，其次推荐使用twiiter的snowflake算法。<br>traceId的传递，需要根据rpc框架来实现了。dubbo框架采用dubbo的fiter来实现，参考代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 调用过程拦截  </span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">invoke</span><span class="params">(Invoker&lt;?&gt; invoker, Invocation invocation)</span> <span class="keyword">throws</span> RpcException &#123;  </span><br><span class="line"><span class="comment">//异步获取serviceId，没获取到不进行采样  </span></span><br><span class="line"><span class="type">String</span> <span class="variable">serviceId</span> <span class="operator">=</span> tracer.getServiceId(RpcContext.getContext().getUrl().getServiceInterface());  </span><br><span class="line"><span class="keyword">if</span> (serviceId == <span class="literal">null</span>) &#123;  </span><br><span class="line">Tracer.startTraceWork();  </span><br><span class="line"><span class="keyword">return</span> invoker.invoke(invocation);  </span><br><span class="line">&#125;        </span><br><span class="line"><span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();  </span><br><span class="line"><span class="type">RpcContext</span> <span class="variable">context</span> <span class="operator">=</span> RpcContext.getContext();  </span><br><span class="line"><span class="type">boolean</span> <span class="variable">isConsumerSide</span> <span class="operator">=</span> context.isConsumerSide();  </span><br><span class="line"><span class="type">Span</span> <span class="variable">span</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line"><span class="type">Endpoint</span> <span class="variable">endpoint</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line">endpoint = tracer.newEndPoint();  </span><br><span class="line">endpoint.setServiceName(serviceId);  </span><br><span class="line">endpoint.setIp(context.getLocalAddressString());  </span><br><span class="line">endpoint.setPort(context.getLocalPort());  </span><br><span class="line"><span class="keyword">if</span> (context.isConsumerSide()) &#123; <span class="comment">//是否是消费者  </span></span><br><span class="line"><span class="type">Span</span> <span class="variable">span1</span> <span class="operator">=</span> tracer.getParentSpan();  </span><br><span class="line"><span class="keyword">if</span> (span1 == <span class="literal">null</span>) &#123; <span class="comment">//为rootSpan  </span></span><br><span class="line">span = tracer.newSpan(context.getMethodName(), endpoint, serviceId);<span class="comment">//生成root Span  </span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">span = tracer.genSpan(span1.getTraceId(), span1.getId(), tracer.genSpanId(), context.getMethodName(), span1.isSample(), <span class="literal">null</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (context.isProviderSide()) &#123;  </span><br><span class="line">Long traceId, parentId, spanId;  </span><br><span class="line">traceId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.TID));  </span><br><span class="line">parentId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.PID));  </span><br><span class="line">spanId = TracerUtils.getAttachmentLong(invocation.getAttachment(TracerUtils.SID));  </span><br><span class="line"><span class="type">boolean</span> <span class="variable">isSample</span> <span class="operator">=</span> (traceId != <span class="literal">null</span>);  </span><br><span class="line">span = tracer.genSpan(traceId, parentId, spanId, context.getMethodName(), isSample, serviceId);  </span><br><span class="line">&#125;  </span><br><span class="line">invokerBefore(invocation, span, endpoint, start);<span class="comment">//记录annotation  </span></span><br><span class="line"><span class="type">RpcInvocation</span> <span class="variable">invocation1</span> <span class="operator">=</span> (RpcInvocation) invocation;  </span><br><span class="line">setAttachment(span, invocation1);<span class="comment">//设置需要向下游传递的参数  </span></span><br><span class="line"><span class="type">Result</span> <span class="variable">result</span> <span class="operator">=</span> invoker.invoke(invocation);  </span><br><span class="line"><span class="keyword">if</span> (result.getException() != <span class="literal">null</span>)&#123;  </span><br><span class="line">catchException(result.getException(), endpoint);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">return</span> result;  </span><br><span class="line">&#125;<span class="keyword">catch</span> (RpcException e) &#123;  </span><br><span class="line"><span class="keyword">if</span> (e.getCause() != <span class="literal">null</span> &amp;&amp; e.getCause() <span class="keyword">instanceof</span> TimeoutException)&#123;  </span><br><span class="line">catchTimeoutException(e, endpoint);  </span><br><span class="line">&#125;<span class="keyword">else</span> &#123;  </span><br><span class="line">catchException(e, endpoint);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">throw</span> e;  </span><br><span class="line">&#125;<span class="keyword">finally</span> &#123;  </span><br><span class="line"><span class="keyword">if</span> (span != <span class="literal">null</span>) &#123;  </span><br><span class="line"><span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();  </span><br><span class="line">invokerAfter(invocation, endpoint, span, end, isConsumerSide);<span class="comment">//调用后记录annotation  </span></span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>dubbo通过invocation.setAttachmen来在消费者和调用者之间传递traceId。<br>如果是http接口调用实现的rpc建议采用在request的head里面传递traceId。<br>在本地服务里面通过threadlocal变量来传递traceId。<br>如果想打印sql语句，通过orm框架的拦截器机制实现，以下是mybatis的参考代码</p>
+<figure class="highlight xml"><figcaption><span>schema.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Intercepts(&#123; @Signature(type = Executor.class, method = &quot;update&quot;, args = &#123; MappedStatement.class, Object.class &#125;),  </span><br><span class="line">@Signature(type = Executor.class, method = &quot;query&quot;, args = &#123; MappedStatement.class, Object.class,  </span><br><span class="line">RowBounds.class, ResultHandler.class &#125;) &#125;)  </span><br><span class="line">public class MidaiLogMybatisPlugn implements Interceptor &#123;  </span><br><span class="line">@Override  </span><br><span class="line">public Object intercept(Invocation invocation) throws Throwable &#123;    </span><br><span class="line">Object result = null;  </span><br><span class="line">//从当前线程获取trace  </span><br><span class="line">MidaiLogTrace trace = MidaiLogTraceService.getMidaiLogTrace();  </span><br><span class="line">if(trace !=null)&#123;  </span><br><span class="line">Object[] arguments = invocation.getArgs();  </span><br><span class="line">MidaiLogTraceService.traceSqlLog(trace.getTraceId(), getSqlStatement(arguments));  </span><br><span class="line">&#125;  </span><br><span class="line">try &#123;  </span><br><span class="line">result = invocation.proceed();        </span><br><span class="line">&#125; catch (Exception e) &#123;  </span><br><span class="line">throw e;  </span><br><span class="line">&#125;  </span><br><span class="line">return result;  </span><br><span class="line">&#125;    </span><br><span class="line">@Override  </span><br><span class="line">public Object plugin(Object target) &#123;  </span><br><span class="line">return Plugin.wrap(target, this); // mybatis提供的包装工具类  </span><br><span class="line">&#125;    </span><br><span class="line">@Override  </span><br><span class="line">public void setProperties(Properties properties) &#123;  </span><br><span class="line">&#125;   </span><br><span class="line">private String getSqlStatement(Object[] arguments) &#123;  </span><br><span class="line">MappedStatement mappedStatement = (MappedStatement) arguments[0];  </span><br><span class="line">Object parameter = null;  </span><br><span class="line">if (arguments.length &gt; 1) &#123;  </span><br><span class="line">parameter = arguments[1];  </span><br><span class="line">&#125;  </span><br><span class="line">String sqlId = mappedStatement.getId();  </span><br><span class="line">BoundSql boundSql = mappedStatement.getBoundSql(parameter);  </span><br><span class="line">Configuration configuration = mappedStatement.getConfiguration();  </span><br><span class="line">String sql = showSql(configuration, boundSql);  </span><br><span class="line">StringBuilder str = new StringBuilder(100);  </span><br><span class="line">str.append(sqlId);  </span><br><span class="line">str.append(&quot;:&quot;);  </span><br><span class="line">str.append(sql);  </span><br><span class="line">str.append(&quot;:&quot;);  </span><br><span class="line">return str.toString();  </span><br><span class="line">&#125;    </span><br><span class="line">public String showSql(Configuration configuration, BoundSql boundSql) &#123;  </span><br><span class="line">Object parameterObject = boundSql.getParameterObject();  </span><br><span class="line">List<span class="tag">&lt;<span class="name">ParameterMapping</span>&gt;</span> parameterMappings = boundSql.getParameterMappings();  </span><br><span class="line">String sql = boundSql.getSql().replaceAll(&quot;[\\s]+&quot;, &quot; &quot;);  </span><br><span class="line">if (parameterMappings.size() &gt; 0 &amp;&amp; parameterObject != null) &#123;  </span><br><span class="line">TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();  </span><br><span class="line">if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) &#123;  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(parameterObject));    </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">MetaObject metaObject = configuration.newMetaObject(parameterObject);  </span><br><span class="line">for (ParameterMapping parameterMapping : parameterMappings) &#123;  </span><br><span class="line">String propertyName = parameterMapping.getProperty();  </span><br><span class="line">if (metaObject.hasGetter(propertyName)) &#123;  </span><br><span class="line">Object obj = metaObject.getValue(propertyName);  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(obj));  </span><br><span class="line">&#125; else if (boundSql.hasAdditionalParameter(propertyName)) &#123;  </span><br><span class="line">Object obj = boundSql.getAdditionalParameter(propertyName);  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(obj));  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">return sql;  </span><br><span class="line">&#125;   </span><br><span class="line">private static String getParameterValue(Object obj) &#123;  </span><br><span class="line">String value = null;  </span><br><span class="line">if (obj instanceof String) &#123;  </span><br><span class="line">value = &quot;‘&quot; + obj.toString() + &quot;‘&quot;;  </span><br><span class="line">&#125; else if (obj instanceof Date) &#123;  </span><br><span class="line">DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);  </span><br><span class="line">value = &quot;‘&quot; + formatter.format(new Date()) + &quot;‘&quot;;  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">if (obj != null) &#123;  </span><br><span class="line">value = obj.toString();  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">value = &quot;&quot;;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">        &#125;  </span><br><span class="line">        return value;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当系统并发达到一定数量级，log4j日志打印本身会成为瓶颈，这个时候需要mq来解耦了，<br>不在打印日志，而是发送mq消息，由mq消费端处理。因为目前公司项目并发数量还不足以导致该问题，因此尚未采用。<br>elk收集日志之后，通过kibana可以提供搜索。</p>
+<img src="/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/1.png" class="" title="image">
+
+<p>剩下最后的工作量就是提供一个web界面来更好的分析和展示数据。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -908,87 +1080,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/19/solr%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="陈公子">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="陈公子的博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 陈公子的博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/19/solr%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D/" class="post-title-link" itemprop="url">solr中文分词</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-06-19 07:29:14" itemprop="dateCreated datePublished" datetime="2023-06-19T07:29:14+00:00">2023-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-20 13:09:16" itemprop="dateModified" datetime="2023-06-20T13:09:16+00:00">2023-06-20</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="solr中文分词"><a href="#solr中文分词" class="headerlink" title="solr中文分词"></a>solr中文分词</h1><p>solr中文分词。<br>solr5.0 自带一个中文分词包，lucene-analyzers-smartcn-5.0.0.jar。<br>在安装目录下搜寻找到，并copy到solr提供的web服务目录的lib目录下。<br>修改collection配置里面的schema.xml。新增字段类型。</p>
-<figure class="highlight xml"><figcaption><span>schema.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">fieldType</span> <span class="attr">name</span>=<span class="string">&quot;text_cn&quot;</span> <span class="attr">class</span>=<span class="string">&quot;solr.TextField&quot;</span> <span class="attr">positionIncrementGap</span>=<span class="string">&quot;100&quot;</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">analyzer</span> <span class="attr">type</span>=<span class="string">&quot;index&quot;</span>&gt;</span>    </span><br><span class="line"><span class="comment">&lt;!-- 此处需要配置主要的分词类 --&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">tokenizer</span> <span class="attr">class</span>=<span class="string">&quot;solr.SmartChineseSentenceTokenizerFactory&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">tokenizer</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span> <span class="attr">class</span>=<span class="string">&quot;solr.SmartChineseWordTokenFilterFactory&quot;</span>/&gt;</span>    </span><br><span class="line"><span class="tag">&lt;/<span class="name">analyzer</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">analyzer</span> <span class="attr">type</span>=<span class="string">&quot;query&quot;</span>&gt;</span>    </span><br><span class="line"><span class="comment">&lt;!-- 此处配置同上 --&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">tokenizer</span> <span class="attr">class</span>=<span class="string">&quot;solr.SmartChineseSentenceTokenizerFactory&quot;</span>/&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span> <span class="attr">class</span>=<span class="string">&quot;solr.SmartChineseWordTokenFilterFactory&quot;</span>/&gt;</span>    </span><br><span class="line"><span class="tag">&lt;/<span class="name">analyzer</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;/<span class="name">fieldType</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
-
-<p>启动solr cloud服务，新建collection就好。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
