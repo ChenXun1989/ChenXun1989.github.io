@@ -155,7 +155,7 @@ site_state: true
 # Key is the link label showing to end users.
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
-#GitHub: https://github.com/yourname || fab fa-github
+GitHub: https://github.com/ChenXun1989 || fab fa-github
 #E-Mail: mailto:yourname@gmail.com || fa fa-envelope
 #Weibo: https://weibo.com/yourname || fab fa-weibo
 #Twitter: https://twitter.com/yourname || fab fa-twitter
@@ -177,7 +177,7 @@ links_settings:
   layout: block
 
 links:
-#Title: https://example.com
+Title: https://www.chenxun.wiki
 
 # Table of Contents in the Sidebar
 # Front-matter variable (nonsupport wrap expand_all).
@@ -203,7 +203,7 @@ language_switcher: true
 
 footer:
   # Specify the year when the site was setup. If not defined, current year will be used.
-  #since: 2021
+  since: 2021
 
   # Icon between year and copyright info.
   icon:
