@@ -30,6 +30,8 @@ jobs:
           npm install hexo-theme-next --save -g
           npm install --save hexo-helper-live2d -g
           npm install live2d-widget-model-z16 -g
+          npm install hexo-abbrlink -g
+          npm install theme-next/hexo-next-share -g
           npm install
       - name: Build
         run: npm run build
