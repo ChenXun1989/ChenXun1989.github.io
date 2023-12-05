@@ -1,8 +1,9 @@
 ---
 title: java多线程基础
-date: 2023-06-19 17:35:36
 tags:
-- java
+  - java
+abbrlink: 39355
+date: 2023-06-19 17:35:36
 ---
 # java多线程基础
 

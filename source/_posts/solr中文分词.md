@@ -1,8 +1,9 @@
 ---
 title: solr中文分词
-date: 2023-06-19 15:29:14
 tags:
-- solr
+  - solr
+abbrlink: 9592
+date: 2023-06-19 15:29:14
 ---
 # solr中文分词
 

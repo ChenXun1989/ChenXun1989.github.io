@@ -1,8 +1,9 @@
 ---
 title: dubbo源码研究之rpc模块
-date: 2023-06-20 12:21:47
 tags:
-- dubbo
+  - dubbo
+abbrlink: 47627
+date: 2023-06-20 12:21:47
 ---
 # dubbo源码研究之rpc模块
 dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。

@@ -1,8 +1,9 @@
 ---
 title: 详解CopyOnWriter
-date: 2023-06-20 15:12:34
 tags:
-- java
+  - java
+abbrlink: 59910
+date: 2023-06-20 15:12:34
 ---
 # 详解CopyOnWriter
 

@@ -1,8 +1,9 @@
 ---
 title: mybatis源码分析（一）
-date: 2023-06-20 14:59:40
 tags:
-- mybatis
+  - mybatis
+abbrlink: 26971
+date: 2023-06-20 14:59:40
 ---
 # mybatis源码分析（一）
 

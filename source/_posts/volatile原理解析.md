@@ -1,9 +1,10 @@
 ---
 title: volatile原理解析
-date: 2023-06-20 14:18:09
 tags:
-- java
-- jvm
+  - java
+  - jvm
+abbrlink: 51308
+date: 2023-06-20 14:18:09
 ---
 # volatile原理解析
 

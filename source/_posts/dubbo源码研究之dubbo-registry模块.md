@@ -1,8 +1,9 @@
 ---
 title: dubbo源码研究之dubbo-registry模块
-date: 2023-06-19 17:46:19
 tags:
-- dubbo
+  - dubbo
+abbrlink: 32149
+date: 2023-06-19 17:46:19
 ---
 # dubbo源码研究之dubbo-registry模块
 dubbo-registry注册中心模块，基于注册中心下发地址的集群方式，以及对各种注册中心的抽象。

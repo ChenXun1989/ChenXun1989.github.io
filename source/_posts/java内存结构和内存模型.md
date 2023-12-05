@@ -1,8 +1,9 @@
 ---
 title: java内存结构和内存模型
-date: 2023-06-20 14:13:32
 tags:
-- java
+  - java
+abbrlink: 12456
+date: 2023-06-20 14:13:32
 ---
 # java内存结构和内存模型
 

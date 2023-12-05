@@ -1,8 +1,9 @@
 ---
 title: dubbo源码研究之config模块
-date: 2023-06-20 13:51:48
 tags:
- - dubbo
+  - dubbo
+abbrlink: 36986
+date: 2023-06-20 13:51:48
 ---
 # dubbo源码研究之config模块
 

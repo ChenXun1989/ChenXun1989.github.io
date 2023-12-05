@@ -1,8 +1,9 @@
 ---
 title: java线程状态
-date: 2023-06-20 14:46:26
 tags:
-- java
+  - java
+abbrlink: 3579
+date: 2023-06-20 14:46:26
 ---
 # java线程状态
 java线程有以下几个状态

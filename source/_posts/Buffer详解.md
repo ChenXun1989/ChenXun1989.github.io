@@ -1,8 +1,9 @@
 ---
 title: Buffer详解
-date: 2023-06-20 14:38:07
 tags:
- - java源码
+  - java源码
+abbrlink: 9196
+date: 2023-06-20 14:38:07
 ---
 # Buffer详解
 

@@ -1,8 +1,9 @@
 ---
 title: synchronized原理解析
-date: 2023-06-20 14:30:26
 tags:
-- java
+  - java
+abbrlink: 35937
+date: 2023-06-20 14:30:26
 ---
 
 # synchronized原理解析

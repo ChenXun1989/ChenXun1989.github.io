@@ -1,8 +1,9 @@
 ---
 title: dubbo源码研究之extension模块
-date: 2023-06-19 17:20:53
 tags:
-- dubbo
+  - dubbo
+abbrlink: 40013
+date: 2023-06-19 17:20:53
 ---
 # dubbo源码研究之extension模块
 

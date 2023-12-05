@@ -1,8 +1,9 @@
 ---
 title: ringBuffer深入浅出
-date: 2023-06-20 15:55:40
 tags:
- - java
+  - java
+abbrlink: 22759
+date: 2023-06-20 15:55:40
 ---
 # ringBuffer深入浅出
 

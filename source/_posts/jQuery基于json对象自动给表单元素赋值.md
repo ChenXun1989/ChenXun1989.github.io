@@ -1,8 +1,9 @@
 ---
 title: jQuery基于json对象自动给表单元素赋值
-date: 2023-06-20 12:30:39
 tags:
-- 前端
+  - 前端
+abbrlink: 58164
+date: 2023-06-20 12:30:39
 ---
 # jQuery基于json对象自动给表单元素赋值
 

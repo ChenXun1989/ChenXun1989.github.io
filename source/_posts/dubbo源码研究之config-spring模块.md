@@ -1,8 +1,9 @@
 ---
 title: dubbo源码研究之config-spring模块
-date: 2023-06-20 13:58:06
 tags:
- - dubbo
+  - dubbo
+abbrlink: 10082
+date: 2023-06-20 13:58:06
 ---
 # dubbo源码研究之config-spring模块
 

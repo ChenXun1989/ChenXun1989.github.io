@@ -1,9 +1,10 @@
 ---
 title: jvm里面的access_flag
-date: 2023-06-20 15:30:09
 tags:
-- java
-- jvm
+  - java
+  - jvm
+abbrlink: 7816
+date: 2023-06-20 15:30:09
 ---
 
 # jvm里面的access_flag
