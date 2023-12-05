@@ -33,7 +33,7 @@ jobs:
           npm install hexo-abbrlink --save -g
           npm install hexo-neat --save -g
           npm install hexo-baidu-url-submit -g
-          npm install hexo-submit-urls-to-search-engine --save -g
+          npm install theme-next/hexo-next-share -g
           npm install
       - name: Build
         run: npm run build
