@@ -170,14 +170,14 @@ baidu_url_submit:
   token: SsKHDBadwomcuXQs # 百度站长密钥
   path: baidu_urls.txt # 文本文档的地址， 新链接会保存在此文本文档里，这个默认
 
-#hexo_submit_urls_to_search_engine:
-#  submit_condition: count # count/period The submitted condition, only supports count now
-#  count: 20 # Submit the latest 10 links
-#  period: 900 #A period of time, in seconds, the update time of the article is away from the running time of the plugin. Within this period of time, the link will be submitted
-#  google: 0 #  1/0->on/off   Submit to Google
-#  bing: 0 #Submit to bing
-#  baidu: 1 #Submit to baidu
-#  txt_path: submit_urls.txt # The address of the text document, the link to be pushed will be saved in this text document
-#  baidu_host: https://www.chenxun.wiki # Domain name registered in Baidu webmaster platform
-#  baidu_token: SsKHDBadwomcuXQs # Please note that this is your secret key, so do not publish the website source code in the public repository!
+hexo_submit_urls_to_search_engine:
+  submit_condition: count # count/period The submitted condition, only supports count now
+  count: 20 # Submit the latest 10 links
+  period: 900 #A period of time, in seconds, the update time of the article is away from the running time of the plugin. Within this period of time, the link will be submitted
+  google: 0 #  1/0->on/off   Submit to Google
+  bing: 0 #Submit to bing
+  baidu: 1 #Submit to baidu
+  txt_path: submit_urls.txt # The address of the text document, the link to be pushed will be saved in this text document
+  baidu_host: https://www.chenxun.wiki # Domain name registered in Baidu webmaster platform
+  baidu_token: SsKHDBadwomcuXQs # Please note that this is your secret key, so do not publish the website source code in the public repository!
 
