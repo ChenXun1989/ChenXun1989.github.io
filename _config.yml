@@ -102,7 +102,7 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: baidu_url_submitter
 
 # live2d宠物 推荐使用 jsdelivr 的 CDN 来加载
 live2d:
@@ -135,7 +135,7 @@ search:
   path: search.xml
   field: post
 
-# abbrlink config
+# abbrlink config 短链
 abbrlink:
   alg: crc32  #support crc16(default) and crc32
   rep: hex    #support dec(default) and hex
@@ -145,3 +145,39 @@ abbrlink:
   auto_category:
     enable: false
     depth:
+
+# neat_enable 压缩代码
+neat_enable: true
+neat_html:
+  enable: true
+  exclude:
+neat_css:
+  enable: true
+  exclude:
+    - '**/*.min.css'
+neat_js:
+  enable: true
+  mangle: true
+  output:
+  compress:
+  exclude:
+    - '**/*.min.js'
+    - '**/index.js'
+
+baidu_url_submit:
+  count: 200  # 比如200，代表提交最新的200个链接
+  host: www.chenxun.wiki # 在百度站长平台中注册的域名
+  token: SsKHDBadwomcuXQs # 百度站长密钥
+  path: baidu_urls.txt # 文本文档的地址， 新链接会保存在此文本文档里，这个默认
+
+hexo_submit_urls_to_search_engine:
+  submit_condition: count # count/period The submitted condition, only supports count now
+  count: 20 # Submit the latest 10 links
+  period: 900 #A period of time, in seconds, the update time of the article is away from the running time of the plugin. Within this period of time, the link will be submitted
+  google: 0 #  1/0->on/off   Submit to Google
+  bing: 0 #Submit to bing
+  baidu: 1 #Submit to baidu
+  txt_path: submit_urls.txt # The address of the text document, the link to be pushed will be saved in this text document
+  baidu_host: https://www.chenxun.wiki # Domain name registered in Baidu webmaster platform
+  baidu_token: SsKHDBadwomcuXQs # Please note that this is your secret key, so do not publish the website source code in the public repository!
+
