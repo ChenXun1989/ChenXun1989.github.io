@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.chenxun.wiki","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.chenxun.wiki","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="陈公子的博客">
@@ -45,7 +45,20 @@
 
 
 
-
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+#needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -180,7 +193,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023062036986/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -198,7 +211,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">dubbo源码研究之config模块</a>
+          <a href="/2023062036986/" class="post-title-link" itemprop="url">dubbo源码研究之config模块</a>
         </h2>
 
         <div class="post-meta-container">
@@ -208,9 +221,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-06-20 05:51:48 / 修改时间：13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T05:51:48+00:00">2023-06-20</time>
+      <time title="创建时间：2023-06-20 05:51:48" itemprop="dateCreated datePublished" datetime="2023-06-20T05:51:48+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -235,7 +254,7 @@
 <li>dubbo-container 容器模块，是一个Standlone的容器，以简单的Main加载Spring启动，因为服务通常不需要Tomcat&#x2F;JBoss等Web容器的特性，没必要用Web容器去加载服务。</li>
 </ul>
 <p>今天开始从dubbo入口，config模块开始研究。<br>config模块和Service模块是API，其他为SPI实现。<br>config模块uml类图</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bconfig%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/2023062036986/1.png" class="" title="image">
 
 <p>AbstractConfig类提供几个主要的方法 appendAnnotation，appendProperties，appendParameters，appendAttributes<br>其他子类提供相关自身的属性。<br>AbstractConfig类里面大量通过 反射和javabean约定获取相关值，特别注意的是toString方法注释提到的防御性容错</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">catch</span> (Throwable t) &#123; <span class="comment">// 防御性容错  </span></span><br><span class="line">logger.warn(t.getMessage(), t);  </span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.toString();  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -273,7 +292,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/202306204306/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -291,7 +310,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/" class="post-title-link" itemprop="url">浅谈分布式项目日志监控</a>
+          <a href="/202306204306/" class="post-title-link" itemprop="url">浅谈分布式项目日志监控</a>
         </h2>
 
         <div class="post-meta-container">
@@ -301,9 +320,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-06-20 05:48:20 / 修改时间：13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T05:48:20+00:00">2023-06-20</time>
+      <time title="创建时间：2023-06-20 05:48:20" itemprop="dateCreated datePublished" datetime="2023-06-20T05:48:20+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -323,7 +348,7 @@
 <figure class="highlight xml"><figcaption><span>schema.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@Intercepts(&#123; @Signature(type = Executor.class, method = &quot;update&quot;, args = &#123; MappedStatement.class, Object.class &#125;),  </span><br><span class="line">@Signature(type = Executor.class, method = &quot;query&quot;, args = &#123; MappedStatement.class, Object.class,  </span><br><span class="line">RowBounds.class, ResultHandler.class &#125;) &#125;)  </span><br><span class="line">public class MidaiLogMybatisPlugn implements Interceptor &#123;  </span><br><span class="line">@Override  </span><br><span class="line">public Object intercept(Invocation invocation) throws Throwable &#123;    </span><br><span class="line">Object result = null;  </span><br><span class="line">//从当前线程获取trace  </span><br><span class="line">MidaiLogTrace trace = MidaiLogTraceService.getMidaiLogTrace();  </span><br><span class="line">if(trace !=null)&#123;  </span><br><span class="line">Object[] arguments = invocation.getArgs();  </span><br><span class="line">MidaiLogTraceService.traceSqlLog(trace.getTraceId(), getSqlStatement(arguments));  </span><br><span class="line">&#125;  </span><br><span class="line">try &#123;  </span><br><span class="line">result = invocation.proceed();        </span><br><span class="line">&#125; catch (Exception e) &#123;  </span><br><span class="line">throw e;  </span><br><span class="line">&#125;  </span><br><span class="line">return result;  </span><br><span class="line">&#125;    </span><br><span class="line">@Override  </span><br><span class="line">public Object plugin(Object target) &#123;  </span><br><span class="line">return Plugin.wrap(target, this); // mybatis提供的包装工具类  </span><br><span class="line">&#125;    </span><br><span class="line">@Override  </span><br><span class="line">public void setProperties(Properties properties) &#123;  </span><br><span class="line">&#125;   </span><br><span class="line">private String getSqlStatement(Object[] arguments) &#123;  </span><br><span class="line">MappedStatement mappedStatement = (MappedStatement) arguments[0];  </span><br><span class="line">Object parameter = null;  </span><br><span class="line">if (arguments.length &gt; 1) &#123;  </span><br><span class="line">parameter = arguments[1];  </span><br><span class="line">&#125;  </span><br><span class="line">String sqlId = mappedStatement.getId();  </span><br><span class="line">BoundSql boundSql = mappedStatement.getBoundSql(parameter);  </span><br><span class="line">Configuration configuration = mappedStatement.getConfiguration();  </span><br><span class="line">String sql = showSql(configuration, boundSql);  </span><br><span class="line">StringBuilder str = new StringBuilder(100);  </span><br><span class="line">str.append(sqlId);  </span><br><span class="line">str.append(&quot;:&quot;);  </span><br><span class="line">str.append(sql);  </span><br><span class="line">str.append(&quot;:&quot;);  </span><br><span class="line">return str.toString();  </span><br><span class="line">&#125;    </span><br><span class="line">public String showSql(Configuration configuration, BoundSql boundSql) &#123;  </span><br><span class="line">Object parameterObject = boundSql.getParameterObject();  </span><br><span class="line">List<span class="tag">&lt;<span class="name">ParameterMapping</span>&gt;</span> parameterMappings = boundSql.getParameterMappings();  </span><br><span class="line">String sql = boundSql.getSql().replaceAll(&quot;[\\s]+&quot;, &quot; &quot;);  </span><br><span class="line">if (parameterMappings.size() &gt; 0 &amp;&amp; parameterObject != null) &#123;  </span><br><span class="line">TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();  </span><br><span class="line">if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) &#123;  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(parameterObject));    </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">MetaObject metaObject = configuration.newMetaObject(parameterObject);  </span><br><span class="line">for (ParameterMapping parameterMapping : parameterMappings) &#123;  </span><br><span class="line">String propertyName = parameterMapping.getProperty();  </span><br><span class="line">if (metaObject.hasGetter(propertyName)) &#123;  </span><br><span class="line">Object obj = metaObject.getValue(propertyName);  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(obj));  </span><br><span class="line">&#125; else if (boundSql.hasAdditionalParameter(propertyName)) &#123;  </span><br><span class="line">Object obj = boundSql.getAdditionalParameter(propertyName);  </span><br><span class="line">sql = sql.replaceFirst(&quot;\\?&quot;, getParameterValue(obj));  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">return sql;  </span><br><span class="line">&#125;   </span><br><span class="line">private static String getParameterValue(Object obj) &#123;  </span><br><span class="line">String value = null;  </span><br><span class="line">if (obj instanceof String) &#123;  </span><br><span class="line">value = &quot;‘&quot; + obj.toString() + &quot;‘&quot;;  </span><br><span class="line">&#125; else if (obj instanceof Date) &#123;  </span><br><span class="line">DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);  </span><br><span class="line">value = &quot;‘&quot; + formatter.format(new Date()) + &quot;‘&quot;;  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">if (obj != null) &#123;  </span><br><span class="line">value = obj.toString();  </span><br><span class="line">&#125; else &#123;  </span><br><span class="line">value = &quot;&quot;;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">        &#125;  </span><br><span class="line">        return value;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>当系统并发达到一定数量级，log4j日志打印本身会成为瓶颈，这个时候需要mq来解耦了，<br>不在打印日志，而是发送mq消息，由mq消费端处理。因为目前公司项目并发数量还不足以导致该问题，因此尚未采用。<br>elk收集日志之后，通过kibana可以提供搜索。</p>
-<img src="/2023/06/20/%E6%B5%85%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7/1.png" class="" title="image">
+<img src="/202306204306/1.png" class="" title="image">
 
 <p>剩下最后的工作量就是提供一个web界面来更好的分析和展示数据。</p>
 
@@ -352,7 +377,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/%E5%9F%BA%E4%BA%8Ejquery%E6%8A%8A%E8%A1%A8%E5%8D%95%E8%BD%AC%E6%88%90%E6%88%90json%E5%AF%B9%E8%B1%A1/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023062011819/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -370,7 +395,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/20/%E5%9F%BA%E4%BA%8Ejquery%E6%8A%8A%E8%A1%A8%E5%8D%95%E8%BD%AC%E6%88%90%E6%88%90json%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">基于jquery把表单转成成json对象</a>
+          <a href="/2023062011819/" class="post-title-link" itemprop="url">基于jquery把表单转成成json对象</a>
         </h2>
 
         <div class="post-meta-container">
@@ -380,9 +405,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-06-20 05:38:15 / 修改时间：13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T05:38:15+00:00">2023-06-20</time>
+      <time title="创建时间：2023-06-20 05:38:15" itemprop="dateCreated datePublished" datetime="2023-06-20T05:38:15+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -431,7 +462,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/jQuery%E5%9F%BA%E4%BA%8Ejson%E5%AF%B9%E8%B1%A1%E8%87%AA%E5%8A%A8%E7%BB%99%E8%A1%A8%E5%8D%95%E5%85%83%E7%B4%A0%E8%B5%8B%E5%80%BC/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023062058164/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -449,7 +480,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/20/jQuery%E5%9F%BA%E4%BA%8Ejson%E5%AF%B9%E8%B1%A1%E8%87%AA%E5%8A%A8%E7%BB%99%E8%A1%A8%E5%8D%95%E5%85%83%E7%B4%A0%E8%B5%8B%E5%80%BC/" class="post-title-link" itemprop="url">jQuery基于json对象自动给表单元素赋值</a>
+          <a href="/2023062058164/" class="post-title-link" itemprop="url">jQuery基于json对象自动给表单元素赋值</a>
         </h2>
 
         <div class="post-meta-container">
@@ -459,9 +490,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-06-20 04:30:39 / 修改时间：13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T04:30:39+00:00">2023-06-20</time>
+      <time title="创建时间：2023-06-20 04:30:39" itemprop="dateCreated datePublished" datetime="2023-06-20T04:30:39+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -504,7 +541,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bcontainer%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/20230620172/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -522,7 +559,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bcontainer%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">dubbo源码研究之container模块</a>
+          <a href="/20230620172/" class="post-title-link" itemprop="url">dubbo源码研究之container模块</a>
         </h2>
 
         <div class="post-meta-container">
@@ -532,9 +569,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-06-20 04:25:41 / 修改时间：13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T04:25:41+00:00">2023-06-20</time>
+      <time title="创建时间：2023-06-20 04:25:41" itemprop="dateCreated datePublished" datetime="2023-06-20T04:25:41+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -552,7 +595,7 @@
 
 <p>container接口非常简洁，只有两个方法，start，stop。注意两个方法都是void并且不抛出受检查异常。<br>细心的童鞋也可能发现上面的注释，spi，Singleton，ThreadSafe。 说明该接口是基于spi机制，单例，并且线程安全的。</p>
 <p>Container 接口的主要实现</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bcontainer%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/20230620172/1.png" class="" title="image">
 
 <p>其中JavaConfigContainer是基于spring的javaconfig，其中javaconfig是spring4之后主推的配置模式，<br>使用spring boot的童鞋如果和dubbo整合使用零配置的方式可以考虑这个类。<br>SpringContainer主要指定了默认的配置文件路径，通过ClassPathXmlApplicationContext来启动spring容器。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * SpringContainer. (SPI, Singleton, ThreadSafe)</span></span><br><span class="line"><span class="comment">    * </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@author</span> william.liangf  </span></span><br><span class="line"><span class="comment">    */</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringContainer</span> <span class="keyword">implements</span> <span class="title class_">Container</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(SpringContainer.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SPRING_CONFIG</span> <span class="operator">=</span> <span class="string">&quot;dubbo.spring.config&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEFAULT_SPRING_CONFIG</span> <span class="operator">=</span> <span class="string">&quot;classpath*:META-INF/spring/*.xml&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> ClassPathXmlApplicationContext context;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ClassPathXmlApplicationContext <span class="title function_">getContext</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> context;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="type">String</span> <span class="variable">configPath</span> <span class="operator">=</span> ConfigUtils.getProperty(SPRING_CONFIG);  </span><br><span class="line">    <span class="keyword">if</span> (configPath == <span class="literal">null</span> || configPath.length() == <span class="number">0</span>) &#123;  </span><br><span class="line">    configPath = DEFAULT_SPRING_CONFIG;  </span><br><span class="line">    &#125;  </span><br><span class="line">    context = <span class="keyword">new</span> <span class="title class_">ClassPathXmlApplicationContext</span>(configPath.split(<span class="string">&quot;[,\\s]+&quot;</span>));  </span><br><span class="line">    context.start();  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="keyword">try</span> &#123;  </span><br><span class="line">    <span class="keyword">if</span> (context != <span class="literal">null</span>) &#123;  </span><br><span class="line">    context.stop();  </span><br><span class="line">    context.close();  </span><br><span class="line">    context = <span class="literal">null</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;  </span><br><span class="line">    logger.error(e.getMessage(), e);  </span><br><span class="line">    &#125;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -587,7 +630,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023062047627/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -605,7 +648,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">dubbo源码研究之rpc模块</a>
+          <a href="/2023062047627/" class="post-title-link" itemprop="url">dubbo源码研究之rpc模块</a>
         </h2>
 
         <div class="post-meta-container">
@@ -615,9 +658,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-06-20 04:21:47 / 修改时间：13:09:16" itemprop="dateCreated datePublished" datetime="2023-06-20T04:21:47+00:00">2023-06-20</time>
+      <time title="创建时间：2023-06-20 04:21:47" itemprop="dateCreated datePublished" datetime="2023-06-20T04:21:47+00:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -631,19 +680,19 @@
     
     <div class="post-body" itemprop="articleBody">
           <h1 id="dubbo源码研究之rpc模块"><a href="#dubbo源码研究之rpc模块" class="headerlink" title="dubbo源码研究之rpc模块"></a>dubbo源码研究之rpc模块</h1><p>dubbo作为一个服务化框架，rpc模块是dubbo整个框架的核心部分。我们来通过dubbo来了解rpc调用的本质。</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/2023062047627/1.png" class="" title="image">
 
 <p>dubbo的rpc模块以Invocation和Result为中心，扩展接口为Protocol、Invoker和Exporter。<br>Protocol是服务域，它是Invoker暴露和引用的主功能入口，它负责Invoker的生命周期管理。<br>Invoker是实体域，它是Dubbo的核心模型，其它模型都向它靠扰，或转换成它，它代表一个可执行体，可向它发起invoke调用，<br>它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。<br>invoker接口提供两个方法。<br>Class getInterface(); 获取调用的接口<br>Result invoke(Invocation invocation) throws RpcException; 执行调用<br>说明rpc就两件事，第一，定位要调用的是哪个接口，第二发起调用返回结果。值得注意的是invoker需要Invocation提供的信息，Invocation 支持有本地invoker。invoker不参与Invocation的序列化。Invocation转成request对象通过网络传递并序列化和反序列化。</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/2.png" class="" title="image">
+<img src="/2023062047627/2.png" class="" title="image">
 
 <p>rpccontext是一个静态工具类，通过threadlocal来保存单次调用的上下文。<br>Protocol负载invoker的暴露与引用。</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/3.png" class="" title="image">
+<img src="/2023062047627/3.png" class="" title="image">
 
 <p>一个refer的invoker就会存在一个export的invoker，如果引用的服务不存在，则需要设置<br>暴露服务顺序</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/4.png" class="" title="image">
+<img src="/2023062047627/4.png" class="" title="image">
 
 <p>引用服务时序</p>
-<img src="/2023/06/20/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Brpc%E6%A8%A1%E5%9D%97/5.png" class="" title="image">
+<img src="/2023062047627/5.png" class="" title="image">
 
 <p>dubbo的rpc模块也遵守dubbo的整体设计原则采用Microkernel + Plugin模式，Microkernel只负责组装Plugin。<br>invoker是核心模型，服务方把invoker对象暴露成Exporter对象，并把url描述写入注册中心，注册中心推送到消费方。消费方通过url转成invoker对象。</p>
 
@@ -672,7 +721,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023061932149/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -690,7 +739,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">dubbo源码研究之dubbo-registry模块</a>
+          <a href="/2023061932149/" class="post-title-link" itemprop="url">dubbo源码研究之dubbo-registry模块</a>
         </h2>
 
         <div class="post-meta-container">
@@ -708,7 +757,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-20 13:09:16" itemprop="dateModified" datetime="2023-06-20T13:09:16+00:00">2023-06-20</time>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -745,7 +794,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">register</span><span class="params">(URL url)</span> &#123;  </span><br><span class="line"><span class="built_in">super</span>.register(url);  </span><br><span class="line">failedRegistered.remove(url);  </span><br><span class="line">failedUnregistered.remove(url);  </span><br><span class="line"><span class="keyword">try</span> &#123;  </span><br><span class="line"><span class="comment">// 向服务器端发送注册请求  </span></span><br><span class="line">doRegister(url);  </span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line"><span class="type">Throwable</span> <span class="variable">t</span> <span class="operator">=</span> e;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果开启了启动时检测，则直接抛出异常  </span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">check</span> <span class="operator">=</span> getUrl().getParameter(Constants.CHECK_KEY, <span class="literal">true</span>)  </span><br><span class="line">            &amp;&amp; url.getParameter(Constants.CHECK_KEY, <span class="literal">true</span>)  </span><br><span class="line">            &amp;&amp; ! Constants.CONSUMER_PROTOCOL.equals(url.getProtocol());  </span><br><span class="line">    <span class="type">boolean</span> <span class="variable">skipFailback</span> <span class="operator">=</span> t <span class="keyword">instanceof</span> SkipFailbackWrapperException;  </span><br><span class="line">    <span class="keyword">if</span> (check || skipFailback) &#123;  </span><br><span class="line">        <span class="keyword">if</span>(skipFailback) &#123;  </span><br><span class="line">            t = t.getCause();  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Failed to register &quot;</span> + url + <span class="string">&quot; to registry &quot;</span> + getUrl().getAddress() + <span class="string">&quot;, cause: &quot;</span> + t.getMessage(), t);  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        logger.error(<span class="string">&quot;Failed to register &quot;</span> + url + <span class="string">&quot;, waiting for retry, cause: &quot;</span> + t.getMessage(), t);  </span><br><span class="line">    &#125;  </span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 将失败的注册请求记录到失败列表，定时重试  </span></span><br><span class="line">    failedRegistered.add(url);  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>register方法把具体的注册实现交给子类的doRegister实现。注册失败的都会记录到失败的set集合里面去，值得注意一个check 配置，当设置时，记录失败注册和订阅请求，后台定时重试。<br>zookeeper注册中心是dubbo推荐使用的注册中心，本身zookeeper的基于是Paxos，一个分布式一致性算法。</p>
-<img src="/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bdubbo-registry%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/2023061932149/1.png" class="" title="image">
 
 <p>流程：</p>
 <ol>
@@ -779,7 +828,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/19/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023061939355/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -797,7 +846,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/19/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">java多线程基础</a>
+          <a href="/2023061939355/" class="post-title-link" itemprop="url">java多线程基础</a>
         </h2>
 
         <div class="post-meta-container">
@@ -815,7 +864,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-20 13:09:16" itemprop="dateModified" datetime="2023-06-20T13:09:16+00:00">2023-06-20</time>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -870,7 +919,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bextension%E6%A8%A1%E5%9D%97/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023061940013/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -888,7 +937,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bextension%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">dubbo源码研究之extension模块</a>
+          <a href="/2023061940013/" class="post-title-link" itemprop="url">dubbo源码研究之extension模块</a>
         </h2>
 
         <div class="post-meta-container">
@@ -906,7 +955,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-20 13:09:16" itemprop="dateModified" datetime="2023-06-20T13:09:16+00:00">2023-06-20</time>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -926,10 +975,10 @@
 <figure class="highlight java"><figcaption><span>ExtensionLoader.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> T <span class="title function_">getExtension</span><span class="params">(String name)</span> &#123;  </span><br><span class="line"><span class="keyword">if</span> (name == <span class="literal">null</span> || name.length() == <span class="number">0</span>)  </span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Extension name == null&quot;</span>);  </span><br><span class="line"><span class="keyword">if</span> (<span class="string">&quot;true&quot;</span>.equals(name)) &#123;  </span><br><span class="line"><span class="keyword">return</span> getDefaultExtension();  </span><br><span class="line">&#125;  </span><br><span class="line">Holder&lt;Object&gt; holder = cachedInstances.get(name);  </span><br><span class="line"><span class="keyword">if</span> (holder == <span class="literal">null</span>) &#123;  </span><br><span class="line">cachedInstances.putIfAbsent(name, <span class="keyword">new</span> <span class="title class_">Holder</span>&lt;Object&gt;());  </span><br><span class="line">holder = cachedInstances.get(name);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="type">Object</span> <span class="variable">instance</span> <span class="operator">=</span> holder.get();  </span><br><span class="line"><span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;  </span><br><span class="line"><span class="keyword">synchronized</span> (holder) &#123;  </span><br><span class="line">instance = holder.get();  </span><br><span class="line"><span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;  </span><br><span class="line">instance = createExtension(name);  </span><br><span class="line">holder.set(instance);  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">return</span> (T) instance;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>具体流程如下</p>
-<img src="/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bextension%E6%A8%A1%E5%9D%97/1.png" class="" title="image">
+<img src="/2023061940013/1.png" class="" title="image">
 
 <p>该方法通过大量缓存容器来优化性能，并且每个扩展点都是单例存在，所以扩展dubbo框架的时候要注意该扩展点的线程安全性。<br>ExtensionFactory为spi接口实现实例在注入属性（injectExtension）时提供注入的属性.</p>
-<img src="/2023/06/19/dubbo%E6%BA%90%E7%A0%81%E7%A0%94%E7%A9%B6%E4%B9%8Bextension%E6%A8%A1%E5%9D%97/2.png" class="" title="image">
+<img src="/2023061940013/2.png" class="" title="image">
 
 <p>该工厂有三个实现，分别支持从spring ，spi，Adaptive里面获取对象，注入Extension对象中。</p>
 
@@ -958,7 +1007,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023/06/19/solrcloud%E6%90%AD%E5%BB%BA/">
+    <link itemprop="mainEntityOfPage" href="https://www.chenxun.wiki/2023061930297/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -976,7 +1025,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/19/solrcloud%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">solrcloud搭建</a>
+          <a href="/2023061930297/" class="post-title-link" itemprop="url">solrcloud搭建</a>
         </h2>
 
         <div class="post-meta-container">
@@ -994,7 +1043,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-06-20 13:09:16" itemprop="dateModified" datetime="2023-06-20T13:09:16+00:00">2023-06-20</time>
+      <time title="修改时间：2023-12-05 02:48:12" itemprop="dateModified" datetime="2023-12-05T02:48:12+00:00">2023-12-05</time>
     </span>
 
   
@@ -1111,6 +1160,9 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/ChenXun1989" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -1119,7 +1171,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
 <script src="/js/third-party/search/local-search.js"></script>
@@ -1136,5 +1188,14 @@
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/z16.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"dialog":{"enable":true,"hitokoto":true},"log":false});</script></body>
 </html>
