@@ -34,7 +34,7 @@ jobs:
           npm install theme-next/hexo-next-share -g
           npm install hexo-neat --save -g
           npm install hexo-baidu-url-submit -g
-          npm install --save hexo-submit-urls-to-search-engine -g
+          npm install hexo-submit-urls-to-search-engine --save -g
           npm install
       - name: Build
         run: npm run build
@@ -43,5 +43,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-
-
