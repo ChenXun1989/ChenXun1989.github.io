@@ -359,6 +359,27 @@ pipeline {
 
         }
 
+        stage('测试覆盖率统计'){
+            when {
+                expression {
+                    return params.is_enable_jacoco
+                }
+            }
+            steps {
+                script{
+                    def serveripList = params.remote_ip_list_str.split(",")
+                    def ip=serveripList[0]
+                    println (" === 统计单元测试覆盖率 ====")
+                    sh """
+${params.maven_home}/bin/mvn org.jacoco:jacoco-maven-plugin:0.8.4:dump -Djacoco.address=${ip} -Djacoco.port=6300
+                   """
+                }
+
+                println (" === 生成测试覆盖率html报告 ====")
+                jacoco()
+            }
+        }
+
     }
 }
 
