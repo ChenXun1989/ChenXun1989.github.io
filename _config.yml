@@ -165,7 +165,7 @@ neat_js:
     - '**/index.js'
 
 baidu_url_submit:
-  count: 200  # 比如200，代表提交最新的200个链接
+  count: 50  # 比如200，代表提交最新的200个链接
   host: www.chenxun.wiki # 在百度站长平台中注册的域名
   token: SsKHDBadwomcuXQs # 百度站长密钥
   path: baidu_urls.txt # 文本文档的地址， 新链接会保存在此文本文档里，这个默认
